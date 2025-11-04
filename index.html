@@ -1,56 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi Bitácora en Línea</title>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background-color: #0b0c10; color: #ffffff; }
-    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 250px; background-color: #050607; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-    .main { margin-left: 250px; padding: 20px; box-sizing: border-box; }
-    h1 { margin-top: 0; }
-    .note-form textarea { width: 100%; height: 80px; background-color: #1a1b1e; color: #ffffff; border: none; padding: 10px; border-radius: 5px; resize: vertical; }
-    .note-form button { margin-top: 10px; padding: 10px 15px; background-color: #4b7bec; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-    .note { background-color: #1a1b1e; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-    .note h3 { margin: 0 0 5px; font-size: 1em; color: #8fa3bf; }
-  </style>
+<meta charset="UTF-8">
+<title>Mi Bitácora de Joaquin Alvarez</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background-color:#121212; color:#f5f5f5; display:flex; min-height:100vh; }
+  .sidebar { width:250px; background-color:#1e1e1e; padding:20px; position:fixed; height:100vh; display:flex; flex-direction:column; justify-content:space-between; }
+  .sidebar header { font-size:24px; font-weight:bold; margin-bottom:10px; }
+  .sidebar p { font-size:14px; line-height:1.5; }
+  .links { margin-top:auto; }
+  .links a { color:#9acd32; text-decoration:none; display:block; margin-bottom:10px; }
+  .links a:hover { text-decoration:underline; }
+  .main { margin-left:250px; padding:20px; flex:1; }
+  .main h1 { font-size:28px; margin-bottom:10px; }
+  .note-form textarea { width:100%; height:100px; background-color:#1e1e1e; color:#f5f5f5; border:1px solid #333; border-radius:4px; padding:10px; resize:vertical; }
+  .note-form button { margin-top:10px; padding:10px 15px; background-color:#9acd32; color:#121212; border:none; border-radius:4px; cursor:pointer; }
+  .note-form button:hover { background-color:#8abf24; }
+  .notes { margin-top:20px; display:flex; flex-direction:column; }
+  .note { background-color:#1e1e1e; border:1px solid #333; border-radius:4px; padding:15px; margin-bottom:10px; }
+  .note-date { font-size:12px; color:#bbb; margin-bottom:5px; }
+</style>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>Mi Bitácora</h2>
-    <p>Bienvenido a mi bitácora en línea. Aquí puedo añadir notas y pensamientos en orden cronológico.</p>
+<div class="sidebar">
+  <div>
+    <header>Joaquin Alvarez</header>
+    <p>Bienvenido a mi bitácora personal. Aquí comparto mis pensamientos y experiencias. Estas notas son personales; sólo yo puedo añadir contenido.</p>
   </div>
-  <div class="main">
-    <h1>Notas</h1>
-    <div class="note-form">
-      <textarea id="noteText" placeholder="Escribe una nueva nota..."></textarea>
-      <button onclick="addNote()">Añadir Nota</button>
-    </div>
-    <div id="notesContainer"></div>
+  <div class="links">
+    <a href="https://www.linkedin.com/in/joaquin-alvarez-mercado/" target="_blank">LinkedIn</a>
+    <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank">YouTube</a>
   </div>
-  <script>
-    function addNote() {
-      const noteText = document.getElementById('noteText').value.trim();
-      if (!noteText) return;
-      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
-      notes.push({ date: new Date().toISOString(), text: noteText });
-      notes.sort((a, b) => new Date(b.date) - new Date(a.date));
-      localStorage.setItem('notes', JSON.stringify(notes));
-      document.getElementById('noteText').value = '';
-      displayNotes();
-    }
-    function displayNotes() {
-      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
-      const container = document.getElementById('notesContainer');
-      container.innerHTML = '';
-      notes.forEach(note => {
-        const div = document.createElement('div');
-        div.className = 'note';
-        const date = new Date(note.date);
-        div.innerHTML = '<h3>' + date.toLocaleString() + '</h3><p>' + note.text.replace(/\\n/g, '<br>') + '</p>';
-        container.appendChild(div);
-      });
-    }
-    document.addEventListener('DOMContentLoaded', displayNotes);
-  </script>
+</div>
+<div class="main">
+  <h1>Notas recientes</h1>
+  <div class="note-form">
+    <textarea id="noteInput" placeholder="Escribe una nota..."></textarea>
+    <button onclick="addNote()">Añadir nota</button>
+  </div>
+  <div class="notes" id="notes"></div>
+</div>
+<script>
+  function loadNotes() {
+    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+    const notesContainer = document.getElementById('notes');
+    notesContainer.innerHTML = '';
+    notes.slice().reverse().forEach(function(note) {
+      const noteDiv = document.createElement('div');
+      noteDiv.className = 'note';
+      const dateDiv = document.createElement('div');
+      dateDiv.className = 'note-date';
+      dateDiv.textContent = new Date(note.date).toLocaleString();
+      const textDiv = document.createElement('div');
+      textDiv.textContent = note.text;
+      noteDiv.appendChild(dateDiv);
+      noteDiv.appendChild(textDiv);
+      notesContainer.appendChild(noteDiv);
+    });
+  }
+  function addNote() {
+    const input = document.getElementById('noteInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+    notes.push({ text: text, date: new Date().toISOString() });
+    localStorage.setItem('notes', JSON.stringify(notes));
+    input.value = '';
+    loadNotes();
+  }
+  loadNotes();
+</script>
 </body>
 </html>
