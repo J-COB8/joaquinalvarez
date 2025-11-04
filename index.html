@@ -1,74 +1,504 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Mi Bitácora de Joaquin Alvarez</title>
-<style>
-  body { margin:0; font-family: Arial, sans-serif; background-color:#121212; color:#f5f5f5; display:flex; min-height:100vh; }
-  .sidebar { width:250px; background-color:#1e1e1e; padding:20px; position:fixed; height:100vh; display:flex; flex-direction:column; justify-content:space-between; }
-  .sidebar header { font-size:24px; font-weight:bold; margin-bottom:10px; }
-  .sidebar p { font-size:14px; line-height:1.5; }
-  .links { margin-top:auto; }
-  .links a { color:#9acd32; text-decoration:none; display:block; margin-bottom:10px; }
-  .links a:hover { text-decoration:underline; }
-  .main { margin-left:250px; padding:20px; flex:1; }
-  .main h1 { font-size:28px; margin-bottom:10px; }
-  .note-form textarea { width:100%; height:100px; background-color:#1e1e1e; color:#f5f5f5; border:1px solid #333; border-radius:4px; padding:10px; resize:vertical; }
-  .note-form button { margin-top:10px; padding:10px 15px; background-color:#9acd32; color:#121212; border:none; border-radius:4px; cursor:pointer; }
-  .note-form button:hover { background-color:#8abf24; }
-  .notes { margin-top:20px; display:flex; flex-direction:column; }
-  .note { background-color:#1e1e1e; border:1px solid #333; border-radius:4px; padding:15px; margin-bottom:10px; }
-  .note-date { font-size:12px; color:#bbb; margin-bottom:5px; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bitácora — Joaquín Álvarez</title>
+
+  <!-- Tipografía -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos base (minimalista, alto contraste, espacios generosos) -->
+  <style>
+    :root{
+      --bg:#0d1117;            /* fondo principal */
+      --panel:#0f141b;         /* panel central */
+      --side:#0b1016;          /* sidebar */
+      --muted:#8b949e;         /* texto secundario */
+      --text:#c9d1d9;          /* texto */
+      --border:#222a33;        /* bordes sutiles */
+      --accent:#8b7dff;        /* acento (suave) */
+      --accent-2:#b3abff;      /* hover/acento claro */
+      --note:#111823;          /* tarjeta de nota */
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:14px;
+      --radius-sm:10px;
+      --maxw:820px;            /* ancho legible del contenido */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#0b1015 0%, var(--bg) 60%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      gap:0;
+    }
+
+    /* Layout */
+    .sidebar{
+      width:320px;
+      min-width:280px;
+      background:linear-gradient(180deg, var(--side) 0%, #0c1118 100%);
+      border-right:1px solid var(--border);
+      padding:36px 28px;
+      position:sticky;
+      top:0;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      gap:22px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .brand__title{
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+    .brand__sub{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+    .nav{
+      margin-top:8px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .nav a{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:600;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .nav a:hover{ color:var(--accent-2); text-decoration:underline }
+    .side-footer{
+      margin-top:auto;
+      font-size:12px;
+      color:var(--muted);
+      opacity:.9;
+    }
+
+    .main{
+      flex:1;
+      display:flex;
+      justify-content:center;
+      padding:40px 28px 64px;
+      overflow-x:hidden;
+    }
+    .container{
+      width:100%;
+      max-width:var(--maxw);
+    }
+
+    /* Encabezado principal + acciones admin (cuando proceda) */
+    .page-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin:6px 0 24px;
+    }
+    .title{
+      margin:0;
+      font-size:32px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .muted{ color:var(--muted) }
+
+    .admin-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, #111726, #0e1422);
+      color:#e6e8ee;
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      transition:transform .06s ease, border-color .2s ease, background .2s ease;
+    }
+    .btn:hover{ border-color:#2b3542 }
+    .btn:active{ transform:translateY(1px) }
+    .btn--accent{
+      border-color:transparent;
+      background:linear-gradient(180deg, var(--accent), #6f62ff);
+      color:#0a0b0f;
+      text-shadow:0 1px 0 rgba(255,255,255,.15);
+    }
+    .btn--accent:hover{ background:linear-gradient(180deg, var(--accent-2), var(--accent)) }
+
+    /* Editor (modo admin) */
+    .editor{
+      margin:12px 0 26px;
+      background:var(--note);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+      display:grid;
+      gap:10px;
+    }
+    .editor textarea{
+      width:100%;
+      min-height:120px;
+      resize:vertical;
+      background:#0c121e;
+      color:var(--text);
+      border:1px solid #1e2630;
+      border-radius:var(--radius-sm);
+      padding:14px 12px;
+      font-size:15px;
+      line-height:1.6;
+      outline:none;
+    }
+    .editor textarea:focus{ border-color:#2b3542 }
+    .editor__row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    /* Agrupación por mes */
+    .month{
+      margin:28px 0 18px;
+      padding-top:8px;
+      border-top:1px dashed #1b222c;
+      color:#d7dcff;
+      letter-spacing:.3px;
+      font-weight:700;
+      font-size:13px;
+      text-transform:uppercase;
+      opacity:.9;
+    }
+
+    /* Tarjetas de nota */
+    .note{
+      background:var(--note);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px 16px;
+      margin:10px 0 16px;
+      box-shadow:var(--shadow);
+      transition:transform .08s ease, border-color .2s ease, background .2s ease;
+    }
+    .note:hover{ transform:translateY(-2px) }
+    .note__meta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+    .note__date{
+      font-size:13px; color:var(--muted);
+    }
+    .note__permalink{
+      font-size:12px;
+    }
+    .note__permalink a{
+      color:var(--muted);
+      text-decoration:none;
+      border-bottom:1px dotted #2a3340;
+    }
+    .note__permalink a:hover{ color:var(--accent-2) }
+
+    .note__text{
+      font-size:16px;
+      line-height:1.75;
+      white-space:pre-wrap;
+      word-wrap:break-word;
+    }
+    .note__text code{
+      background:#0a0f17;
+      border:1px solid #202734;
+      border-radius:6px;
+      padding:2px 6px;
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.92em;
+    }
+    .empty{
+      margin:26px 0;
+      color:var(--muted);
+      background:#0e1421;
+      border:1px dashed #223045;
+      border-radius:var(--radius);
+      padding:16px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .sidebar{ display:none }
+      .main{ padding:28px 18px 64px }
+      .title{ font-size:28px }
+      .container{ max-width:min(92vw, var(--maxw)) }
+    }
+  </style>
 </head>
 <body>
-<div class="sidebar">
-  <div>
-    <header>Joaquin Alvarez</header>
-    <p>Bienvenido a mi bitácora personal. Aquí comparto mis pensamientos y experiencias. Estas notas son personales; sólo yo puedo añadir contenido.</p>
-  </div>
-  <div class="links">
-    <a href="https://www.linkedin.com/in/joaquin-alvarez-mercado/" target="_blank">LinkedIn</a>
-    <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank">YouTube</a>
-  </div>
-</div>
-<div class="main">
-  <h1>Notas recientes</h1>
-  <div class="note-form">
-    <textarea id="noteInput" placeholder="Escribe una nota..."></textarea>
-    <button onclick="addNote()">Añadir nota</button>
-  </div>
-  <div class="notes" id="notes"></div>
-</div>
-<script>
-  function loadNotes() {
-    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
-    const notesContainer = document.getElementById('notes');
-    notesContainer.innerHTML = '';
-    notes.slice().reverse().forEach(function(note) {
-      const noteDiv = document.createElement('div');
-      noteDiv.className = 'note';
-      const dateDiv = document.createElement('div');
-      dateDiv.className = 'note-date';
-      dateDiv.textContent = new Date(note.date).toLocaleString();
-      const textDiv = document.createElement('div');
-      textDiv.textContent = note.text;
-      noteDiv.appendChild(dateDiv);
-      noteDiv.appendChild(textDiv);
-      notesContainer.appendChild(noteDiv);
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Presentación y enlaces">
+    <div class="brand">
+      <div class="brand__title">Joaquín Álvarez</div>
+      <div class="brand__sub">
+        Bitácora personal. Notas públicas; solo yo puedo publicar
+        (edición local + exportar JSON). Minimal, claro y sin distracciones.
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a target="_blank" href="https://www.linkedin.com/in/joaquin-alvarez-mercado/" rel="noopener">LinkedIn</a>
+      <a target="_blank" href="https://www.youtube.com/@joaquinalvarezmercado" rel="noopener">YouTube</a>
+    </nav>
+
+    <div class="side-footer">
+      © <span id="year"></span> Joaquín Álvarez · Hecho con GitHub Pages
+    </div>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="main">
+    <div class="container">
+      <header class="page-head">
+        <h1 class="title">Notas recientes</h1>
+        <div class="admin-actions" id="admin-actions" hidden>
+          <button class="btn" id="btn-import">Importar notes.json</button>
+          <button class="btn btn--accent" id="btn-export">Exportar notes.json</button>
+        </div>
+      </header>
+
+      <!-- Editor solo en modo admin -->
+      <section class="editor" id="editor" hidden aria-label="Añadir nueva nota">
+        <textarea id="note-input" placeholder="Escribe una nota (acepta texto largo, enlaces y `código`)."></textarea>
+        <div class="editor__row">
+          <button class="btn" id="btn-clear">Limpiar</button>
+          <button class="btn btn--accent" id="btn-add">Añadir nota</button>
+        </div>
+      </section>
+
+      <!-- Listado público -->
+      <div id="list"></div>
+
+      <div class="empty" id="empty" hidden>
+        Aún no hay notas para mostrar. Sube un <strong>notes.json</strong> con contenido o
+        añade una nota en modo admin (<code>?admin=1</code>) y exporta el JSON.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Utilidades
+    const $ = s => document.querySelector(s);
+    const byId = id => document.getElementById(id);
+    const ADMIN = new URLSearchParams(location.search).has("admin") && ["1","true","yes"].includes(new URLSearchParams(location.search).get("admin"));
+
+    const LS_KEY = "pendingNotes:v1";     // donde guardo el estado de trabajo local
+    const SRC_JSON = "notes.json";        // fuente pública
+
+    const fmtMonth = (d) => d.toLocaleString("es-MX", { month:"long", year:"numeric" })
+                              .replace(/^\w/, c => c.toUpperCase());
+    const fmtDateTime = (d) => d.toLocaleString("es-MX", { dateStyle:"medium", timeStyle:"short" });
+
+    // Estado
+    let notes = []; // array de {id,date,text}
+
+    // Arranque
+    document.addEventListener("DOMContentLoaded", async () => {
+      byId("year").textContent = new Date().getFullYear();
+
+      // Alternar UI admin
+      if (ADMIN){
+        byId("admin-actions").hidden = false;
+        byId("editor").hidden = false;
+      }
+
+      // Eventos admin
+      byId("btn-add")?.addEventListener("click", onAdd);
+      byId("btn-clear")?.addEventListener("click", () => byId("note-input").value = "");
+      byId("btn-export")?.addEventListener("click", onExport);
+      byId("btn-import")?.addEventListener("click", onImport);
+
+      // Cargar JSON público y combinar con trabajo local (sin pisarlo)
+      await loadPublic();
+      mergeLocalDraft();
+      render();
     });
-  }
-  function addNote() {
-    const input = document.getElementById('noteInput');
-    const text = input.value.trim();
-    if (!text) return;
-    const notes = JSON.parse(localStorage.getItem('notes') || '[]');
-    notes.push({ text: text, date: new Date().toISOString() });
-    localStorage.setItem('notes', JSON.stringify(notes));
-    input.value = '';
-    loadNotes();
-  }
-  loadNotes();
-</script>
+
+    async function loadPublic(){
+      try{
+        const res = await fetch(SRC_JSON, { cache:"no-store" });
+        if(!res.ok) throw new Error("No se pudo leer notes.json");
+        const data = await res.json();
+        if(!Array.isArray(data)) throw new Error("notes.json inválido");
+        notes = data.slice();
+      }catch(err){
+        // Si no existe, dejamos notes = []
+        console.warn(err);
+        notes = [];
+      }
+    }
+
+    function mergeLocalDraft(){
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return;
+      try{
+        const local = JSON.parse(raw);
+        if(Array.isArray(local)){
+          // Combina evitando duplicados por id
+          const seen = new Set(notes.map(n => n.id));
+          for(const n of local){
+            if(!seen.has(n.id)){ notes.push(n); seen.add(n.id); }
+          }
+        }
+      }catch(e){ console.warn("draft corrupto:", e); }
+    }
+
+    function persistDraft(){
+      // Guarda solo las notas que no están en remoto aún:
+      // criterio simple: si hay id no semilla (Date.now) y no está en el JSON original.
+      // Para robustez, guardamos todo el arreglo; el flujo es manual.
+      localStorage.setItem(LS_KEY, JSON.stringify(notes));
+    }
+
+    function onAdd(){
+      const ta = byId("note-input");
+      const text = (ta.value || "").trim();
+      if(!text) return;
+      const now = new Date().toISOString();
+      notes.push({ id:String(Date.now()), date: now, text });
+      ta.value = "";
+      persistDraft();
+      render();
+      alert("Nota añadida localmente. Pulsa ‘Exportar notes.json’ y súbelo al repo para publicar.");
+    }
+
+    function onExport(){
+      // Ordena antes de exportar
+      const data = [...notes].sort((a,b)=> new Date(a.date) - new Date(b.date));
+      const blob = new Blob([ JSON.stringify(data, null, 2) ], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "notes.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function onImport(){
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json";
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if(!file) return;
+        try{
+          const text = await file.text();
+          const data = JSON.parse(text);
+          if(!Array.isArray(data)) throw new Error("Formato inválido");
+          notes = data.slice();
+          persistDraft();
+          render();
+          alert("notes.json importado localmente. Recuerda Exportar para subirlo al repo.");
+        }catch(e){
+          alert("No se pudo importar: " + e.message);
+        }
+      };
+      input.click();
+    }
+
+    function render(){
+      // Orden inverso (reciente primero)
+      const sorted = [...notes].sort((a,b)=> new Date(b.date) - new Date(a.date));
+      const host = byId("list");
+      host.innerHTML = "";
+
+      if(sorted.length === 0){
+        byId("empty").hidden = false;
+        return;
+      } else {
+        byId("empty").hidden = true;
+      }
+
+      // Agrupar por mes
+      let currentMonth = "";
+      for(const n of sorted){
+        const d = new Date(n.date);
+        const month = fmtMonth(d);
+        if(month !== currentMonth){
+          currentMonth = month;
+          const tag = document.createElement("div");
+          tag.className = "month";
+          tag.textContent = currentMonth;
+          host.appendChild(tag);
+        }
+        host.appendChild(renderNote(n, d));
+      }
+    }
+
+    function renderNote(n, d){
+      const card = document.createElement("article");
+      card.className = "note";
+      card.id = "note-" + n.id;
+
+      // Header meta
+      const meta = document.createElement("div");
+      meta.className = "note__meta";
+
+      const date = document.createElement("div");
+      date.className = "note__date";
+      date.textContent = fmtDateTime(d);
+
+      const link = document.createElement("div");
+      link.className = "note__permalink";
+      const a = document.createElement("a");
+      a.href = `#note-${n.id}`;
+      a.textContent = "permalink";
+      link.appendChild(a);
+
+      meta.appendChild(date);
+      meta.appendChild(link);
+
+      // Texto (render plano; se respetan saltos y `code`)
+      const text = document.createElement("div");
+      text.className = "note__text";
+      text.innerHTML = escapeHtml(n.text).replace(/`([^`]+)`/g, "<code>$1</code>");
+
+      card.appendChild(meta);
+      card.appendChild(text);
+      return card;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+  </script>
 </body>
 </html>
