@@ -42,8 +42,8 @@
   --sans:      'Inter', system-ui, -apple-system, sans-serif;
   --serif:     'Instrument Serif', Georgia, serif;
   --maxw:      1120px;
-  --r:         20px;
-  --r-sm:      14px;
+  --r:         12px;
+  --r-sm:      8px;
 }
 
 html{
@@ -292,18 +292,24 @@ section{ padding:clamp(64px,10vh,110px) 0; }
 .body-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:14px; }
 .title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
 .project h3{ font-size:clamp(26px,3.2vw,38px); font-weight:800; letter-spacing:-0.03em; line-height:1.05; }
+/* el contenedor del texto llena todo el espacio disponible,
+   simétrico con el botón de la flecha */
 .project p{
-  font-size:14.5px; color:var(--dim); line-height:1.6; max-width:60ch;
+  flex:1; width:100%; max-width:none;
+  font-size:14.5px; color:var(--dim); line-height:1.6;
   background:var(--bg3); border:1px solid var(--line); border-radius:var(--r-sm);
   padding:14px 18px;
 }
 .go-big{
   flex:0 0 auto; align-self:stretch;
   width:clamp(90px,11vw,130px); min-height:90px;
-  display:flex; align-items:center; justify-content:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
   background:var(--ink); color:#0B0B0C; border-radius:var(--r-sm);
-  font-size:clamp(42px,4.5vw,58px); font-weight:800; line-height:1;
+  font-size:clamp(38px,4vw,52px); font-weight:800; line-height:1;
   transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+}
+.go-big small{
+  font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
 }
 .project:hover .go-big{ transform:translate(3px,-3px); box-shadow:0 10px 30px rgba(255,255,255,.14); }
 @media (max-width:760px){
@@ -312,7 +318,7 @@ section{ padding:clamp(64px,10vh,110px) 0; }
 }
 @media (max-width:560px){
   .project .body{ flex-direction:column; gap:16px; }
-  .go-big{ width:100%; min-height:64px; font-size:38px; }
+  .go-big{ width:100%; min-height:64px; font-size:32px; flex-direction:row; gap:10px; }
 }
 
 /* ============================================================
@@ -502,7 +508,7 @@ footer{
             <div class="title-row"><h3>Paratu</h3><span class="tag" data-en="iOS App · 2026">App iOS · 2026</span></div>
             <p data-en="A personal clarity system for iOS: tasks, journal and finances in one minimalist app. No subscriptions, no cloud, no distractions — your data lives only on your phone.">Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
           </div>
-          <span class="go-big" aria-hidden="true">↗</span>
+          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
         </div>
       </a>
 
@@ -513,7 +519,7 @@ footer{
             <div class="title-row"><h3>FOLIO</h3><span class="tag" data-en="Product · 2026">Producto · 2026</span></div>
             <p data-en="The first folder you can use as a notebook.">La primera carpeta para usar como cuaderno.</p>
           </div>
-          <span class="go-big" aria-hidden="true">↗</span>
+          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
         </div>
       </a>
 
@@ -525,7 +531,7 @@ footer{
             <div class="title-row"><h3>Bandeja</h3><span class="tag">Web app · 2026</span></div>
             <p data-en="Your email, summarized every morning: a daily brief with what matters in your inbox — without opening it all.">Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
           </div>
-          <span class="go-big" aria-hidden="true">↗</span>
+          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
         </div>
       </a>
     </div>
