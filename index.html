@@ -297,14 +297,15 @@ section{ padding:clamp(64px,10vh,110px) 0; }
 .project p{
   flex:1; width:100%; max-width:none;
   font-size:14.5px; color:var(--dim); line-height:1.6;
-  background:var(--bg3); border:1px solid var(--line); border-radius:var(--r-sm);
+  /* mismo fondo y borde que las cards de "Quién soy" */
+  background:var(--bg2); border:1px solid var(--line); border-radius:14px;
   padding:14px 18px;
 }
 .go-big{
   flex:0 0 auto; align-self:stretch;
   width:clamp(90px,11vw,130px); min-height:90px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-  background:var(--ink); color:#0B0B0C; border-radius:var(--r-sm);
+  background:var(--ink); color:#0B0B0C; border-radius:14px;
   font-size:clamp(38px,4vw,52px); font-weight:800; line-height:1;
   transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
 }
