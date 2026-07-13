@@ -328,6 +328,7 @@ section{ padding:clamp(64px,10vh,110px) 0; }
 .cell{
   background:var(--bg2); border:1px solid var(--line); border-radius:var(--r);
   padding:26px; display:flex; flex-direction:column;
+  min-width:0; /* permite encoger las celdas: sin esto el grid revienta en teléfono */
   transition:border-color .25s, transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
 }
 .cell:hover{ border-color:var(--line-mid); }
@@ -383,9 +384,9 @@ a.cell:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.5);
   .cell{ padding:20px; }
   .cell.bio, .cell.now, .cell.skills{ grid-column:span 2; }
   .social{ min-height:132px; }
-  /* la edad a lo ancho, con los números en grande */
+  /* la edad a lo ancho, con los números tan grandes como quepan */
   .cell.edad-cell{ grid-column:span 2; padding:24px 20px; }
-  .edad-cell .num{ font-size:58px; }
+  .edad-cell .num{ font-size:clamp(30px, 9.2vw, 58px); }
 }
 
 /* ============================================================
