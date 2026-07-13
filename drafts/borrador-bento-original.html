@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Joaquin — Personal</title>
+<meta name="description" content="Página personal de Joaquin." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Archivo+Black&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* ===== PALETA (cámbiala fácil aquí) ===== */
+    --page-bg:   #ffffff;        /* fondo blanco */
+    --card-line: #ececf0;        /* borde sutil de tarjetas claras */
+    --accent:    #ff6a2b;        /* color sólido principal (naranja) */
+    --accent-2:  #9fc3ff;        /* color sólido secundario (azul) */
+    --accent-3:  #b9f0c9;        /* color sólido terciario (verde menta) */
+    --accent-4:  #d9c8ff;        /* color sólido cuarto (lila) */
+    --ink:       #15151a;        /* texto oscuro */
+    --white:     #ffffff;
+    --muted:     #6a6a74;
+    --soft:      #f4f4f7;        /* relleno de placeholders de imagen */
+    --radius:    24px;
+    --radius-sm: 16px;
+    --gap:       14px;
+    --shadow:    0 6px 22px rgba(20,20,40,.06);
+    --shadow-hover:0 18px 40px rgba(20,20,40,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Archivo',system-ui,-apple-system,sans-serif;
+    background:var(--page-bg);
+    min-height:100vh;
+    padding:clamp(18px,5vw,64px);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{font-family:'Archivo Black',sans-serif;letter-spacing:-.01em}
+  .wrap{max-width:1120px;margin:0 auto}
+
+  /* barra superior */
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin:0 4px 22px;flex-wrap:wrap;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent)}
+  .status{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--white);border:1px solid var(--card-line);padding:8px 14px;border-radius:999px;box-shadow:var(--shadow)}
+  .status .live{width:8px;height:8px;border-radius:50%;background:#37d67a;box-shadow:0 0 10px #37d67a;animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* GRID */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
+  .card{
+    border-radius:var(--radius);
+    padding:24px;
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+    transition:transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .22s;
+    text-decoration:none;color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  a.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
+  .span-2{grid-column:span 2}.span-3{grid-column:span 3}.span-4{grid-column:span 4}
+  .row-2{grid-row:span 2}
+
+  .fill-light{background:var(--white);border:1px solid var(--card-line)}
+  .fill-accent{background:var(--accent);color:#fff}
+  .fill-accent2{background:var(--accent-2)}
+  .fill-accent3{background:var(--accent-3)}
+  .fill-accent4{background:var(--accent-4)}
+
+  .label{font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:700;opacity:.6;margin-bottom:12px}
+  .muted{color:var(--muted)}
+
+  /* placeholder de imagen reutilizable */
+  .imgph{background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 12px,#eee 12px,#eee 24px);
+    border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+    color:#9a9aa6;font-size:13px;font-weight:700;letter-spacing:.05em;min-height:120px}
+  .imgph::before{content:"🖼  IMAGEN"}
+
+  /* HERO con foto */
+  .hero{justify-content:space-between;min-height:300px;gap:18px;flex-direction:row;align-items:stretch}
+  .hero .copy{display:flex;flex-direction:column;justify-content:flex-end;flex:1}
+  .hero .eyebrow{font-size:14px;font-weight:700;opacity:.85}
+  .hero h1{font-size:clamp(34px,5vw,58px);line-height:.95;margin-top:6px;color:#fff}
+  .hero p{margin-top:14px;max-width:30ch;color:rgba(255,255,255,.95);font-weight:500}
+  .hero .photo{width:200px;flex:0 0 200px;border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+  .hero .photo::before{content:"📷  TU FOTO"}
+
+  /* AVATAR pequeño */
+  .avatar{align-items:center;justify-content:center;text-align:center}
+  .pic{width:96px;height:96px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;font-size:38px;color:var(--accent);margin-bottom:12px;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+  .avatar h3{font-size:19px}
+  .avatar small{color:var(--muted);font-weight:600}
+
+  .stat{align-items:flex-start;justify-content:center}
+  .stat .num{font-size:clamp(32px,5vw,48px);line-height:1;color:var(--accent)}
+  .stat .cap{font-size:13px;margin-top:8px;font-weight:600;color:var(--muted)}
+
+  /* SOCIAL */
+  .social{justify-content:space-between}
+  .social .ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:auto}
+  .social h4{font-size:17px;margin-top:18px}
+  .social .handle{font-size:13px;color:var(--muted);margin-top:2px;font-weight:600}
+  .arrow{position:absolute;top:22px;right:22px;font-size:18px;opacity:.4;transition:.2s}
+  a.card:hover .arrow{opacity:1;transform:translate(2px,-2px)}
+  .ig{background:linear-gradient(135deg,#fd5,#f43f8a,#9d2dd0)}
+  .gh{background:#111}.li{background:#0a66c2}.x{background:#111}.tt{background:#111}
+  .mail-ic{background:var(--accent)}
+  svg{width:24px;height:24px;fill:#fff}
+
+  /* PROYECTOS con imagen */
+  .proj-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .proj{background:var(--white);border:1px solid var(--card-line);border-radius:var(--radius-sm);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s}
+  .proj:hover{transform:translateY(-3px)}
+  .proj .thumb{min-height:108px}
+  .proj .body{padding:14px}
+  .proj .tag{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
+  .proj h5{font-size:15px;margin:4px 0 3px}
+  .proj p{font-size:12.5px;color:var(--muted)}
+
+  /* skills chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .chip{font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(0,0,0,.06)}
+  .fill-accent2 .chip,.fill-accent3 .chip,.fill-accent4 .chip{background:rgba(0,0,0,.10)}
+
+  /* CTA */
+  .cta{align-items:center;text-align:center;justify-content:center}
+  .cta h3{font-size:clamp(22px,3.4vw,34px);color:#fff}
+  .cta p{color:rgba(255,255,255,.92);margin-top:6px;font-weight:500}
+  .btn{display:inline-block;margin-top:16px;background:#fff;color:var(--accent);font-weight:800;padding:13px 26px;border-radius:999px;text-decoration:none}
+
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+
+  @media(max-width:860px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .span-3,.span-4{grid-column:span 2}.hero{grid-column:span 2}
+  }
+  @media(max-width:560px){
+    .grid{grid-template-columns:1fr}
+    .span-2,.span-3,.span-4,.hero{grid-column:span 1}
+    .hero{flex-direction:column}.hero .photo{width:100%;flex:0 0 160px;min-height:160px}
+    .proj-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span> joaquin.dev</div>
+    <span class="status"><span class="live"></span> Disponible para nuevos proyectos</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- HERO con foto -->
+    <div class="card fill-accent span-3 hero">
+      <div class="copy">
+        <div class="eyebrow">Hola, soy</div>
+        <h1 class="display">Joaquin<br>Apellido</h1>
+        <p>Una línea corta y poderosa sobre quién eres y qué haces.</p>
+      </div>
+      <div class="photo"></div>
+    </div>
+
+    <!-- AVATAR -->
+    <div class="card fill-accent2 avatar">
+      <div class="pic display">J</div>
+      <h3 class="display">Joaquin</h3>
+      <small>📍 México</small>
+    </div>
+
+    <!-- BIO -->
+    <div class="card fill-light span-2">
+      <div class="label">Quién soy</div>
+      <p class="muted" style="font-size:15px">Un párrafo breve sobre tu historia, tu enfoque y lo que te apasiona. 2–3 frases bastan.</p>
+    </div>
+
+    <!-- STAT 1 -->
+    <div class="card fill-light stat">
+      <div class="num display">+5</div>
+      <div class="cap">Años creando</div>
+    </div>
+
+    <!-- STAT 2 -->
+    <div class="card fill-light stat">
+      <div class="num display">20+</div>
+      <div class="cap">Proyectos</div>
+    </div>
+
+    <!-- PROYECTOS (espacio para 4, con imagen) -->
+    <div class="card fill-light span-3 row-2">
+      <div class="proj-head">
+        <div class="label" style="margin:0">Proyectos / Qué he hecho</div>
+        <span class="muted" style="font-size:13px;font-weight:600">Ver todos ↗</span>
+      </div>
+      <div class="proj-grid">
+        <div class="proj"><div class="thumb imgph"></div><div class="body"><span class="tag">Proyecto</span><h5 class="display">Nombre del proyecto</h5><p>Una línea de qué hiciste.</p></div></div>
+        <div class="proj"><div class="thumb imgph"></div><div class="body"><span class="tag">Trabajo</span><h5 class="display">Otro proyecto</h5><p>Tu rol o el resultado.</p></div></div>
+        <div class="proj"><div class="thumb imgph"></div><div class="body"><span class="tag">Logro</span><h5 class="display">Algo destacado</h5><p>De lo que te enorgulleces.</p></div></div>
+        <div class="proj"><div class="thumb imgph"></div><div class="body"><span class="tag">Side project</span><h5 class="display">Un cuarto</h5><p>Lo que quieras mostrar.</p></div></div>
+      </div>
+    </div>
+
+    <!-- NOW -->
+    <div class="card fill-accent3">
+      <div class="label">Ahora mismo 🚀</div>
+      <p style="font-size:15px;font-weight:500">En qué estás enfocado hoy: estudiando, trabajando en, aprendiendo…</p>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="card fill-accent4">
+      <div class="label">Lo que sé hacer</div>
+      <div class="chips">
+        <span class="chip">Habilidad 1</span><span class="chip">Habilidad 2</span>
+        <span class="chip">Habilidad 3</span><span class="chip">Habilidad 4</span>
+      </div>
+    </div>
+
+    <!-- SOCIAL: Instagram -->
+    <a class="card fill-light social" href="#" target="_blank" rel="noopener">
+      <span class="arrow">↗</span>
+      <div class="ic ig"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.2 8.8 2.2 12 2.2zm0 3.13A6.67 6.67 0 1 0 18.67 12 6.67 6.67 0 0 0 12 5.33zm0 11A4.33 4.33 0 1 1 16.33 12 4.33 4.33 0 0 1 12 16.33zm6.93-11.6a1.56 1.56 0 1 1-1.56-1.55 1.56 1.56 0 0 1 1.56 1.55z"/></svg></div>
+      <div><h4 class="display">Instagram</h4><div class="handle">@tuusuario</div></div>
+    </a>
+
+    <!-- SOCIAL: GitHub -->
+    <a class="card fill-light social" href="#" target="_blank" rel="noopener">
+      <span class="arrow">↗</span>
+      <div class="ic gh"><svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.57.1.78-.25.78-.55v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.27 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.79.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg></div>
+      <div><h4 class="display">GitHub</h4><div class="handle">@tuusuario</div></div>
+    </a>
+
+    <!-- SOCIAL: LinkedIn -->
+    <a class="card fill-light social" href="#" target="_blank" rel="noopener">
+      <span class="arrow">↗</span>
+      <div class="ic li"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg></div>
+      <div><h4 class="display">LinkedIn</h4><div class="handle">/in/tuusuario</div></div>
+    </a>
+
+    <!-- SOCIAL: X -->
+    <a class="card fill-light social" href="#" target="_blank" rel="noopener">
+      <span class="arrow">↗</span>
+      <div class="ic x"><svg viewBox="0 0 24 24"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.22-6.82-5.97 6.82H1.66l7.73-8.84L1.24 2.25h6.83l4.71 6.23 5.46-6.23zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64z"/></svg></div>
+      <div><h4 class="display">X / Twitter</h4><div class="handle">@tuusuario</div></div>
+    </a>
+
+    <!-- EMAIL -->
+    <a class="card fill-light social" href="mailto:jam082008@gmail.com">
+      <span class="arrow">↗</span>
+      <div class="ic mail-ic"><svg viewBox="0 0 24 24"><path d="M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm2 .4v.2l8 5 8-5v-.2H4zm16 2.5-7.47 4.67a1 1 0 0 1-1.06 0L4 7.9V19h16V7.9z"/></svg></div>
+      <div><h4 class="display">Escríbeme</h4><div class="handle">jam082008@gmail.com</div></div>
+    </a>
+
+    <!-- CTA -->
+    <div class="card fill-accent span-4 cta">
+      <h3 class="display">¿Trabajamos juntos?</h3>
+      <p>Siempre abierto a ideas, colaboraciones y buenas conversaciones.</p>
+      <a class="btn" href="mailto:jam082008@gmail.com">Contáctame →</a>
+    </div>
+
+  </div>
+
+  <footer>© <span id="year"></span> Joaquin · Hecho con cariño</footer>
+</div>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+</body>
+</html>

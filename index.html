@@ -1,504 +1,892 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bitácora — Joaquín Álvarez</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Joaquin Álvarez Mercado — Portafolio</title>
+<meta name="description" content="Joaquin Álvarez Mercado — portafolio personal. Proyectos, perfil y contacto." />
+<!-- pinta la barra del navegador del teléfono del mismo amarillo de la foto -->
+<meta name="theme-color" content="#F0C64D" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F0C64D" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#F0C64D" />
+<meta name="color-scheme" content="dark" />
 
-  <!-- Tipografía -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- ============================================================
+  GUÍA RÁPIDA DE EDICIÓN
+  1. TU FOTO: el hero usa  foto.jpg  en teléfono y  foto-ancha.jpg
+     en computadora (búscalas en el <picture> del hero para cambiarlas).
+  2. REDES: busca "CAMBIA AQUÍ" para poner los links reales de
+     TikTok, Instagram, YouTube y LinkedIn.
+  3. PROYECTOS: cada card tiene href="#" — cuando cada proyecto
+     tenga su propia página, apunta el href ahí
+     (ej. href="proyectos/mi-proyecto.html").
+  4. TEXTOS: todo lo que está entre [corchetes] es para reemplazar.
+============================================================ -->
 
-  <!-- Estilos base (minimalista, alto contraste, espacios generosos) -->
-  <style>
-    :root{
-      --bg:#0d1117;            /* fondo principal */
-      --panel:#0f141b;         /* panel central */
-      --side:#0b1016;          /* sidebar */
-      --muted:#8b949e;         /* texto secundario */
-      --text:#c9d1d9;          /* texto */
-      --border:#222a33;        /* bordes sutiles */
-      --accent:#8b7dff;        /* acento (suave) */
-      --accent-2:#b3abff;      /* hover/acento claro */
-      --note:#111823;          /* tarjeta de nota */
-      --shadow:0 10px 30px rgba(0,0,0,.35);
-      --radius:14px;
-      --radius-sm:10px;
-      --maxw:820px;            /* ancho legible del contenido */
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,#0b1015 0%, var(--bg) 60%);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      display:flex;
-      gap:0;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,450;14..32,500;14..32,600;14..32,700;14..32,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
-    /* Layout */
-    .sidebar{
-      width:320px;
-      min-width:280px;
-      background:linear-gradient(180deg, var(--side) 0%, #0c1118 100%);
-      border-right:1px solid var(--border);
-      padding:36px 28px;
-      position:sticky;
-      top:0;
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-      gap:22px;
-    }
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .brand__title{
-      font-weight:700;
-      font-size:22px;
-      letter-spacing:.2px;
-    }
-    .brand__sub{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-    }
-    .nav{
-      margin-top:8px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .nav a{
-      color:var(--accent);
-      text-decoration:none;
-      font-weight:600;
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
-    .nav a:hover{ color:var(--accent-2); text-decoration:underline }
-    .side-footer{
-      margin-top:auto;
-      font-size:12px;
-      color:var(--muted);
-      opacity:.9;
-    }
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .main{
-      flex:1;
-      display:flex;
-      justify-content:center;
-      padding:40px 28px 64px;
-      overflow-x:hidden;
-    }
-    .container{
-      width:100%;
-      max-width:var(--maxw);
-    }
+:root{
+  /* tema oscuro: el "ink" ahora es claro y los fondos oscuros */
+  --bg:        #0B0B0C;
+  --bg2:       #141416;
+  --bg3:       #1D1D20;
+  --ink:       #F5F5F4;
+  --mid:       #C6C6CC;
+  --dim:       #8E8E96;
+  --dimmer:    #5C5C64;
+  --line:      rgba(255,255,255,0.10);
+  --line-mid:  rgba(255,255,255,0.22);
+  --ok:        #12B76A;               /* único color: punto "disponible" */
+  --sans:      'Inter', system-ui, -apple-system, sans-serif;
+  --serif:     'Instrument Serif', Georgia, serif;
+  --maxw:      1120px;
+  --r:         20px;
+  --r-sm:      14px;
+}
 
-    /* Encabezado principal + acciones admin (cuando proceda) */
-    .page-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      margin:6px 0 24px;
-    }
-    .title{
-      margin:0;
-      font-size:32px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .muted{ color:var(--muted) }
+html{
+  background:#0B0B0C;
+}
+/* franja amarilla escondida arriba de la pantalla: solo se ve en el
+   rebote del scroll en iOS, para que la foto "se extienda" hacia arriba */
+.overscroll-top{
+  position:fixed; left:0; right:0; top:-100vh; height:100vh;
+  background:#F0C64D; z-index:-1; pointer-events:none;
+}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+::selection{ background:#F5F5F4; color:#0B0B0C; }
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:4px; }
 
-    .admin-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      appearance:none;
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, #111726, #0e1422);
-      color:#e6e8ee;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:600;
-      font-size:14px;
-      cursor:pointer;
-      box-shadow:var(--shadow);
-      transition:transform .06s ease, border-color .2s ease, background .2s ease;
-    }
-    .btn:hover{ border-color:#2b3542 }
-    .btn:active{ transform:translateY(1px) }
-    .btn--accent{
-      border-color:transparent;
-      background:linear-gradient(180deg, var(--accent), #6f62ff);
-      color:#0a0b0f;
-      text-shadow:0 1px 0 rgba(255,255,255,.15);
-    }
-    .btn--accent:hover{ background:linear-gradient(180deg, var(--accent-2), var(--accent)) }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 clamp(20px,5vw,44px); }
 
-    /* Editor (modo admin) */
-    .editor{
-      margin:12px 0 26px;
-      background:var(--note);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:16px;
-      box-shadow:var(--shadow);
-      display:grid;
-      gap:10px;
-    }
-    .editor textarea{
-      width:100%;
-      min-height:120px;
-      resize:vertical;
-      background:#0c121e;
-      color:var(--text);
-      border:1px solid #1e2630;
-      border-radius:var(--radius-sm);
-      padding:14px 12px;
-      font-size:15px;
-      line-height:1.6;
-      outline:none;
-    }
-    .editor textarea:focus{ border-color:#2b3542 }
-    .editor__row{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+/* micro-etiquetas */
+.tag{
+  font-size:11px; font-weight:600; letter-spacing:0.14em;
+  text-transform:uppercase; color:var(--dim);
+}
 
-    /* Agrupación por mes */
-    .month{
-      margin:28px 0 18px;
-      padding-top:8px;
-      border-top:1px dashed #1b222c;
-      color:#d7dcff;
-      letter-spacing:.3px;
-      font-weight:700;
-      font-size:13px;
-      text-transform:uppercase;
-      opacity:.9;
-    }
+/* ---------- animación de entrada (sobria, respeta reduced-motion) ---------- */
+.reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.reveal.in{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1; transform:none; transition:none; }
+  html{ scroll-behavior:auto; }
+}
 
-    /* Tarjetas de nota */
-    .note{
-      background:var(--note);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px 16px;
-      margin:10px 0 16px;
-      box-shadow:var(--shadow);
-      transition:transform .08s ease, border-color .2s ease, background .2s ease;
-    }
-    .note:hover{ transform:translateY(-2px) }
-    .note__meta{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:8px;
-    }
-    .note__date{
-      font-size:13px; color:var(--muted);
-    }
-    .note__permalink{
-      font-size:12px;
-    }
-    .note__permalink a{
-      color:var(--muted);
-      text-decoration:none;
-      border-bottom:1px dotted #2a3340;
-    }
-    .note__permalink a:hover{ color:var(--accent-2) }
+/* ============================================================
+   NAV
+============================================================ */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  background:rgba(11,11,12,.82);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  transform:translateY(-100%);
+  transition:transform .4s cubic-bezier(.2,.7,.2,1);
+}
+nav.visible{ transform:translateY(0); }
+@media (prefers-reduced-motion: reduce){ nav{ transition:none; } }
+.nav-inner{
+  max-width:var(--maxw); margin:0 auto;
+  padding:16px clamp(20px,5vw,44px);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+/* el nombre: lo más grande del header, se "desencripta" al aparecer */
+.nav-name{
+  font-weight:800; font-size:20px; letter-spacing:-0.02em;
+  display:flex; align-items:center; min-width:0;
+  opacity:0; transition:opacity .3s ease;
+}
+/* cada letra vive en su celda con el ancho de la letra final:
+   los símbolos cambian dentro sin mover nada y los espacios se respetan */
+.nn-text{ white-space:nowrap; }
+.nn-text .ch{ display:inline-block; text-align:center; }
+nav.visible .nav-name{ opacity:1; }
+@media (prefers-reduced-motion: reduce){
+  .nav-name{ transition:none; }
+  nav.visible .nav-name{ opacity:1; }
+}
 
-    .note__text{
-      font-size:16px;
-      line-height:1.75;
-      white-space:pre-wrap;
-      word-wrap:break-word;
-    }
-    .note__text code{
-      background:#0a0f17;
-      border:1px solid #202734;
-      border-radius:6px;
-      padding:2px 6px;
-      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size:.92em;
-    }
-    .empty{
-      margin:26px 0;
-      color:var(--muted);
-      background:#0e1421;
-      border:1px dashed #223045;
-      border-radius:var(--radius);
-      padding:16px;
-    }
+/* botón de contacto: blanco sólido, se hunde al presionar y suelta una onda */
+.nav-cta{
+  position:relative; overflow:hidden;
+  font-size:13px; font-weight:700; letter-spacing:.01em;
+  color:#0B0B0C; background:var(--ink);
+  border:1px solid var(--ink); border-radius:100px; padding:9px 20px;
+  transition:transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+}
+.nav-cta:hover{ transform:translateY(-1px); box-shadow:0 6px 22px rgba(255,255,255,.16); }
+.nav-cta:active{ transform:scale(.94); }
+.nav-cta .ripple{
+  position:absolute; border-radius:50%; pointer-events:none;
+  background:rgba(11,11,12,.25); transform:scale(0);
+  animation:ripple .55s ease-out forwards;
+}
+@keyframes ripple{ to{ transform:scale(3.2); opacity:0; } }
+@media (max-width:480px){ .nav-name{ font-size:15px; } }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .sidebar{ display:none }
-      .main{ padding:28px 18px 64px }
-      .title{ font-size:28px }
-      .container{ max-width:min(92vw, var(--maxw)) }
-    }
-  </style>
+/* ============================================================
+   HERO — foto a pantalla completa con el texto encima
+============================================================ */
+header.hero{
+  position:relative; overflow:hidden;
+  min-height:100vh; min-height:100svh;
+  display:flex; align-items:flex-end;
+  /* mismo amarillo de la foto: Safari toma este color para teñir su barra
+     y se ve mientras carga la imagen */
+  background:#F0C64D;
+}
+.hero-img{ position:absolute; inset:0; }
+.hero-img img{
+  width:100%; height:100%;
+  object-fit:cover; object-position:center 25%;
+}
+/* velo oscuro abajo para que el texto se lea sobre la foto */
+/* el degradado termina en el negro exacto de la página: la foto se funde con el fondo */
+.hero-scrim{
+  position:absolute; inset:0;
+  background:linear-gradient(to top, #0B0B0C 0%, rgba(11,11,12,.55) 26%, rgba(11,11,12,0) 60%);
+}
+.hero-content{
+  position:relative; z-index:2; width:100%;
+  padding-top:60px; padding-bottom:clamp(36px,7vh,72px);
+  color:#fff;
+}
+.hero h1{
+  font-size:clamp(48px,8vw,96px);
+  font-weight:800; line-height:0.98; letter-spacing:-0.045em; color:#fff;
+  text-wrap:balance;
+}
+.hero h1 .hollow{
+  color:transparent;
+  -webkit-text-stroke:1.5px #fff;
+}
+.hero-actions{ margin-top:30px; display:flex; gap:12px; flex-wrap:wrap; }
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:14px; font-weight:600; padding:13px 24px; border-radius:100px;
+  border:1px solid var(--ink); transition:background .2s, color .2s, border-color .2s, transform .2s;
+}
+/* botones sobre la foto */
+.hero .btn.solid{ background:#fff; color:#0B0B0C; border-color:#fff; }
+.hero .btn.solid:hover{ background:rgba(255,255,255,.85); transform:translateY(-1px); }
+.hero .btn.ghost{ color:#fff; border-color:rgba(255,255,255,.55); }
+.hero .btn.ghost:hover{ background:#fff; color:#0B0B0C; border-color:#fff; }
+/* botones en el resto de la página */
+.btn.solid{ background:var(--ink); color:#0B0B0C; }
+.btn.ghost{ color:var(--ink); }
+.btn.ghost:hover{ background:var(--ink); color:#0B0B0C; }
+
+.photo-caption{
+  position:absolute; right:clamp(20px,5vw,44px); bottom:clamp(36px,7vh,72px); z-index:2;
+  background:rgba(255,255,255,.14); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.28); border-radius:100px;
+  font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:rgba(255,255,255,.9); padding:7px 14px;
+}
+
+@media (max-width:860px){
+  .hero h1{ font-size:clamp(42px,11.5vw,64px); }
+  .hero-scrim{ background:linear-gradient(to top, #0B0B0C 0%, rgba(11,11,12,.6) 30%, rgba(11,11,12,0) 66%); }
+  .photo-caption{ display:none; }
+}
+
+/* ============================================================
+   INTRO — franja bajo el hero (lede + disponibilidad)
+============================================================ */
+.intro{ border-bottom:1px solid var(--line); }
+section.intro{ padding:clamp(36px,6vh,60px) 0; }
+.intro-inner{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:20px 48px; flex-wrap:wrap;
+}
+.intro-eyebrow{
+  display:inline-flex; align-items:center; gap:10px; margin-bottom:18px;
+  font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim);
+}
+.intro-eyebrow .rule{ width:36px; height:1px; background:var(--line-mid); }
+.intro-lede{
+  max-width:52ch;
+  font-size:clamp(17px,2vw,21px); font-weight:450; line-height:1.55; color:var(--mid);
+}
+.intro-lede em{ font-family:var(--serif); font-style:italic; font-size:1.12em; color:var(--ink); }
+.intro-meta{
+  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+  font-size:13.5px; font-weight:500; color:var(--dim); text-align:right;
+}
+.intro-meta .avail{ display:inline-flex; align-items:center; gap:8px; color:var(--ink); }
+.intro-meta .avail::before{
+  content:''; width:7px; height:7px; border-radius:50%;
+  background:var(--ok); box-shadow:0 0 0 3px rgba(18,183,106,.16);
+}
+@media (max-width:700px){
+  .intro-meta{ align-items:flex-start; text-align:left; flex-direction:row; flex-wrap:wrap; gap:8px 20px; }
+}
+
+/* ============================================================
+   ENCABEZADOS DE SECCIÓN
+============================================================ */
+section{ padding:clamp(64px,10vh,110px) 0; }
+.sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:14px; }
+.sec-num{ font-family:var(--serif); font-style:italic; font-size:15px; color:var(--dim); }
+.sec-head .rule{ flex:1; height:1px; background:var(--line); align-self:center; }
+.sec-title{
+  font-size:clamp(28px,4vw,42px); font-weight:700; letter-spacing:-0.03em; line-height:1.1;
+  margin-bottom:14px;
+}
+.sec-sub{ font-size:15px; color:var(--dim); max-width:52ch; margin-bottom:52px; }
+
+/* ============================================================
+   PROYECTOS — protagonistas
+============================================================ */
+.projects{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.project{
+  grid-column:span 1;
+  background:var(--bg); border:1px solid var(--line); border-radius:var(--r);
+  overflow:hidden; display:flex; flex-direction:column;
+  transition:border-color .25s, transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+}
+.project.featured{ grid-column:1 / -1; }
+.project:hover{
+  border-color:var(--line-mid);
+  transform:translateY(-4px);
+  box-shadow:0 24px 60px rgba(0,0,0,.55);
+}
+.project .shot{
+  position:relative; overflow:hidden; background:var(--bg2);
+  border-bottom:1px solid var(--line);
+  aspect-ratio:16/9;
+}
+.project.featured .shot{ aspect-ratio:21/9; }
+.project .shot .ph{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:repeating-linear-gradient(45deg, var(--bg2), var(--bg2) 14px, var(--bg3) 14px, var(--bg3) 28px);
+  color:var(--dimmer); font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+}
+.project:hover .shot .ph{ transform:scale(1.03); }
+.project .body{ padding:24px 26px 26px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.project .meta-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.project h3{ font-size:clamp(20px,2.4vw,26px); font-weight:700; letter-spacing:-0.02em; }
+.project p{ font-size:14.5px; color:var(--dim); line-height:1.6; max-width:60ch; }
+.project .go{
+  margin-top:10px; display:inline-flex; align-items:center; gap:7px;
+  font-size:13.5px; font-weight:600; color:var(--ink);
+}
+.project .go .ar{ transition:transform .2s; }
+.project:hover .go .ar{ transform:translate(3px,-3px); }
+@media (max-width:760px){
+  .projects{ grid-template-columns:1fr; }
+  .project.featured .shot{ aspect-ratio:16/9; }
+}
+
+/* ============================================================
+   BENTO — sobre mí + redes
+============================================================ */
+.bento{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.cell{
+  background:var(--bg2); border:1px solid var(--line); border-radius:var(--r);
+  padding:26px; display:flex; flex-direction:column;
+  transition:border-color .25s, transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+}
+.cell:hover{ border-color:var(--line-mid); }
+a.cell:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.5); }
+.cell .tag{ margin-bottom:14px; }
+.span2{ grid-column:span 2; }
+
+.cell.bio p{ font-size:15.5px; color:var(--mid); line-height:1.65; }
+.cell.bio p + p{ margin-top:10px; }
+
+.cell.now p{ font-size:14.5px; color:var(--mid); line-height:1.6; }
+.now-dot{ display:inline-flex; align-items:center; gap:8px; }
+.now-dot::before{
+  content:''; width:6px; height:6px; border-radius:50%;
+  background:var(--ok); box-shadow:0 0 0 3px rgba(18,183,106,.14);
+}
+
+.chips{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  font-size:13px; font-weight:500; color:var(--mid);
+  padding:6px 14px; border:1px solid var(--line-mid); border-radius:100px; background:var(--bg);
+}
+
+.stat .num{ font-size:clamp(34px,4vw,46px); font-weight:800; letter-spacing:-0.04em; line-height:1; }
+.stat .cap{ font-size:13px; color:var(--dim); margin-top:8px; font-weight:500; }
+/* edad en vivo: dígitos tabulares para que no bailen al cambiar */
+.num.edad{ font-variant-numeric:tabular-nums; white-space:nowrap; letter-spacing:-0.02em; }
+.num.edad .dec{ font-size:.52em; font-weight:600; color:var(--dim); }
+
+/* — cards de redes: monocromas, color de marca solo al hover — */
+.social{ justify-content:space-between; gap:20px; min-height:150px; position:relative; }
+.social .ic{
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--ink); transition:background .25s, transform .25s;
+}
+.social .ic svg{ width:21px; height:21px; fill:#0B0B0C; transition:fill .25s; }
+.social:hover .ic svg{ fill:#fff; }
+.social h4{ font-size:16px; font-weight:700; letter-spacing:-0.01em; }
+.social .handle{ font-size:13px; color:var(--dim); font-weight:500; margin-top:2px; }
+.social .arrow{
+  position:absolute; top:20px; right:20px; font-size:16px; color:var(--dimmer);
+  transition:color .2s, transform .2s;
+}
+.social:hover .arrow{ color:var(--ink); transform:translate(2px,-2px); }
+.social:hover .ic{ transform:scale(1.06); }
+.social.tiktok:hover  .ic{ background:#000; box-shadow:2px 2px 0 rgba(238,29,82,.55), -2px -2px 0 rgba(105,201,208,.55); }
+.social.insta:hover   .ic{ background:linear-gradient(135deg,#FFDC80,#F56040,#C13584,#833AB4); }
+.social.youtube:hover .ic{ background:#FF0000; }
+.social.linkedin:hover .ic{ background:#0A66C2; }
+
+@media (max-width:900px){
+  .bento{ grid-template-columns:repeat(2,1fr); }
+  .span2{ grid-column:span 2; }
+}
+@media (max-width:520px){
+  .bento{ grid-template-columns:1fr 1fr; gap:12px; }
+  .cell{ padding:20px; }
+  .cell.bio, .cell.now, .cell.skills{ grid-column:span 2; }
+  .social{ min-height:132px; }
+  /* la edad a lo ancho, con los números en grande */
+  .cell.edad-cell{ grid-column:span 2; padding:24px 20px; }
+  .edad-cell .num{ font-size:58px; }
+}
+
+/* ============================================================
+   CONTACTO
+============================================================ */
+.contact{ text-align:center; }
+.contact .rule-top{ height:1px; background:var(--line); margin-bottom:clamp(64px,10vh,100px); }
+.contact h2{
+  font-size:clamp(40px,7vw,80px); font-weight:800; letter-spacing:-0.04em; line-height:1.02;
+}
+.contact .sub{ margin-top:18px; font-size:16px; color:var(--dim); }
+.contact .mail{
+  display:inline-block; margin-top:30px;
+  font-size:clamp(18px,2.6vw,24px); font-weight:600; letter-spacing:-0.01em;
+  border-bottom:1.5px solid var(--ink); padding-bottom:3px;
+  transition:opacity .2s;
+}
+.contact .mail:hover{ opacity:.6; }
+/* ---- escenario de físicas ---- */
+.fisica-stage{
+  position:relative; overflow:hidden;
+  min-height:clamp(420px, 68vh, 640px);
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); border-radius:var(--r);
+  background:var(--bg2);
+}
+.contact-copy{ position:relative; z-index:2; pointer-events:none; padding:24px; }
+.contact-copy .mail{ pointer-events:auto; }
+/* chips de redes: más chicos que las cards del bento, con cuerpo físico */
+.chip-soc{
+  position:absolute; top:0; left:0; z-index:1;
+  display:inline-flex; align-items:center;
+  padding:11px 20px; border-radius:100px;
+  background:var(--ink); color:#0B0B0C;
+  font-size:14px; font-weight:700; letter-spacing:-0.01em;
+  cursor:grab; user-select:none; -webkit-user-select:none;
+  touch-action:none; will-change:transform;
+  visibility:hidden; /* se muestran cuando las físicas los colocan */
+}
+.chip-soc:active{ cursor:grabbing; }
+/* sin físicas (reduced motion / sin conexión): fila normal */
+.fisica-stage.sin-fisica .chip-soc{
+  position:static; visibility:visible; margin:6px 5px; touch-action:auto;
+}
+.fisica-stage.sin-fisica{ flex-direction:column; }
+.fisica-stage.sin-fisica .chips-row{ position:relative; z-index:2; }
+
+footer{
+  border-top:1px solid var(--line); margin-top:clamp(64px,10vh,100px);
+  padding:30px 0 40px;
+}
+.foot-inner{
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  font-size:13px; color:var(--dim);
+}
+</style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar" aria-label="Presentación y enlaces">
-    <div class="brand">
-      <div class="brand__title">Joaquín Álvarez</div>
-      <div class="brand__sub">
-        Bitácora personal. Notas públicas; solo yo puedo publicar
-        (edición local + exportar JSON). Minimal, claro y sin distracciones.
-      </div>
+
+<div class="overscroll-top" aria-hidden="true"></div>
+
+<!-- ===================== NAV ===================== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="nav-name" href="#top"><span class="nn-text">Joaquin Álvarez Mercado</span></a>
+    <a class="nav-cta" href="#contacto">Contacto</a>
+  </div>
+</nav>
+
+<div id="top"></div>
+
+<!-- ===================== HERO ===================== -->
+<!-- foto-ancha.jpg se usa en computadora; foto.jpg (vertical) en teléfono -->
+<header class="hero">
+  <div class="hero-img">
+    <picture>
+      <source id="hero-src-mobile" media="(max-width: 760px)" srcset="foto.jpg" />
+      <img id="hero-img" src="foto-ancha.jpg" alt="Foto de Joaquin" />
+    </picture>
+  </div>
+  <div class="hero-scrim"></div>
+  <span class="photo-caption">Joaquin · MX</span>
+  <div class="wrap hero-content">
+    <h1 class="reveal">Joaquin<br /><span class="hollow">Álvarez Mercado</span></h1>
+    <div class="hero-actions reveal">
+      <a class="btn solid" href="#proyectos">Ver proyectos ↓</a>
+      <a class="btn ghost" href="#contacto">Contáctame</a>
     </div>
+  </div>
+</header>
 
-    <nav class="nav">
-      <a target="_blank" href="https://www.linkedin.com/in/joaquin-alvarez-mercado/" rel="noopener">LinkedIn</a>
-      <a target="_blank" href="https://www.youtube.com/@joaquinalvarezmercado" rel="noopener">YouTube</a>
-    </nav>
-
-    <div class="side-footer">
-      © <span id="year"></span> Joaquín Álvarez · Hecho con GitHub Pages
+<!-- ===================== INTRO (lo que salió del hero) ===================== -->
+<section class="intro">
+  <div class="wrap intro-inner">
+    <div>
+      <div class="intro-eyebrow reveal"><span class="rule"></span> Portafolio — <span id="year-eyebrow">2026</span></div>
+      <p class="intro-lede reveal">[Una línea corta y potente sobre quién eres y qué haces.] Por ejemplo: construyo <em>proyectos</em> donde se cruzan los negocios, el contenido y la tecnología.</p>
     </div>
-  </aside>
+    <div class="intro-meta reveal">
+      <span class="avail">Disponible para proyectos</span>
+      <span>México</span>
+      <span>Negocios · Contenido · Producto</span>
+    </div>
+  </div>
+</section>
 
-  <!-- Contenido principal -->
-  <main class="main">
-    <div class="container">
-      <header class="page-head">
-        <h1 class="title">Notas recientes</h1>
-        <div class="admin-actions" id="admin-actions" hidden>
-          <button class="btn" id="btn-import">Importar notes.json</button>
-          <button class="btn btn--accent" id="btn-export">Exportar notes.json</button>
+<!-- ===================== PROYECTOS ===================== -->
+<section id="proyectos">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">01</span><span class="tag">Proyectos</span><span class="rule"></span></div>
+    <h2 class="sec-title reveal">Lo que he construido.</h2>
+    <p class="sec-sub reveal">Cada proyecto tendrá su propia página con toda la historia — podrás compartir el link directo de cualquiera.</p>
+
+    <div class="projects">
+      <!-- Proyecto destacado: Paratu -->
+      <a class="project featured reveal" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
+        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+        <div class="body">
+          <div class="meta-row">
+            <span class="tag">App iOS · 2026</span>
+            <span class="tag">Destacado</span>
+          </div>
+          <h3>Paratu</h3>
+          <p>Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
+          <span class="go">Ver proyecto <span class="ar">↗</span></span>
         </div>
-      </header>
+      </a>
 
-      <!-- Editor solo en modo admin -->
-      <section class="editor" id="editor" hidden aria-label="Añadir nueva nota">
-        <textarea id="note-input" placeholder="Escribe una nota (acepta texto largo, enlaces y `código`)."></textarea>
-        <div class="editor__row">
-          <button class="btn" id="btn-clear">Limpiar</button>
-          <button class="btn btn--accent" id="btn-add">Añadir nota</button>
+      <!-- CAMBIA AQUÍ: href del proyecto 2 -->
+      <a class="project reveal" href="#">
+        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+        <div class="body">
+          <span class="tag">[Categoría] · 2025</span>
+          <h3>[Proyecto dos]</h3>
+          <p>[Qué es y qué lograste con él, en una línea.]</p>
+          <span class="go">Ver proyecto <span class="ar">↗</span></span>
         </div>
-      </section>
+      </a>
 
-      <!-- Listado público -->
-      <div id="list"></div>
-
-      <div class="empty" id="empty" hidden>
-        Aún no hay notas para mostrar. Sube un <strong>notes.json</strong> con contenido o
-        añade una nota en modo admin (<code>?admin=1</code>) y exporta el JSON.
-      </div>
+      <!-- Proyecto 3: Bandeja -->
+      <a class="project reveal" href="https://mailed-two.vercel.app" target="_blank" rel="noopener">
+        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+        <div class="body">
+          <span class="tag">Web app · 2026</span>
+          <h3>Bandeja</h3>
+          <p>Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
+          <span class="go">Ver proyecto <span class="ar">↗</span></span>
+        </div>
+      </a>
     </div>
-  </main>
+  </div>
+</section>
 
-  <script>
-    // Utilidades
-    const $ = s => document.querySelector(s);
-    const byId = id => document.getElementById(id);
-    const ADMIN = new URLSearchParams(location.search).has("admin") && ["1","true","yes"].includes(new URLSearchParams(location.search).get("admin"));
+<!-- ===================== SOBRE MÍ (BENTO) ===================== -->
+<section id="sobre-mi" style="padding-top:0;">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">02</span><span class="tag">Sobre mí</span><span class="rule"></span></div>
+    <h2 class="sec-title reveal">Quién soy.</h2>
+    <p class="sec-sub reveal">Lo esencial, sin rodeos — y dónde encontrarme.</p>
 
-    const LS_KEY = "pendingNotes:v1";     // donde guardo el estado de trabajo local
-    const SRC_JSON = "notes.json";        // fuente pública
+    <div class="bento">
 
-    const fmtMonth = (d) => d.toLocaleString("es-MX", { month:"long", year:"numeric" })
-                              .replace(/^\w/, c => c.toUpperCase());
-    const fmtDateTime = (d) => d.toLocaleString("es-MX", { dateStyle:"medium", timeStyle:"short" });
+      <!-- BIO -->
+      <div class="cell bio span2 reveal">
+        <span class="tag">Mi historia</span>
+        <p>[Dos o tres frases honestas sobre ti: de dónde eres, qué estudias, qué te mueve. Esto es lo primero que lee alguien que quiere saber quién eres — hazlo humano.]</p>
+        <p>[Una segunda frase con algo de personalidad: qué te obsesiona, qué estás aprendiendo.]</p>
+      </div>
 
-    // Estado
-    let notes = []; // array de {id,date,text}
+      <!-- AHORA MISMO -->
+      <div class="cell now reveal">
+        <span class="tag now-dot">Ahora mismo</span>
+        <p>[En qué estás enfocado hoy: estudiando en el Tec, construyendo X, creando contenido sobre Y…]</p>
+      </div>
 
-    // Arranque
-    document.addEventListener("DOMContentLoaded", async () => {
-      byId("year").textContent = new Date().getFullYear();
+      <!-- EDAD EN VIVO (nacimiento: 20 sep 2008 — cámbialo en el JS si no es el año) -->
+      <div class="cell stat edad-cell reveal">
+        <span class="tag">Mi edad</span>
+        <div class="num edad"><span id="edad-ent">17</span><span class="dec" id="edad-dec">.0000000000</span></div>
+        <div class="cap">años — y subiendo, en vivo</div>
+      </div>
 
-      // Alternar UI admin
-      if (ADMIN){
-        byId("admin-actions").hidden = false;
-        byId("editor").hidden = false;
-      }
+      <!-- SKILLS -->
+      <div class="cell skills span2 reveal">
+        <span class="tag">Lo que sé hacer</span>
+        <div class="chips">
+          <span class="chip">[Habilidad 1]</span>
+          <span class="chip">[Habilidad 2]</span>
+          <span class="chip">[Habilidad 3]</span>
+          <span class="chip">[Habilidad 4]</span>
+          <span class="chip">[Habilidad 5]</span>
+        </div>
+      </div>
 
-      // Eventos admin
-      byId("btn-add")?.addEventListener("click", onAdd);
-      byId("btn-clear")?.addEventListener("click", () => byId("note-input").value = "");
-      byId("btn-export")?.addEventListener("click", onExport);
-      byId("btn-import")?.addEventListener("click", onImport);
+      <!-- NACIONALIDAD -->
+      <div class="cell stat reveal">
+        <span class="tag">Nacionalidad</span>
+        <div class="num">México</div>
+        <div class="cap">mexicano 🇲🇽</div>
+      </div>
 
-      // Cargar JSON público y combinar con trabajo local (sin pisarlo)
-      await loadPublic();
-      mergeLocalDraft();
-      render();
+      <!-- IDIOMAS / EXTRA -->
+      <div class="cell stat reveal">
+        <span class="tag">Idiomas</span>
+        <div class="num">ES · EN</div>
+        <div class="cap">[Español nativo · Inglés fluido]</div>
+      </div>
+
+      <!-- ============ REDES (4 cards) ============ -->
+      <!-- CAMBIA AQUÍ: link y @usuario de TikTok -->
+      <a class="cell social tiktok reveal" href="https://www.tiktok.com/@usuario" target="_blank" rel="noopener">
+        <span class="arrow">↗</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.9 2.9 0 0 1-5.2 1.74 2.9 2.9 0 0 1 2.31-4.64c.3 0 .58.05.86.13V9.4a6.33 6.33 0 0 0-.86-.06 6.34 6.34 0 1 0 6.34 6.34V8.9a8.16 8.16 0 0 0 4.77 1.52v-3.45a4.85 4.85 0 0 1-1-.28z"/></svg></div>
+        <div><h4>TikTok</h4><div class="handle">@usuario</div></div>
+      </a>
+
+      <!-- CAMBIA AQUÍ: link y @usuario de Instagram -->
+      <a class="cell social insta reveal" href="https://www.instagram.com/usuario" target="_blank" rel="noopener">
+        <span class="arrow">↗</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.2 8.8 2.2 12 2.2zm0 3.13A6.67 6.67 0 1 0 18.67 12 6.67 6.67 0 0 0 12 5.33zm0 11A4.33 4.33 0 1 1 16.33 12 4.33 4.33 0 0 1 12 16.33zm6.93-11.6a1.56 1.56 0 1 1-1.56-1.55 1.56 1.56 0 0 1 1.56 1.55z"/></svg></div>
+        <div><h4>Instagram</h4><div class="handle">@usuario</div></div>
+      </a>
+
+      <!-- CAMBIA AQUÍ: link y nombre del canal de YouTube -->
+      <a class="cell social youtube reveal" href="https://www.youtube.com/@usuario" target="_blank" rel="noopener">
+        <span class="arrow">↗</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg></div>
+        <div><h4>YouTube</h4><div class="handle">@usuario</div></div>
+      </a>
+
+      <!-- CAMBIA AQUÍ: link de LinkedIn -->
+      <a class="cell social linkedin reveal" href="https://www.linkedin.com/in/usuario" target="_blank" rel="noopener">
+        <span class="arrow">↗</span>
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg></div>
+        <div><h4>LinkedIn</h4><div class="handle">/in/usuario</div></div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACTO ===================== -->
+<section id="contacto" class="contact" style="padding-top:0;">
+  <div class="wrap">
+    <div class="rule-top"></div>
+    <!-- escenario con físicas: los chips de redes caen y rebotan aquí detrás del texto -->
+    <div class="fisica-stage" id="fisica-stage">
+      <div class="contact-copy reveal">
+        <h2>Hagamos algo<br />que valga la pena.</h2>
+        <p class="sub">Abierto a ideas, colaboraciones y buenas conversaciones.</p>
+        <a class="mail" href="mailto:joaquinalvarezme@ymail.com">joaquinalvarezme@ymail.com</a>
+      </div>
+      <!-- CAMBIA AQUÍ: mismos links de tus redes -->
+      <a class="chip-soc" href="https://www.tiktok.com/@usuario" target="_blank" rel="noopener">TikTok</a>
+      <a class="chip-soc" href="https://www.instagram.com/usuario" target="_blank" rel="noopener">Instagram</a>
+      <a class="chip-soc" href="https://www.youtube.com/@usuario" target="_blank" rel="noopener">YouTube</a>
+      <a class="chip-soc" href="https://www.linkedin.com/in/usuario" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+  <footer>
+    <div class="wrap foot-inner">
+      <span>© <span id="year">2026</span> Joaquin Álvarez Mercado</span>
+      <span>México</span>
+    </div>
+  </footer>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js" defer></script>
+<script>
+  // año automático
+  var y = new Date().getFullYear();
+  document.getElementById('year').textContent = y;
+  document.getElementById('year-eyebrow').textContent = y;
+
+  // efecto "decode" por letra: cada letra es una celda con el ancho exacto
+  // de la letra final; los símbolos ciclan dentro de su celda y se van
+  // fijando de izquierda a derecha. Los espacios nunca se tocan.
+  var nnText = document.querySelector('.nn-text');
+  var NOMBRE = nnText.textContent;
+  var GLIFOS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789#$%&@*+=?!<>/\\|';
+  var decodeTimer = null;
+  var reducirMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // construye una celda por letra (con la letra real, para medir su ancho)
+  var celdas = [];
+  nnText.textContent = '';
+  NOMBRE.split('').forEach(function(c){
+    var s = document.createElement('span');
+    if (c === ' '){ s.innerHTML = '&nbsp;'; }
+    else { s.className = 'ch'; s.textContent = c; }
+    nnText.appendChild(s);
+    celdas.push({ el: s, letra: c });
+  });
+
+  // fija el ancho de cada celda al de su letra final (una sola vez,
+  // cuando la nav ya es visible y se puede medir)
+  var anchosFijados = false;
+  function fijarAnchos(){
+    if (anchosFijados) return;
+    var anchos = celdas.map(function(c){ return c.el.getBoundingClientRect().width; });
+    if (anchos[0] === 0) return; // aún no se puede medir
+    celdas.forEach(function(c, i){ if (c.letra !== ' ') c.el.style.width = anchos[i] + 'px'; });
+    anchosFijados = true;
+  }
+
+  function desencriptar(){
+    if (reducirMovimiento) return;
+    clearInterval(decodeTimer);
+    fijarAnchos();
+    var tick = 0;
+    decodeTimer = setInterval(function(){
+      tick++;
+      var listas = 0;
+      celdas.forEach(function(c, i){
+        if (c.letra === ' '){ listas++; return; }
+        // cada letra se fija cuando le llega su turno (de izquierda a derecha)
+        // duración total ≈ (letras × 4 + 8) × 40ms ≈ 4 segundos
+        if (tick > i * 4 + 8){ c.el.textContent = c.letra; listas++; }
+        else c.el.textContent = GLIFOS[Math.floor(Math.random() * GLIFOS.length)];
+      });
+      if (listas === celdas.length) clearInterval(decodeTimer);
+    }, 40);
+  }
+
+  // desplazamiento suave con easing propio para todos los links internos
+  // (Contacto, Ver proyectos, el nombre → arriba): arranca lento,
+  // acelera y frena elegante, con duración según la distancia
+  function scrollSuave(destinoY){
+    var inicio = scrollY, delta = destinoY - inicio;
+    if (Math.abs(delta) < 2) return;
+    var dur = Math.max(600, Math.min(1500, Math.abs(delta) * 0.45));
+    var t0 = null;
+    function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+    function paso(ts){
+      if (t0 === null) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      scrollTo({ top: inicio + delta * ease(p), behavior: 'instant' });
+      if (p < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href').slice(1);
+      var destino = document.getElementById(id);
+      if (!destino) return;
+      e.preventDefault();
+      if (reducirMovimiento){ destino.scrollIntoView(); return; }
+      scrollSuave(id === 'top' ? 0 : destino.getBoundingClientRect().top + scrollY);
+    });
+  });
+
+  // onda al presionar el botón de contacto
+  var cta = document.querySelector('.nav-cta');
+  cta.addEventListener('click', function(e){
+    var rect = cta.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height);
+    var r = document.createElement('span');
+    r.className = 'ripple';
+    r.style.width = r.style.height = size + 'px';
+    r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    r.style.top  = (e.clientY - rect.top  - size / 2) + 'px';
+    cta.appendChild(r);
+    setTimeout(function(){ r.remove(); }, 600);
+  });
+
+  // la nav aparece hasta que bajas un poco (pasada media pantalla del hero)
+  // y la barra del navegador del teléfono cambia de amarillo (foto) a negro (contenido)
+  var nav = document.getElementById('nav');
+  var themeMetas = document.querySelectorAll('meta[name="theme-color"]');
+  var navEstabaVisible = false;
+  function pintarBarra(){
+    var past = scrollY > innerHeight * 0.55;
+    nav.classList.toggle('visible', past);
+    themeMetas.forEach(function(m){ m.setAttribute('content', past ? '#0B0B0C' : '#F0C64D'); });
+    if (past && !navEstabaVisible) desencriptar();   // se desencripta cada vez que aparece
+    navEstabaVisible = past;
+  }
+  addEventListener('scroll', pintarBarra, {passive:true});
+  pintarBarra();
+
+  // edad calculándose en vivo — CAMBIA AQUÍ si el año no es 2008
+  // (año, mes-1, día): septiembre es el mes 8 porque JavaScript cuenta desde 0
+  var NACIMIENTO = new Date(2008, 8, 20).getTime();
+  var MS_POR_ANIO = 365.2425 * 24 * 60 * 60 * 1000; // año promedio del calendario gregoriano
+  var edadEnt = document.getElementById('edad-ent');
+  var edadDec = document.getElementById('edad-dec');
+  function tickEdad(){
+    var edad = (Date.now() - NACIMIENTO) / MS_POR_ANIO;
+    var partes = edad.toFixed(10).split('.');
+    edadEnt.textContent = partes[0];
+    edadDec.textContent = '.' + partes[1];
+    requestAnimationFrame(tickEdad);
+  }
+  requestAnimationFrame(tickEdad);
+
+  // aparición escalonada al hacer scroll
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.1, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay = (i % 4) * 60 + 'ms';
+    io.observe(el);
+  });
+
+  // ============================================================
+  // FÍSICAS de los chips de redes (sección contacto)
+  // Caen, rebotan, se pueden aventar, y responden a la
+  // inclinación del teléfono. Clic corto = abrir la red.
+  // ============================================================
+  addEventListener('load', function(){
+    var stage = document.getElementById('fisica-stage');
+    var chips = Array.prototype.slice.call(stage.querySelectorAll('.chip-soc'));
+    var sinFisica = typeof Matter === 'undefined' ||
+                    matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (sinFisica){ stage.classList.add('sin-fisica'); return; }
+
+    var Engine = Matter.Engine, Bodies = Matter.Bodies, Body = Matter.Body,
+        Composite = Matter.Composite;
+    var engine = Engine.create();
+    engine.world.gravity.y = 1;
+
+    var muros = [];
+    function hacerMuros(){
+      muros.forEach(function(m){ Composite.remove(engine.world, m); });
+      var w = stage.clientWidth, h = stage.clientHeight, g = 60; // grosor
+      muros = [
+        Bodies.rectangle(w/2, h + g/2 - 2, w + g*2, g, {isStatic:true}), // piso
+        Bodies.rectangle(w/2, -h - g/2, w + g*2, g, {isStatic:true}),    // techo (alto, para que caigan)
+        Bodies.rectangle(-g/2 + 2, 0, g, h*4, {isStatic:true}),          // izquierda
+        Bodies.rectangle(w + g/2 - 2, 0, g, h*4, {isStatic:true})        // derecha
+      ];
+      Composite.add(engine.world, muros);
+    }
+    hacerMuros();
+
+    // un cuerpo por chip, soltados desde arriba en fila desordenada
+    var cuerpos = chips.map(function(el, i){
+      var bw = el.offsetWidth, bh = el.offsetHeight;
+      var x = stage.clientWidth * (0.2 + 0.2 * i) + (Math.random() * 30 - 15);
+      var y = -80 - i * 90;
+      var b = Bodies.rectangle(x, y, bw, bh, {
+        restitution: 0.55, friction: 0.35, frictionAir: 0.012,
+        angle: (Math.random() - 0.5) * 0.6,
+        chamfer: { radius: Math.min(bh/2, 22) }
+      });
+      b.chipEl = el; b.chipW = bw; b.chipH = bh;
+      return b;
+    });
+    Composite.add(engine.world, cuerpos);
+
+    // pinta cada frame; solo corre cuando la sección se ve
+    var visible = false;
+    new IntersectionObserver(function(en){
+      visible = en[0].isIntersecting;
+      if (visible) requestAnimationFrame(frame);
+    }, {threshold:.05}).observe(stage);
+
+    var ultimo = performance.now();
+    function frame(t){
+      if (!visible) return;
+      Engine.update(engine, Math.min(t - ultimo, 33)); ultimo = t;
+      cuerpos.forEach(function(b){
+        b.chipEl.style.visibility = 'visible';
+        b.chipEl.style.transform = 'translate(' + (b.position.x - b.chipW/2) + 'px,' +
+          (b.position.y - b.chipH/2) + 'px) rotate(' + b.angle + 'rad)';
+      });
+      requestAnimationFrame(frame);
+    }
+
+    // arrastrar / aventar / clic
+    cuerpos.forEach(function(b){
+      var el = b.chipEl, arrastrando = false, movido = 0, px = 0, py = 0, t0 = 0;
+      el.addEventListener('click', function(e){ e.preventDefault(); }); // el clic real se decide abajo
+      el.addEventListener('pointerdown', function(e){
+        pedirPermisoMovimiento();
+        arrastrando = true; movido = 0; px = e.clientX; py = e.clientY; t0 = Date.now();
+        el.setPointerCapture(e.pointerId);
+        Body.setStatic(b, true);
+        e.preventDefault();
+      });
+      el.addEventListener('pointermove', function(e){
+        if (!arrastrando) return;
+        var r = stage.getBoundingClientRect();
+        movido += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
+        Body.setPosition(b, { x: e.clientX - r.left, y: e.clientY - r.top });
+        b.lanzX = (e.clientX - px); b.lanzY = (e.clientY - py);
+        px = e.clientX; py = e.clientY;
+      });
+      el.addEventListener('pointerup', function(){
+        if (!arrastrando) return;
+        arrastrando = false;
+        Body.setStatic(b, false);
+        // toque corto y sin arrastre = abrir el link
+        if (movido < 10 && Date.now() - t0 < 400){
+          window.open(el.href, '_blank', 'noopener');
+        } else {
+          Body.setVelocity(b, { x: (b.lanzX || 0) * 1.2, y: (b.lanzY || 0) * 1.2 }); // aventón
+        }
+      });
     });
 
-    async function loadPublic(){
-      try{
-        const res = await fetch(SRC_JSON, { cache:"no-store" });
-        if(!res.ok) throw new Error("No se pudo leer notes.json");
-        const data = await res.json();
-        if(!Array.isArray(data)) throw new Error("notes.json inválido");
-        notes = data.slice();
-      }catch(err){
-        // Si no existe, dejamos notes = []
-        console.warn(err);
-        notes = [];
+    // gravedad según la inclinación del teléfono
+    var permisoPedido = false;
+    function pedirPermisoMovimiento(){
+      if (permisoPedido) return; permisoPedido = true;
+      if (typeof DeviceOrientationEvent !== 'undefined' &&
+          typeof DeviceOrientationEvent.requestPermission === 'function'){
+        DeviceOrientationEvent.requestPermission().catch(function(){});
       }
     }
+    addEventListener('deviceorientation', function(e){
+      if (e.gamma === null) return;
+      engine.world.gravity.x = Math.max(-1, Math.min(1, e.gamma / 35));
+      engine.world.gravity.y = Math.max(-1, Math.min(1, e.beta / 35));
+    });
 
-    function mergeLocalDraft(){
-      const raw = localStorage.getItem(LS_KEY);
-      if(!raw) return;
-      try{
-        const local = JSON.parse(raw);
-        if(Array.isArray(local)){
-          // Combina evitando duplicados por id
-          const seen = new Set(notes.map(n => n.id));
-          for(const n of local){
-            if(!seen.has(n.id)){ notes.push(n); seen.add(n.id); }
-          }
-        }
-      }catch(e){ console.warn("draft corrupto:", e); }
-    }
-
-    function persistDraft(){
-      // Guarda solo las notas que no están en remoto aún:
-      // criterio simple: si hay id no semilla (Date.now) y no está en el JSON original.
-      // Para robustez, guardamos todo el arreglo; el flujo es manual.
-      localStorage.setItem(LS_KEY, JSON.stringify(notes));
-    }
-
-    function onAdd(){
-      const ta = byId("note-input");
-      const text = (ta.value || "").trim();
-      if(!text) return;
-      const now = new Date().toISOString();
-      notes.push({ id:String(Date.now()), date: now, text });
-      ta.value = "";
-      persistDraft();
-      render();
-      alert("Nota añadida localmente. Pulsa ‘Exportar notes.json’ y súbelo al repo para publicar.");
-    }
-
-    function onExport(){
-      // Ordena antes de exportar
-      const data = [...notes].sort((a,b)=> new Date(a.date) - new Date(b.date));
-      const blob = new Blob([ JSON.stringify(data, null, 2) ], { type:"application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "notes.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    async function onImport(){
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/json";
-      input.onchange = async () => {
-        const file = input.files?.[0];
-        if(!file) return;
-        try{
-          const text = await file.text();
-          const data = JSON.parse(text);
-          if(!Array.isArray(data)) throw new Error("Formato inválido");
-          notes = data.slice();
-          persistDraft();
-          render();
-          alert("notes.json importado localmente. Recuerda Exportar para subirlo al repo.");
-        }catch(e){
-          alert("No se pudo importar: " + e.message);
-        }
-      };
-      input.click();
-    }
-
-    function render(){
-      // Orden inverso (reciente primero)
-      const sorted = [...notes].sort((a,b)=> new Date(b.date) - new Date(a.date));
-      const host = byId("list");
-      host.innerHTML = "";
-
-      if(sorted.length === 0){
-        byId("empty").hidden = false;
-        return;
-      } else {
-        byId("empty").hidden = true;
-      }
-
-      // Agrupar por mes
-      let currentMonth = "";
-      for(const n of sorted){
-        const d = new Date(n.date);
-        const month = fmtMonth(d);
-        if(month !== currentMonth){
-          currentMonth = month;
-          const tag = document.createElement("div");
-          tag.className = "month";
-          tag.textContent = currentMonth;
-          host.appendChild(tag);
-        }
-        host.appendChild(renderNote(n, d));
-      }
-    }
-
-    function renderNote(n, d){
-      const card = document.createElement("article");
-      card.className = "note";
-      card.id = "note-" + n.id;
-
-      // Header meta
-      const meta = document.createElement("div");
-      meta.className = "note__meta";
-
-      const date = document.createElement("div");
-      date.className = "note__date";
-      date.textContent = fmtDateTime(d);
-
-      const link = document.createElement("div");
-      link.className = "note__permalink";
-      const a = document.createElement("a");
-      a.href = `#note-${n.id}`;
-      a.textContent = "permalink";
-      link.appendChild(a);
-
-      meta.appendChild(date);
-      meta.appendChild(link);
-
-      // Texto (render plano; se respetan saltos y `code`)
-      const text = document.createElement("div");
-      text.className = "note__text";
-      text.innerHTML = escapeHtml(n.text).replace(/`([^`]+)`/g, "<code>$1</code>");
-
-      card.appendChild(meta);
-      card.appendChild(text);
-      return card;
-    }
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#39;");
-    }
-  </script>
+    addEventListener('resize', hacerMuros);
+  });
+</script>
 </body>
 </html>
