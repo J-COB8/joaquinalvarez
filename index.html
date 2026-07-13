@@ -214,23 +214,21 @@ section.intro{ padding:clamp(36px,6vh,60px) 0; }
   gap:20px 48px; flex-wrap:wrap;
 }
 .intro-eyebrow{
-  display:inline-flex; align-items:center; gap:10px; margin-bottom:18px;
-  font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--dim);
+  display:inline-block; margin-bottom:18px;
+  font-size:15px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink);
 }
-.intro-eyebrow .rule{ width:36px; height:1px; background:var(--line-mid); }
 .intro-lede{
   max-width:52ch;
-  font-size:clamp(17px,2vw,21px); font-weight:450; line-height:1.55; color:var(--mid);
+  font-size:clamp(17px,2vw,21px); font-weight:600; line-height:1.55; color:var(--ink);
 }
-.intro-lede em{ font-family:var(--serif); font-style:italic; font-size:1.12em; color:var(--ink); }
 .intro-meta{
   display:flex; flex-direction:column; align-items:flex-end; gap:8px;
   font-size:13.5px; font-weight:500; color:var(--dim); text-align:right;
 }
-.intro-meta .avail{ display:inline-flex; align-items:center; gap:8px; color:var(--ink); }
-.intro-meta .avail::before{
-  content:''; width:7px; height:7px; border-radius:50%;
-  background:var(--ok); box-shadow:0 0 0 3px rgba(18,183,106,.16);
+.intro-meta .avail{ color:var(--ink); font-weight:600; }
+/* en computadora, que se note un poco más */
+@media (min-width:701px){
+  .intro-meta .avail{ font-size:17px; }
 }
 @media (max-width:700px){
   .intro-meta{ align-items:flex-start; text-align:left; flex-direction:row; flex-wrap:wrap; gap:8px 20px; }
@@ -241,7 +239,7 @@ section.intro{ padding:clamp(36px,6vh,60px) 0; }
 ============================================================ */
 section{ padding:clamp(64px,10vh,110px) 0; }
 .sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:14px; }
-.sec-num{ font-family:var(--serif); font-style:italic; font-size:15px; color:var(--dim); }
+.sec-num{ font-weight:800; font-size:15px; color:var(--ink); }
 .sec-head .rule{ flex:1; height:1px; background:var(--line); align-self:center; }
 .sec-title{
   font-size:clamp(28px,4vw,42px); font-weight:700; letter-spacing:-0.03em; line-height:1.1;
@@ -270,7 +268,14 @@ section{ padding:clamp(64px,10vh,110px) 0; }
   border-bottom:1px solid var(--line);
   aspect-ratio:16/9;
 }
-.project.featured .shot{ aspect-ratio:21/9; }
+.project.featured .shot{ aspect-ratio:16/9; }
+/* la imagen no hace zoom (recorta feo lo que está cerca del borde);
+   al hover solo sube un poco de brillo, y la card ya se eleva sola */
+.project .shot img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  transition:filter .35s ease;
+}
+.project:hover .shot img{ filter:brightness(1.06); }
 .project .shot .ph{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   background:repeating-linear-gradient(45deg, var(--bg2), var(--bg2) 14px, var(--bg3) 14px, var(--bg3) 28px);
@@ -311,11 +316,6 @@ a.cell:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.5);
 .cell.bio p + p{ margin-top:10px; }
 
 .cell.now p{ font-size:14.5px; color:var(--mid); line-height:1.6; }
-.now-dot{ display:inline-flex; align-items:center; gap:8px; }
-.now-dot::before{
-  content:''; width:6px; height:6px; border-radius:50%;
-  background:var(--ok); box-shadow:0 0 0 3px rgba(18,183,106,.14);
-}
 
 .chips{ display:flex; flex-wrap:wrap; gap:8px; }
 .chip{
@@ -428,7 +428,7 @@ footer{
 <nav id="nav">
   <div class="nav-inner">
     <a class="nav-name" href="#top"><span class="nn-text">Joaquin Álvarez Mercado</span></a>
-    <a class="nav-cta" href="#contacto">Contacto</a>
+    <a class="nav-cta" href="#contacto" data-en="Contact">Contacto</a>
   </div>
 </nav>
 
@@ -448,8 +448,8 @@ footer{
   <div class="wrap hero-content">
     <h1 class="reveal">Joaquin<br /><span class="hollow">Álvarez Mercado</span></h1>
     <div class="hero-actions reveal">
-      <a class="btn solid" href="#proyectos">Ver proyectos ↓</a>
-      <a class="btn ghost" href="#contacto">Contáctame</a>
+      <a class="btn solid" href="#proyectos" data-en="View projects ↓">Ver proyectos ↓</a>
+      <a class="btn ghost" href="#contacto" data-en="Get in touch">Contactar</a>
     </div>
   </div>
 </header>
@@ -458,13 +458,13 @@ footer{
 <section class="intro">
   <div class="wrap intro-inner">
     <div>
-      <div class="intro-eyebrow reveal"><span class="rule"></span> Portafolio — <span id="year-eyebrow">2026</span></div>
-      <p class="intro-lede reveal">Construyo <em>productos</em>, comparto ideas y aprendo creando.</p>
+      <div class="intro-eyebrow reveal"><span data-en="Portfolio">Portafolio</span> — <span id="year-eyebrow">2026</span></div>
+      <p class="intro-lede reveal" data-en="I build products, share ideas and learn by creating.">Construyo productos, comparto ideas y aprendo creando.</p>
     </div>
     <div class="intro-meta reveal">
-      <span class="avail">Disponible para proyectos</span>
-      <span>México</span>
-      <span>Negocios · Tecnología · Contenido</span>
+      <span class="avail" data-en="Available for projects">Disponible para proyectos</span>
+      <span data-en="Mexico">México</span>
+      <span data-en="Business · Technology · Content">Negocios · Tecnología · Contenido</span>
     </div>
   </div>
 </section>
@@ -472,44 +472,40 @@ footer{
 <!-- ===================== PROYECTOS ===================== -->
 <section id="proyectos">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">01</span><span class="tag">Proyectos</span><span class="rule"></span></div>
-    <h2 class="sec-title reveal">Lo que he construido.</h2>
-    <p class="sec-sub reveal">Cada proyecto tendrá su propia página con toda la historia — podrás compartir el link directo de cualquiera.</p>
+    <div class="sec-head reveal"><span class="sec-num">01</span><span class="tag" data-en="Projects">Proyectos</span><span class="rule"></span></div>
+    <h2 class="sec-title reveal" data-en="What I've built.">Lo que he construido.</h2>
+    <p class="sec-sub reveal" data-en="These are my most relevant projects.">Estos son mis proyectos más relevantes.</p>
 
     <div class="projects">
       <!-- Proyecto destacado: Paratu -->
       <a class="project featured reveal" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
-        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+        <div class="shot"><img src="paratu.jpg" alt="Paratu — pantallas de la app: organiza tu día, notas, imágenes y finanzas" /></div>
         <div class="body">
-          <div class="meta-row">
-            <span class="tag">App iOS · 2026</span>
-            <span class="tag">Destacado</span>
-          </div>
+          <span class="tag" data-en="iOS App · 2026">App iOS · 2026</span>
           <h3>Paratu</h3>
-          <p>Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
-          <span class="go">Ver proyecto <span class="ar">↗</span></span>
+          <p data-en="A personal clarity system for iOS: tasks, journal and finances in one minimalist app. No subscriptions, no cloud, no distractions — your data lives only on your phone.">Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
+          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
         </div>
       </a>
 
-      <!-- CAMBIA AQUÍ: href del proyecto 2 -->
-      <a class="project reveal" href="#">
-        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+      <a class="project reveal" href="https://foliomx.vercel.app" target="_blank" rel="noopener">
+        <div class="shot"><img src="folio.jpg" alt="FOLIO — render de la carpeta cuaderno" /></div>
         <div class="body">
-          <span class="tag">Proyecto · 2026</span>
+          <span class="tag" data-en="Product · 2026">Producto · 2026</span>
           <h3>FOLIO</h3>
-          <p>La primera carpeta para usar como cuaderno.</p>
-          <span class="go">Ver proyecto <span class="ar">↗</span></span>
+          <p data-en="The first folder you can use as a notebook.">La primera carpeta para usar como cuaderno.</p>
+          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
         </div>
       </a>
 
       <!-- Proyecto 3: Bandeja -->
       <a class="project reveal" href="https://mailed-two.vercel.app" target="_blank" rel="noopener">
-        <div class="shot"><div class="ph">Imagen del proyecto</div></div>
+        <div class="shot"><img src="bandeja.jpg" alt="Bandeja — logo" /></div>
         <div class="body">
           <span class="tag">Web app · 2026</span>
           <h3>Bandeja</h3>
-          <p>Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
-          <span class="go">Ver proyecto <span class="ar">↗</span></span>
+          <p data-en="Your email, summarized every morning: a daily brief with what matters in your inbox — without opening it all.">Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
+          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
         </div>
       </a>
     </div>
@@ -519,56 +515,55 @@ footer{
 <!-- ===================== SOBRE MÍ (BENTO) ===================== -->
 <section id="sobre-mi" style="padding-top:0;">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">02</span><span class="tag">Sobre mí</span><span class="rule"></span></div>
-    <h2 class="sec-title reveal">Quién soy.</h2>
-    <p class="sec-sub reveal">Lo esencial, sin rodeos — y dónde encontrarme.</p>
+    <div class="sec-head reveal"><span class="sec-num">02</span><span class="tag" data-en="About me">Sobre mí</span><span class="rule"></span></div>
+    <h2 class="sec-title reveal" style="margin-bottom:52px;" data-en="Who I am.">Quién soy.</h2>
 
     <div class="bento">
 
       <!-- BIO -->
       <div class="cell bio span2 reveal">
-        <span class="tag">Mi historia</span>
-        <p>Desde los 13 años he convertido mis ideas en proyectos. Cada uno, haya funcionado o no, me ha dado experiencia para el siguiente.</p>
-        <p>Me interesan los negocios, la tecnología y ayudar a las personas.</p>
+        <span class="tag" data-en="My story">Mi historia</span>
+        <p data-en="I started in software development at 13. I've worked on projects as well as social movements, and I've gained experience from every project I've been part of.">Desde los 13 años comencé en el desarrollo de software. He trabajado en proyectos así como en movimientos sociales, y he conseguido experiencia de cada proyecto del que he sido parte.</p>
+        <p data-en="I'm interested in business, technology and helping people.">Me interesan los negocios, la tecnología y ayudar a las personas.</p>
       </div>
 
       <!-- AHORA MISMO -->
       <div class="cell now reveal">
-        <span class="tag now-dot">Ahora mismo</span>
-        <p>Estudio en TETR College of Business mientras desarrollo mis proyectos, creo contenido y trabajo con varios equipos.</p>
+        <span class="tag" data-en="Right now">Ahora mismo</span>
+        <p data-en="I study at TETR College of Business while building my projects, creating content and working with several teams.">Estudio en TETR College of Business mientras desarrollo mis proyectos, creo contenido y trabajo con varios equipos.</p>
       </div>
 
       <!-- EDAD EN VIVO (nacimiento: 20 sep 2008 — cámbialo en el JS si no es el año) -->
       <div class="cell stat edad-cell reveal">
-        <span class="tag">Mi edad</span>
+        <span class="tag" data-en="My age">Mi edad</span>
         <div class="num edad"><span id="edad-ent">17</span><span class="dec" id="edad-dec">.0000000000</span></div>
-        <div class="cap">años — y subiendo, en vivo</div>
+        <div class="cap" data-en="years">años</div>
       </div>
 
       <!-- SKILLS -->
       <div class="cell skills span2 reveal">
-        <span class="tag">Lo que sé hacer</span>
+        <span class="tag" data-en="What I do">Lo que sé hacer</span>
         <div class="chips">
-          <span class="chip">Desarrollo de software</span>
-          <span class="chip">Diseño de producto</span>
+          <span class="chip" data-en="Software development">Desarrollo de software</span>
+          <span class="chip" data-en="Product design">Diseño de producto</span>
           <span class="chip">UI/UX</span>
-          <span class="chip">Emprendimiento</span>
-          <span class="chip">Creación de contenido</span>
+          <span class="chip" data-en="Entrepreneurship">Emprendimiento</span>
+          <span class="chip" data-en="Content creation">Creación de contenido</span>
         </div>
       </div>
 
       <!-- NACIONALIDAD -->
       <div class="cell stat reveal">
-        <span class="tag">Nacionalidad</span>
-        <div class="num">México</div>
-        <div class="cap">mexicano 🇲🇽</div>
+        <span class="tag" data-en="Nationality">Nacionalidad</span>
+        <div class="num" data-en="Mexico">México</div>
+        <div class="cap" data-en="Mexican 🇲🇽">mexicano 🇲🇽</div>
       </div>
 
       <!-- IDIOMAS / EXTRA -->
       <div class="cell stat reveal">
-        <span class="tag">Idiomas</span>
+        <span class="tag" data-en="Languages">Idiomas</span>
         <div class="num">ES · EN</div>
-        <div class="cap">Español nativo · Inglés avanzado</div>
+        <div class="cap" data-en="Native Spanish · Advanced English">Español nativo · Inglés avanzado</div>
       </div>
 
       <!-- ============ REDES (4 cards) ============ -->
@@ -607,8 +602,8 @@ footer{
     <!-- escenario con físicas: los chips de redes caen y rebotan aquí detrás del texto -->
     <div class="fisica-stage" id="fisica-stage">
       <div class="contact-copy reveal">
-        <h2>Hagamos algo<br />que valga la pena.</h2>
-        <p class="sub">Abierto a ideas, colaboraciones y buenas conversaciones.</p>
+        <h2 data-en-html="Let's build something<br />worthwhile.">Hagamos algo<br />que valga la pena.</h2>
+        <p class="sub" data-en="Open to ideas, collaborations and good conversations.">Abierto a ideas, colaboraciones y buenas conversaciones.</p>
         <a class="mail" href="mailto:joaquinalvarezme@ymail.com">joaquinalvarezme@ymail.com</a>
       </div>
       <a class="chip-soc" href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
@@ -620,13 +615,34 @@ footer{
   <footer>
     <div class="wrap foot-inner">
       <span>© <span id="year">2026</span> Joaquin Álvarez Mercado</span>
-      <span>México</span>
+      <span data-en="Mexico">México</span>
     </div>
   </footer>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js" defer></script>
 <script>
+  // ============================================================
+  // IDIOMA: si el dispositivo tiene español entre sus idiomas,
+  // la página queda en español; si no, se traduce a inglés.
+  // Los textos en inglés viven en atributos data-en / data-en-html.
+  // ============================================================
+  var hablaEspanol = (navigator.languages && navigator.languages.length
+      ? navigator.languages : [navigator.language || 'es']
+    ).some(function(l){ return /^es/i.test(l); });
+  if (!hablaEspanol){
+    document.documentElement.lang = 'en';
+    document.title = 'Joaquin Álvarez Mercado — Portfolio';
+    var mdesc = document.querySelector('meta[name="description"]');
+    if (mdesc) mdesc.setAttribute('content', 'Joaquin Álvarez Mercado — personal portfolio. Projects, profile and contact.');
+    document.querySelectorAll('[data-en]').forEach(function(el){
+      el.textContent = el.getAttribute('data-en');
+    });
+    document.querySelectorAll('[data-en-html]').forEach(function(el){
+      el.innerHTML = el.getAttribute('data-en-html');
+    });
+  }
+
   // año automático
   var y = new Date().getFullYear();
   document.getElementById('year').textContent = y;
