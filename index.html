@@ -283,19 +283,36 @@ section{ padding:clamp(64px,10vh,110px) 0; }
   transition:transform .5s cubic-bezier(.2,.7,.2,1);
 }
 .project:hover .shot .ph{ transform:scale(1.03); }
-.project .body{ padding:24px 26px 26px; display:flex; flex-direction:column; gap:8px; flex:1; }
-.project .meta-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.project h3{ font-size:clamp(20px,2.4vw,26px); font-weight:700; letter-spacing:-0.02em; }
-.project p{ font-size:14.5px; color:var(--dim); line-height:1.6; max-width:60ch; }
-.project .go{
-  margin-top:10px; display:inline-flex; align-items:center; gap:7px;
-  font-size:13.5px; font-weight:600; color:var(--ink);
+/* cuerpo de la card: título grande + badge a su derecha, texto en
+   contenedor abajo, y a la derecha el botón blanco con la flechota */
+.project .body{
+  padding:24px 26px 26px; flex:1;
+  display:flex; align-items:stretch; justify-content:space-between; gap:22px;
 }
-.project .go .ar{ transition:transform .2s; }
-.project:hover .go .ar{ transform:translate(3px,-3px); }
+.body-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:14px; }
+.title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.project h3{ font-size:clamp(26px,3.2vw,38px); font-weight:800; letter-spacing:-0.03em; line-height:1.05; }
+.project p{
+  font-size:14.5px; color:var(--dim); line-height:1.6; max-width:60ch;
+  background:var(--bg3); border:1px solid var(--line); border-radius:var(--r-sm);
+  padding:14px 18px;
+}
+.go-big{
+  flex:0 0 auto; align-self:stretch;
+  width:clamp(90px,11vw,130px); min-height:90px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--ink); color:#0B0B0C; border-radius:var(--r-sm);
+  font-size:clamp(42px,4.5vw,58px); font-weight:800; line-height:1;
+  transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+}
+.project:hover .go-big{ transform:translate(3px,-3px); box-shadow:0 10px 30px rgba(255,255,255,.14); }
 @media (max-width:760px){
   .projects{ grid-template-columns:1fr; }
   .project.featured .shot{ aspect-ratio:16/9; }
+}
+@media (max-width:560px){
+  .project .body{ flex-direction:column; gap:16px; }
+  .go-big{ width:100%; min-height:64px; font-size:38px; }
 }
 
 /* ============================================================
@@ -481,20 +498,22 @@ footer{
       <a class="project featured reveal" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
         <div class="shot"><img src="paratu.jpg" alt="Paratu — pantallas de la app: organiza tu día, notas, imágenes y finanzas" /></div>
         <div class="body">
-          <span class="tag" data-en="iOS App · 2026">App iOS · 2026</span>
-          <h3>Paratu</h3>
-          <p data-en="A personal clarity system for iOS: tasks, journal and finances in one minimalist app. No subscriptions, no cloud, no distractions — your data lives only on your phone.">Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
-          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
+          <div class="body-main">
+            <div class="title-row"><h3>Paratu</h3><span class="tag" data-en="iOS App · 2026">App iOS · 2026</span></div>
+            <p data-en="A personal clarity system for iOS: tasks, journal and finances in one minimalist app. No subscriptions, no cloud, no distractions — your data lives only on your phone.">Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
+          </div>
+          <span class="go-big" aria-hidden="true">↗</span>
         </div>
       </a>
 
       <a class="project reveal" href="https://foliomx.vercel.app" target="_blank" rel="noopener">
         <div class="shot"><img src="folio.jpg" alt="FOLIO — render de la carpeta cuaderno" /></div>
         <div class="body">
-          <span class="tag" data-en="Product · 2026">Producto · 2026</span>
-          <h3>FOLIO</h3>
-          <p data-en="The first folder you can use as a notebook.">La primera carpeta para usar como cuaderno.</p>
-          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
+          <div class="body-main">
+            <div class="title-row"><h3>FOLIO</h3><span class="tag" data-en="Product · 2026">Producto · 2026</span></div>
+            <p data-en="The first folder you can use as a notebook.">La primera carpeta para usar como cuaderno.</p>
+          </div>
+          <span class="go-big" aria-hidden="true">↗</span>
         </div>
       </a>
 
@@ -502,10 +521,11 @@ footer{
       <a class="project reveal" href="https://mailed-two.vercel.app" target="_blank" rel="noopener">
         <div class="shot"><img src="bandeja.jpg" alt="Bandeja — logo" /></div>
         <div class="body">
-          <span class="tag">Web app · 2026</span>
-          <h3>Bandeja</h3>
-          <p data-en="Your email, summarized every morning: a daily brief with what matters in your inbox — without opening it all.">Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
-          <span class="go"><span data-en="View project">Ver proyecto</span> <span class="ar">↗</span></span>
+          <div class="body-main">
+            <div class="title-row"><h3>Bandeja</h3><span class="tag">Web app · 2026</span></div>
+            <p data-en="Your email, summarized every morning: a daily brief with what matters in your inbox — without opening it all.">Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
+          </div>
+          <span class="go-big" aria-hidden="true">↗</span>
         </div>
       </a>
     </div>
