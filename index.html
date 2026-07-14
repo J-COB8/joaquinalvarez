@@ -291,6 +291,12 @@ section{ padding:clamp(64px,10vh,110px) 0; }
 }
 .body-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:14px; }
 .title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+/* estado del proyecto: pill chiquito junto al badge */
+.badge-status{
+  font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--mid); border:1px solid var(--line-mid); border-radius:100px;
+  padding:4px 11px; white-space:nowrap;
+}
 .project h3{ font-size:clamp(26px,3.2vw,38px); font-weight:800; letter-spacing:-0.03em; line-height:1.05; }
 /* el contenedor del texto llena todo el espacio disponible,
    simétrico con el botón de la flecha */
@@ -518,7 +524,7 @@ footer{
         <div class="shot"><img src="folio.jpg" alt="FOLIO — render de la carpeta cuaderno" /></div>
         <div class="body">
           <div class="body-main">
-            <div class="title-row"><h3>FOLIO</h3><span class="tag" data-en="Product · 2026">Producto · 2026</span></div>
+            <div class="title-row"><h3>FOLIO</h3><span class="tag" data-en="Product · 2026">Producto · 2026</span><span class="badge-status" data-en="In development">En desarrollo</span></div>
             <p data-en="The first folder you can use as a notebook.">La primera carpeta para usar como cuaderno.</p>
           </div>
           <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
@@ -530,7 +536,7 @@ footer{
         <div class="shot"><img src="bandeja.jpg" alt="Bandeja — logo" /></div>
         <div class="body">
           <div class="body-main">
-            <div class="title-row"><h3>Bandeja</h3><span class="tag">Web app · 2026</span></div>
+            <div class="title-row"><h3>Bandeja</h3><span class="tag">Web app · 2026</span><span class="badge-status" data-en="Private beta">Beta privada</span></div>
             <p data-en="Your email, summarized every morning: a daily brief with what matters in your inbox — without opening it all.">Tu correo, resumido cada mañana: un brief diario con lo importante de tu inbox, sin tener que abrirlo todo.</p>
           </div>
           <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
