@@ -1,935 +1,1195 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Joaquin Álvarez Mercado — Portafolio</title>
-<meta name="description" content="Joaquin Álvarez Mercado — portafolio personal. Proyectos, perfil y contacto." />
-<!-- pinta la barra del navegador del teléfono del mismo amarillo de la foto -->
-<meta name="theme-color" content="#F0C64D" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F0C64D" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#F0C64D" />
-<meta name="color-scheme" content="dark" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Joaquín Álvarez Mercado</title>
+<meta name="description" content="Hago cosas. Algunas funcionan. Una app para iOS, una carpeta que se abre plana, una serie que explica negocios y un movimiento ambiental en Ciudad Acuña." data-en-content="I make things. Some of them work. An iOS app, a binder that opens flat, a series that explains businesses and an environmental movement in Ciudad Acuña, Mexico." />
+<meta name="theme-color" content="#ffffff" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Joaquín Álvarez Mercado" />
+<meta property="og:description" content="Hago cosas. Algunas funcionan." />
+<meta property="og:image" content="https://joaquinalvarezmercado.vercel.app/assets/og.jpg" />
+<meta property="og:url" content="https://joaquinalvarezmercado.vercel.app/" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
 
 <!-- ============================================================
   GUÍA RÁPIDA DE EDICIÓN
-  1. TU FOTO: el hero usa  foto.jpg  en teléfono y  foto-ancha.jpg
-     en computadora (búscalas en el <picture> del hero para cambiarlas).
-  2. REDES: los links de TikTok, Instagram, YouTube y LinkedIn están
-     en las cards del bento y en los chips de la sección de contacto.
-  3. PROYECTOS: FOLIO aún tiene href="#" — apunta ahí su link cuando exista.
+  · AHORA: el post-it de la Bitácora (#bitacora). La línea de la hora
+    en Hablemos usa data-tz="Asia/Kolkata" y data-lugar="India".
+    Si te mudas, cambia ambos (ej. data-tz="America/Monterrey").
+  · BITÁCORA: cada <li> del <ol class="log"> es una entrada. Copia
+    una, cambia la fecha y el texto (data-en = versión en inglés).
+  · MÉTRICAS DE PARATU: en el ticket (<figure class="ticket">).
+  · IDIOMA: el español va en el HTML; el inglés vive en data-en /
+    data-en-html. El botón de la cabecera cambia entre ambos.
+  · IMÁGENES en /assets/img (WebP) y VIDEOS en /assets/video.
 ============================================================ -->
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,450;14..32,500;14..32,600;14..32,700;14..32,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@font-face{
+  font-family:"Archivo";
+  src:url("assets/fonts/archivo-latin.woff2") format("woff2");
+  font-weight:100 900; font-stretch:62% 125%; font-style:normal; font-display:swap;
+}
 
+/* ------------------------------------------------------------
+   Tokens. Los colores salen de objetos reales:
+   · amarillo = portada del prototipo 1 de FOLIO, fondo del retrato
+     y resaltado de los subtítulos de Hablemos de Negocios
+   · azul cinta = la cinta de pintor con la que rotulo un prototipo
+------------------------------------------------------------ */
 :root{
-  /* tema oscuro: el "ink" ahora es claro y los fondos oscuros */
-  --bg:        #0B0B0C;
-  --bg2:       #141416;
-  --bg3:       #1D1D20;
-  --ink:       #F5F5F4;
-  --mid:       #C6C6CC;
-  --dim:       #8E8E96;
-  --dimmer:    #5C5C64;
-  --line:      rgba(255,255,255,0.10);
-  --line-mid:  rgba(255,255,255,0.22);
-  --ok:        #12B76A;               /* único color: punto "disponible" */
-  --sans:      'Inter', system-ui, -apple-system, sans-serif;
-  --serif:     'Instrument Serif', Georgia, serif;
-  --maxw:      1120px;
-  --r:         12px;
-  --r-sm:      8px;
+  --paper:#ffffff;
+  --ink:#000000;
+  --graphite:#6b6b6b;
+  --line:#e6e6e6;
+  --sweep:#f4f4f2;
+  --yellow:#fcd404;
+  --tape:#2a8fd6;
+  --gutter:clamp(16px, 4.6vw, 64px);
+  --maxw:1320px;
+  --head:56px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --sh-rest:drop-shadow(0 1px 1px rgba(0,0,0,.16)) drop-shadow(3px 7px 9px rgba(0,0,0,.12)) drop-shadow(10px 22px 26px rgba(0,0,0,.10));
+  --sh-lift:drop-shadow(0 2px 2px rgba(0,0,0,.10)) drop-shadow(12px 26px 24px rgba(0,0,0,.14)) drop-shadow(26px 52px 50px rgba(0,0,0,.12));
 }
 
+*,*::before,*::after{ box-sizing:border-box; }
+*{ margin:0; padding:0; }
 html{
-  background:#0B0B0C;
-}
-/* franja amarilla escondida arriba de la pantalla: solo se ve en el
-   rebote del scroll en iOS, para que la foto "se extienda" hacia arriba */
-.overscroll-top{
-  position:fixed; left:0; right:0; top:-100vh; height:100vh;
-  background:#F0C64D; z-index:-1; pointer-events:none;
+  background:var(--paper);
+  -webkit-text-size-adjust:100%;
+  scroll-padding-top:calc(var(--head) + 12px);
 }
 body{
-  font-family:var(--sans);
-  background:var(--bg);
-  color:var(--ink);
-  font-size:16px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-  overflow-x:hidden;
+  font-family:"Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size:17px; line-height:1.5; font-weight:400; font-stretch:100%;
+  color:var(--ink); background:var(--paper);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  font-synthesis:none;
+  overflow-x:clip;
 }
-::selection{ background:#F5F5F4; color:#0B0B0C; }
-a{ color:inherit; text-decoration:none; }
-img{ max-width:100%; display:block; }
-:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:4px; }
+@media (min-width:900px){ body{ font-size:18px; } }
+img,video,svg{ display:block; max-width:100%; }
+img{ height:auto; }
+a{ color:inherit; text-decoration-thickness:1px; text-underline-offset:.18em; }
+button,input,select{ font:inherit; color:inherit; }
+button{ cursor:pointer; background:none; border:0; }
+::selection{ background:var(--yellow); color:var(--ink); }
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:2px; }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+mark{ background:linear-gradient(transparent 56%, var(--yellow) 56%, var(--yellow) 92%, transparent 92%); color:inherit; padding:0 .06em; }
+q{ quotes:"«" "»"; }
+html[lang="en"] q{ quotes:"“" "”"; }
 
-.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 clamp(20px,5vw,44px); }
-
-/* micro-etiquetas */
-.tag{
-  font-size:11px; font-weight:600; letter-spacing:0.14em;
-  text-transform:uppercase; color:var(--dim);
+.skip{
+  position:fixed; left:12px; top:-60px; z-index:100;
+  background:var(--ink); color:var(--paper); padding:10px 14px; border-radius:6px; text-decoration:none;
 }
+.skip:focus{ top:12px; }
 
-/* ---------- animación de entrada (sobria, respeta reduced-motion) ---------- */
-.reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
-.reveal.in{ opacity:1; transform:none; }
-@media (prefers-reduced-motion: reduce){
-  .reveal{ opacity:1; transform:none; transition:none; }
-  html{ scroll-behavior:auto; }
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter); }
+
+/* Cinta de pintor: dice en qué estado está cada cosa, como en el prototipo */
+.tape{
+  display:inline-block; position:relative; width:max-content; justify-self:start; align-self:flex-start;
+  font-stretch:78%; font-weight:650; font-size:13px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink); background:var(--tape);
+  padding:.62em 1.05em .56em;
+  transform:rotate(-1.6deg);
+  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
 }
 
 /* ============================================================
-   NAV
+   CABECERA
 ============================================================ */
-nav{
-  position:fixed; top:0; left:0; right:0; z-index:50;
-  background:rgba(11,11,12,.82);
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);
-  transform:translateY(-100%);
-  transition:transform .4s cubic-bezier(.2,.7,.2,1);
+.top{
+  position:sticky; top:0; z-index:40;
+  height:var(--head);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding-inline:var(--gutter);
+  background:var(--paper);
+  box-shadow:0 1px 0 transparent;
+  transition:box-shadow .3s;
 }
-nav.visible{ transform:translateY(0); }
-@media (prefers-reduced-motion: reduce){ nav{ transition:none; } }
-.nav-inner{
-  max-width:var(--maxw); margin:0 auto;
-  padding:16px clamp(20px,5vw,44px);
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
+.top.is-scrolled{ box-shadow:0 1px 0 var(--line); }
+.top-name{ font-weight:650; font-size:15px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.top-nav{ display:flex; align-items:center; gap:4px; flex:none; }
+.lang{
+  min-width:44px; height:44px; padding:0 8px;
+  font-size:13px; font-weight:650; letter-spacing:.05em; color:var(--graphite);
+  text-decoration:underline; text-decoration-color:transparent; text-underline-offset:5px; text-decoration-thickness:2px;
+  transition:color .2s, text-decoration-color .2s;
 }
-/* el nombre: lo más grande del header, se "desencripta" al aparecer */
-.nav-name{
-  font-weight:800; font-size:20px; letter-spacing:-0.02em;
-  display:flex; align-items:center; min-width:0;
-  opacity:0; transition:opacity .3s ease;
+.lang:hover{ color:var(--ink); text-decoration-color:var(--ink); }
+.top-cta{
+  display:inline-flex; align-items:center; height:38px; padding:0 16px;
+  border-radius:999px; background:var(--ink); color:var(--paper);
+  font-size:14px; font-weight:650; text-decoration:none; white-space:nowrap;
+  transition:transform .2s var(--ease);
 }
-/* cada letra vive en su celda con el ancho de la letra final:
-   los símbolos cambian dentro sin mover nada y los espacios se respetan */
-.nn-text{ white-space:nowrap; }
-.nn-text .ch{ display:inline-block; text-align:center; }
-nav.visible .nav-name{ opacity:1; }
-@media (prefers-reduced-motion: reduce){
-  .nav-name{ transition:none; }
-  nav.visible .nav-name{ opacity:1; }
+.top-cta:active{ transform:scale(.96); }
+
+/* ============================================================
+   HERO — la mesa
+============================================================ */
+.hero{
+  position:relative;
+  padding:clamp(18px, 4vw, 40px) var(--gutter) 28px;
+  max-width:1480px; margin-inline:auto;
+  display:grid; grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"title" "mesa" "copy";
+}
+.hero-title{
+  grid-area:title;
+  font-size:clamp(46px, 13vw, 76px);
+  font-weight:820; font-stretch:106%; line-height:.9; letter-spacing:-.045em;
+}
+.hero-title span{ display:block; }
+.hero-copy{ grid-area:copy; margin-top:18px; }
+.hero-sub{ max-width:34em; font-size:17px; line-height:1.5; }
+.hero-foot{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:18px; flex-wrap:wrap; }
+.hint{ position:absolute; right:0; bottom:0; font-size:14px; color:var(--graphite); display:none; }
+.cue{
+  display:inline-flex; align-items:center; gap:10px; min-height:44px;
+  font-weight:650; font-size:17px; text-decoration:none;
+}
+.cue svg{ width:22px; height:22px; transition:transform .3s var(--ease); }
+.cue:hover svg{ transform:translateY(3px); }
+
+.mesa{
+  grid-area:mesa; position:relative;
+  width:100%; aspect-ratio:358/452;
+  margin-top:22px;
+}
+.obj{
+  position:absolute; left:var(--x); top:var(--y); width:var(--w);
+  display:block; text-decoration:none; color:var(--ink);
+  container-type:inline-size;
+  transform:translate(var(--dx,0px), var(--dy,0px)) rotate(var(--r,0deg)) scale(var(--s,1));
+  filter:var(--sh-rest);
+  transition:transform .55s var(--ease-out), filter .35s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+  -webkit-user-drag:none; user-select:none; -webkit-user-select:none;
+}
+.obj img{ width:100%; height:auto; -webkit-user-drag:none; pointer-events:none; }
+.obj:focus-visible{ outline:none; --s:1.03; filter:var(--sh-lift); }
+.obj:focus-visible .obj-label{ outline:2px solid var(--ink); outline-offset:3px; }
+.obj-label{
+  position:absolute; left:50%; bottom:-11px; z-index:2;
+  translate:-50% 0; rotate:calc(var(--r,0deg) * -1 - 1.5deg);
+  white-space:nowrap;
+  font-stretch:78%; font-weight:650; font-size:10.5px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
+  background:var(--tape); color:var(--ink); padding:.62em .95em .56em;
+  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
+  transition:opacity .25s var(--ease), translate .3s var(--ease);
+}
+/* la entrada: cada cosa cae sobre la mesa (un solo momento, al cargar) */
+.js .mesa:not(.is-set) .obj{ opacity:0; --s:1.12; --dy:-26px; filter:var(--sh-lift); transition:none; }
+.js .mesa.is-set:not(.is-ready) .obj{
+  transition:transform .75s var(--ease-out) calc(var(--i) * 90ms), filter .6s var(--ease) calc(var(--i) * 90ms), opacity .3s linear calc(var(--i) * 90ms);
 }
 
-/* botón de contacto: blanco sólido, se hunde al presionar y suelta una onda */
-.nav-cta{
+/* posiciones en el teléfono (en % de la mesa) */
+.obj--print  { --x:0%;  --y:5%;  --w:37%; --r:-7deg; z-index:2; }
+.obj--folio  { --x:31%; --y:0%;  --w:46%; --r:4deg;  z-index:3; }
+.obj--phone  { --x:71%; --y:9%;  --w:28%; --r:7deg;  z-index:4; }
+.obj--script { --x:3%;  --y:47%; --w:41%; --r:-4deg; z-index:5; }
+.obj--sticker{ --x:49%; --y:59%; --w:28%; --r:8deg;  z-index:6; }
+
+.print, .sticker, .script, .ui-body, .ui-island, .dot{ display:block; }
+.print{ background:#fff; padding:5%; }
+.print img{ aspect-ratio:3/4; object-fit:cover; }
+.sticker{ background:#fff; border-radius:12%; padding:7% 7% 5%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+.script{
+  background:#fff; aspect-ratio:8.5/11; padding:12cqw 10cqw 0 12cqw;
+  font-size:6.4cqw; line-height:1.42; color:#1f1f1f;
   position:relative; overflow:hidden;
-  font-size:13px; font-weight:700; letter-spacing:.01em;
-  color:#0B0B0C; background:var(--ink);
-  border:1px solid var(--ink); border-radius:100px; padding:9px 20px;
-  transition:transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
 }
-.nav-cta:hover{ transform:translateY(-1px); box-shadow:0 6px 22px rgba(255,255,255,.16); }
-.nav-cta:active{ transform:scale(.94); }
-.nav-cta .ripple{
-  position:absolute; border-radius:50%; pointer-events:none;
-  background:rgba(11,11,12,.25); transform:scale(0);
-  animation:ripple .55s ease-out forwards;
+.script b{ display:block; font-weight:800; font-size:8.2cqw; line-height:1.15; margin-bottom:.7em; letter-spacing:-.01em; }
+.script p{ margin-bottom:.6em; }
+.script p:last-child{ color:#9a9a9a; }
+.script .n{ position:absolute; left:4.5cqw; font-weight:750; font-size:5.2cqw; color:var(--tape); }
+
+/* nota escondida debajo del prototipo: solo la ve quien mueve las cosas */
+.nota-escondida{
+  position:absolute; left:calc(var(--x) + 9%); top:calc(var(--y) + 10%); width:22%;
+  --x:31%; --y:0%;
+  z-index:1; aspect-ratio:1; overflow:hidden;
+  background:var(--yellow); padding:1.1em;
+  font-weight:600; font-size:13px; line-height:1.3; overflow-wrap:anywhere;
+  transform:rotate(-3deg);
+  display:none;
 }
-@keyframes ripple{ to{ transform:scale(3.2); opacity:0; } }
-@media (max-width:480px){ .nav-name{ font-size:15px; } }
+
+/* ------------------------------------------------------------
+   Teléfono (lo usan la mesa y el demo de Paratu).
+   Todo adentro se mide contra el ancho del teléfono (cqw).
+------------------------------------------------------------ */
+.phone{
+  display:block; position:relative; container-type:inline-size;
+  aspect-ratio:9/19.4; width:100%;
+  background:#111; border-radius:15.5% / 7.2%;
+  padding:3.4%;
+  box-shadow:inset 0 0 0 1.5px #3a3a3a, inset 0 0 0 3px #0a0a0a;
+}
+.screen{
+  position:relative; width:100%; height:100%;
+  border-radius:12.5cqw; overflow:hidden;
+  background:#f6f6f7; color:#111;
+  font-family:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Archivo", system-ui, sans-serif;
+  font-size:4.3cqw; line-height:1.3; font-stretch:100%;
+  display:flex; flex-direction:column;
+}
+.ui-status{
+  flex:none; height:12.5cqw; padding:0 7.5cqw;
+  display:flex; align-items:center; justify-content:space-between;
+  font-weight:600; font-size:4cqw;
+}
+.ui-island{ width:27cqw; height:7.8cqw; border-radius:99px; background:#000; }
+.ui-bat{ display:flex; gap:1.2cqw; align-items:center; }
+.ui-bat i{ display:block; width:6.2cqw; height:3cqw; border-radius:.9cqw; border:.5cqw solid #111; position:relative; }
+.ui-bat i::after{ content:""; position:absolute; inset:.4cqw; right:1.2cqw; background:#111; border-radius:.3cqw; }
+.ui-bat b{ display:block; width:4.2cqw; height:3cqw; background:linear-gradient(90deg,#111 0 20%,transparent 20% 27%,#111 27% 47%,transparent 47% 54%,#111 54% 74%,transparent 74% 81%,#111 81%); clip-path:polygon(0 100%,100% 0,100% 100%); }
+.ui-body{ flex:1; min-height:0; overflow:hidden; padding:1.5cqw 5.5cqw 0; }
+.ui-h1{ display:block; font-weight:750; font-size:8.6cqw; letter-spacing:-.02em; line-height:1.1; }
+.ui-date{ display:block; color:#8a8a8e; font-size:3.8cqw; margin-top:.4em; }
+.ui-card{ display:block; background:#fff; border-radius:5cqw; padding:4cqw 4.4cqw; margin-top:4cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); min-height:17cqw; }
+.ui-shortcuts{ display:grid; grid-template-columns:repeat(3,1fr); gap:2.6cqw; margin-top:3cqw; }
+.ui-shortcuts > *{ background:#fff; border-radius:4.4cqw; padding:3.6cqw 0 3cqw; text-align:center; font-weight:600; font-size:3.4cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); display:flex; flex-direction:column; align-items:center; gap:1.4cqw; }
+.ui-shortcuts svg{ width:6cqw; height:6cqw; }
+.ui-h2{ display:block; font-weight:750; font-size:6.2cqw; margin:5cqw 0 2.4cqw; letter-spacing:-.01em; }
+.ui-row{ display:flex; align-items:center; gap:3cqw; background:#fff; border-radius:4.4cqw; padding:3.2cqw 4cqw; margin-bottom:2.2cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); font-weight:600; }
+.ui-row small{ display:block; font-weight:500; color:#8a8a8e; font-size:3.2cqw; }
+.dot{ width:2.6cqw; height:2.6cqw; border-radius:50%; flex:none; background:#f97316; }
+.dot.r{ background:#f26d6d; } .dot.b{ background:#3b82f6; }
+.ui-tabs{
+  flex:none; margin:0 3.5cqw 3.5cqw; height:15cqw; border-radius:99px;
+  background:rgba(255,255,255,.92); box-shadow:0 1cqw 5cqw rgba(0,0,0,.10), inset 0 0 0 .3cqw rgba(0,0,0,.04);
+  display:grid; grid-template-columns:repeat(4,1fr); align-items:center; padding:0 1.4cqw;
+}
+.ui-tabs > *{ display:flex; flex-direction:column; align-items:center; gap:.6cqw; font-size:2.7cqw; font-weight:600; color:#111; padding:1.6cqw 0; border-radius:99px; }
+.ui-tabs svg{ width:5.8cqw; height:5.8cqw; }
+.ui-tabs [aria-selected="true"], .ui-tabs .on{ background:#ececef; }
 
 /* ============================================================
-   HERO — foto a pantalla completa con el texto encima
+   PROYECTOS — piezas comunes
 ============================================================ */
-header.hero{
-  position:relative; overflow:hidden;
-  min-height:100vh; min-height:100svh;
-  display:flex; align-items:flex-end;
-  /* mismo amarillo de la foto: Safari toma este color para teñir su barra
-     y se ve mientras carga la imagen */
-  background:#F0C64D;
+.proj{ padding-block:clamp(104px, 14vw, 200px); }
+.proj-name{
+  font-size:clamp(44px, 7.4vw, 104px);
+  font-weight:820; font-stretch:125%; line-height:.9; letter-spacing:-.045em;
+  margin-top:16px;
+  overflow-wrap:anywhere;
 }
-.hero-img{ position:absolute; inset:0; }
-.hero-img img{
-  width:100%; height:100%;
-  object-fit:cover; object-position:center 25%;
+.proj-what{
+  margin-top:clamp(14px, 1.6vw, 22px);
+  max-width:22em;
+  font-size:clamp(20px, 2vw, 27px); line-height:1.25; font-weight:450; letter-spacing:-.01em;
 }
-/* velo oscuro abajo para que el texto se lea sobre la foto */
-/* el degradado termina en el negro exacto de la página: la foto se funde con el fondo */
-.hero-scrim{
-  position:absolute; inset:0;
-  background:linear-gradient(to top, #0B0B0C 0%, rgba(11,11,12,.55) 26%, rgba(11,11,12,0) 60%);
-}
-.hero-content{
-  position:relative; z-index:2; width:100%;
-  padding-top:60px; padding-bottom:clamp(36px,7vh,72px);
-  color:#fff;
-}
-.hero h1{
-  font-size:clamp(48px,8vw,96px);
-  font-weight:800; line-height:0.98; letter-spacing:-0.045em; color:#fff;
-  text-wrap:balance;
-}
-.hero h1 .hollow{
-  color:transparent;
-  -webkit-text-stroke:1.5px #fff;
-}
-.hero-actions{ margin-top:30px; display:flex; gap:12px; flex-wrap:wrap; }
-.btn{
-  display:inline-flex; align-items:center; gap:8px;
-  font-size:14px; font-weight:600; padding:13px 24px; border-radius:100px;
-  border:1px solid var(--ink); transition:background .2s, color .2s, border-color .2s, transform .2s;
-}
-/* botones sobre la foto */
-.hero .btn.solid{ background:#fff; color:#0B0B0C; border-color:#fff; }
-.hero .btn.solid:hover{ background:rgba(255,255,255,.85); transform:translateY(-1px); }
-.hero .btn.ghost{ color:#fff; border-color:rgba(255,255,255,.55); }
-.hero .btn.ghost:hover{ background:#fff; color:#0B0B0C; border-color:#fff; }
-/* botones en el resto de la página */
-.btn.solid{ background:var(--ink); color:#0B0B0C; }
-.btn.ghost{ color:var(--ink); }
-.btn.ghost:hover{ background:var(--ink); color:#0B0B0C; }
-
-.photo-caption{
-  position:absolute; right:clamp(20px,5vw,44px); bottom:clamp(36px,7vh,72px); z-index:2;
-  background:rgba(255,255,255,.14); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.28); border-radius:100px;
-  font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
-  color:rgba(255,255,255,.9); padding:7px 14px;
-}
-
-@media (max-width:860px){
-  .hero h1{ font-size:clamp(42px,11.5vw,64px); }
-  .hero-scrim{ background:linear-gradient(to top, #0B0B0C 0%, rgba(11,11,12,.6) 30%, rgba(11,11,12,0) 66%); }
-  .photo-caption{ display:none; }
-}
-
-/* ============================================================
-   INTRO — franja bajo el hero (lede + disponibilidad)
-============================================================ */
-.intro{ border-bottom:1px solid var(--line); }
-section.intro{ padding:clamp(36px,6vh,60px) 0; }
-.intro-inner{
-  display:flex; align-items:flex-end; justify-content:space-between;
-  gap:20px 48px; flex-wrap:wrap;
-}
-.intro-eyebrow{
-  display:inline-block; margin-bottom:18px;
-  font-size:15px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink);
-}
-.intro-lede{
-  max-width:52ch;
-  font-size:clamp(17px,2vw,21px); font-weight:600; line-height:1.55; color:var(--ink);
-}
-.intro-meta{
-  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
-  font-size:13.5px; font-weight:500; color:var(--dim); text-align:right;
-}
-.intro-meta .avail{ color:var(--ink); font-weight:600; }
-/* en computadora, que se note un poco más */
-@media (min-width:701px){
-  .intro-meta .avail{ font-size:17px; }
-}
-@media (max-width:700px){
-  .intro-meta{ align-items:flex-start; text-align:left; flex-direction:row; flex-wrap:wrap; gap:8px 20px; }
+.prose p + p{ margin-top:1em; }
+.links{ display:flex; flex-wrap:wrap; gap:4px 26px; margin-top:24px; }
+.links a{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; }
+.linea{
+  font-size:clamp(28px, 4vw, 54px); line-height:1.04; font-weight:780; letter-spacing:-.035em;
+  max-width:16em; text-wrap:balance;
 }
 
 /* ============================================================
-   ENCABEZADOS DE SECCIÓN
+   ACUÑA SIN HUELLA — 1,300 botellas por 13 árboles
 ============================================================ */
-section{ padding:clamp(64px,10vh,110px) 0; }
-.sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:14px; }
-.sec-num{ font-weight:800; font-size:15px; color:var(--ink); }
-.sec-head .rule{ flex:1; height:1px; background:var(--line); align-self:center; }
-.sec-title{
-  font-size:clamp(28px,4vw,42px); font-weight:700; letter-spacing:-0.03em; line-height:1.1;
-  margin-bottom:14px;
-}
-.sec-sub{ font-size:15px; color:var(--dim); max-width:52ch; margin-bottom:52px; }
+.acuna-head{ position:relative; }
+.acuna-sticker{ position:absolute; right:10px; top:-86px; width:84px; transform:rotate(8deg); filter:var(--sh-rest); }
+.canje{ margin-top:clamp(44px, 6vw, 88px); }
+.canje-row{ display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:16px 10px; }
+.slot{ position:relative; aspect-ratio:60/110; }
+.slot svg{ position:absolute; inset:0; width:100%; height:100%; transform-origin:50% 100%; }
+.slot .crate{ transition:transform .5s var(--ease), opacity .35s linear; }
+.slot .tree{ transform:scale(0); transition:transform .7s var(--spring); }
+.canje.is-planted .slot .crate{ transform:scale(.25); opacity:0; transition-delay:calc(var(--i) * 110ms); }
+.canje.is-planted .slot .tree{ transform:scale(1); transition-delay:calc(var(--i) * 110ms + 180ms); }
+.canje figcaption{ margin-top:24px; max-width:26em; font-size:clamp(20px, 2vw, 26px); line-height:1.3; letter-spacing:-.01em; }
+.canje figcaption b{ font-weight:750; }
+.acuna-prose{ display:grid; gap:1em; margin-top:clamp(36px, 5vw, 64px); max-width:36em; }
 
 /* ============================================================
-   PROYECTOS — protagonistas
+   PARATU — la app que funciona + el ticket
 ============================================================ */
-.projects{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
-.project{
-  grid-column:span 1;
-  background:var(--bg); border:1px solid var(--line); border-radius:var(--r);
-  overflow:hidden; display:flex; flex-direction:column;
-  transition:border-color .25s, transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+.paratu-grid{ display:grid; grid-template-columns:minmax(0,1fr); grid-template-areas:"texto" "demo" "ticket"; row-gap:44px; }
+.paratu-texto{ grid-area:texto; }
+.nombres{ margin-top:20px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; font-size:15px; color:var(--graphite); }
+.nombres s{ font-weight:650; text-decoration-thickness:2px; }
+.nombres b{ font-weight:750; color:var(--ink); }
+.demo-nota{ margin-top:26px; max-width:26em; font-size:15px; color:var(--graphite); }
+.demo-nota button{ display:inline; padding:12px 0; margin:-12px 0; text-decoration:underline; text-underline-offset:.2em; color:var(--ink); font-weight:600; }
+.demo{ grid-area:demo; justify-self:center; width:min(80vw, 330px); }
+.demo .phone{ filter:var(--sh-rest); }
+.ticket-wrap{ grid-area:ticket; justify-self:center; }
+
+/* ---- la app ---- */
+.app .ui-body{ overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; padding-bottom:4cqw; }
+.app .ui-body::-webkit-scrollbar{ display:none; }
+.app-view{ display:none; }
+.app-view.is-on{ display:block; animation:vista .28s var(--ease); }
+@keyframes vista{ from{ opacity:0; transform:translateY(2cqw); } }
+.app button{ font-family:inherit; }
+.ui-shortcuts button{ cursor:pointer; }
+.task{ display:flex; align-items:center; gap:3cqw; background:#fff; border-radius:4.4cqw; padding:3.1cqw 3.8cqw; margin-bottom:2.2cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); font-weight:600; }
+.task input{ appearance:none; -webkit-appearance:none; flex:none; width:5.6cqw; height:5.6cqw; border-radius:50%; border:.55cqw solid #b7b7bd; display:grid; place-items:center; cursor:pointer; margin:0; transition:background .2s, border-color .2s, transform .2s var(--spring); }
+.task input:checked{ background:#34c759; border-color:#34c759; }
+.task input:checked::after{ content:""; width:1.4cqw; height:2.6cqw; border:solid #fff; border-width:0 .6cqw .6cqw 0; transform:translateY(-.3cqw) rotate(45deg); }
+.task input:active{ transform:scale(.85); }
+.task input:focus-visible{ outline:2px solid #111; outline-offset:2px; }
+.task .tt{ flex:1; min-width:0; cursor:pointer; }
+.task small{ display:block; font-weight:500; color:#8a8a8e; font-size:3.2cqw; }
+.task.is-done .tt > span{ text-decoration:line-through; color:#9a9aa0; }
+.pin{ flex:none; font-size:2.9cqw; font-weight:700; background:var(--yellow); color:#000; padding:.9cqw 1.8cqw; border-radius:1.2cqw; text-decoration:none; white-space:nowrap; }
+.ui-add{ display:flex; gap:2cqw; margin-top:1cqw; }
+.ui-add input{ flex:1; min-width:0; border:0; background:#fff; border-radius:4.4cqw; padding:3.2cqw 4cqw; font-size:max(4cqw, 16px); box-shadow:inset 0 0 0 .3cqw rgba(0,0,0,.06); }
+.ui-add button{ flex:none; width:11cqw; border-radius:50%; background:#111; color:#fff; font-size:6cqw; line-height:1; }
+.ui-seg{ display:grid; grid-template-columns:repeat(3,1fr); background:#ececef; border-radius:99px; padding:.8cqw; margin:3cqw 0; font-size:3.4cqw; font-weight:600; text-align:center; }
+.ui-seg span{ padding:1.8cqw 0; border-radius:99px; color:#8a8a8e; }
+.ui-seg .on{ background:#fff; color:#111; box-shadow:0 .3cqw 1cqw rgba(0,0,0,.08); }
+.bit-cards{ position:relative; border-radius:4cqw; overflow:hidden; }
+.bit-cards img{ width:100%; }
+.bit-hot{ position:absolute; right:0; top:0; width:50%; height:100%; border-radius:4cqw; }
+.bit-hot:focus-visible{ outline:.8cqw solid var(--yellow); outline-offset:-.8cqw; }
+.bit-pista{ margin-top:3cqw; font-size:3.4cqw; color:#6b6b70; }
+.bit-pista a{ color:#111; font-weight:700; }
+.cuentas{ display:grid; grid-template-columns:repeat(3,1fr); gap:2cqw; margin-top:3cqw; }
+.cuentas button{ text-align:left; background:#fff; border-radius:3.6cqw; padding:2.6cqw 2.8cqw; font-size:3.3cqw; font-weight:600; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
+.cuentas button small{ display:block; color:#8a8a8e; font-weight:500; font-size:3cqw; }
+.cuentas button[aria-pressed="true"]{ box-shadow:inset 0 0 0 .5cqw #111; }
+.gasto{ background:#fff; border-radius:5cqw; padding:3.6cqw 4cqw; margin-top:3cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
+.gasto-tipo{ display:flex; justify-content:center; gap:1cqw; background:#f1f1f3; border-radius:99px; padding:.8cqw; width:max-content; margin:0 auto 2cqw; font-size:2.9cqw; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+.gasto-tipo button{ padding:1.4cqw 3cqw; border-radius:99px; color:#8a8a8e; }
+.gasto-tipo button[aria-pressed="true"]{ background:#fff; color:#e5484d; box-shadow:0 .3cqw 1cqw rgba(0,0,0,.08); }
+.gasto-tipo button.ing[aria-pressed="true"]{ color:#1f9d55; }
+.gasto label{ display:block; }
+.gasto .monto{ display:flex; align-items:baseline; font-weight:750; font-size:9cqw; letter-spacing:-.02em; }
+.gasto .monto input{ width:100%; border:0; background:none; font-weight:750; font-size:max(9cqw,16px); letter-spacing:-.02em; padding:0; }
+.gasto .concepto{ width:100%; border:0; border-top:.3cqw solid #eee; background:none; padding:2.4cqw 0 .6cqw; font-size:max(3.8cqw,16px); margin-top:1cqw; }
+.gasto .guardar{ margin-top:2.6cqw; width:100%; background:#111; color:#fff; border-radius:99px; padding:2.8cqw 0; font-size:3.6cqw; font-weight:700; }
+.movs{ margin-top:3cqw; }
+.mov{ display:flex; justify-content:space-between; gap:2cqw; background:#fff; border-radius:3.8cqw; padding:3cqw 4cqw; margin-bottom:2cqw; font-weight:600; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
+.mov small{ display:block; color:#8a8a8e; font-weight:500; font-size:3cqw; }
+.mov .neg{ color:#e5484d; } .mov .pos{ color:#1f9d55; }
+
+/* ---- el ticket: las métricas de la App Store, impresas ---- */
+.ticket-wrap{ filter:var(--sh-rest); }
+.ticket{
+  width:min(80vw, 280px);
+  background:#fdfdfb;
+  padding:22px 20px 34px;
+  font-family:ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size:12.5px; line-height:1.6; text-transform:uppercase; letter-spacing:.02em; color:#1b1b1b;
+  transform:rotate(-2.5deg);
+  --dent:9px;
+  -webkit-mask:conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--dent) 100%;
+          mask:conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--dent) 100%;
 }
-.project.featured{ grid-column:1 / -1; }
-.project:hover{
-  border-color:var(--line-mid);
-  transform:translateY(-4px);
-  box-shadow:0 24px 60px rgba(0,0,0,.55);
-}
-.project .shot{
-  position:relative; overflow:hidden; background:var(--bg2);
-  border-bottom:1px solid var(--line);
-  aspect-ratio:16/9;
-}
-.project.featured .shot{ aspect-ratio:16/9; }
-/* la imagen no hace zoom (recorta feo lo que está cerca del borde);
-   al hover solo sube un poco de brillo, y la card ya se eleva sola */
-.project .shot img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  transition:filter .35s ease;
-}
-.project:hover .shot img{ filter:brightness(1.06); }
-.project .shot img.contain{ object-fit:contain; background:#fff; padding:6%; }
-.project .shot .ph{
-  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-  background:repeating-linear-gradient(45deg, var(--bg2), var(--bg2) 14px, var(--bg3) 14px, var(--bg3) 28px);
-  color:var(--dimmer); font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
-  transition:transform .5s cubic-bezier(.2,.7,.2,1);
-}
-.project:hover .shot .ph{ transform:scale(1.03); }
-/* cuerpo de la card: título grande + badge a su derecha, texto en
-   contenedor abajo, y a la derecha el botón blanco con la flechota */
-.project .body{
-  padding:24px 26px 26px; flex:1;
-  display:flex; align-items:stretch; justify-content:space-between; gap:22px;
-}
-.body-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:14px; }
-.title-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-/* estado del proyecto: pill chiquito junto al badge */
-.badge-status{
-  font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--mid); border:1px solid var(--line-mid); border-radius:100px;
-  padding:4px 11px; white-space:nowrap;
-}
-.project h3{ font-size:clamp(26px,3.2vw,38px); font-weight:800; letter-spacing:-0.03em; line-height:1.05; }
-/* el contenedor del texto llena todo el espacio disponible,
-   simétrico con el botón de la flecha */
-.project p{
-  flex:1; width:100%; max-width:none;
-  font-size:14.5px; color:var(--dim); line-height:1.6;
-  /* mismo fondo y borde que las cards de "Quién soy" */
-  background:var(--bg2); border:1px solid var(--line); border-radius:14px;
-  padding:14px 18px;
-}
-.go-big{
-  flex:0 0 auto; align-self:stretch;
-  width:clamp(90px,11vw,130px); min-height:90px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-  background:var(--ink); color:#0B0B0C; border-radius:14px;
-  font-size:clamp(38px,4vw,52px); font-weight:800; line-height:1;
-  transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
-}
-.go-big small{
-  font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-}
-.project:hover .go-big{ transform:translate(3px,-3px); box-shadow:0 10px 30px rgba(255,255,255,.14); }
-@media (max-width:760px){
-  .projects{ grid-template-columns:1fr; }
-  .project.featured .shot{ aspect-ratio:16/9; }
-}
-@media (max-width:560px){
-  .project .body{ flex-direction:column; gap:16px; }
-  .go-big{ width:100%; min-height:64px; font-size:32px; flex-direction:row; gap:10px; }
-}
+.ticket .ticket-t{ font:inherit; font-weight:700; text-align:center; font-size:15px; letter-spacing:.14em; }
+.ticket .sub{ text-align:center; color:#6a6a6a; margin-bottom:12px; }
+.ticket dl{ border-top:1px dashed #bbb; border-bottom:1px dashed #bbb; padding:10px 0; }
+.ticket dl div{ display:flex; gap:6px; }
+.ticket dt{ flex:1; display:flex; overflow:hidden; white-space:nowrap; }
+.ticket dt::after{ content:" ....................................................."; color:#aaa; }
+.ticket dd{ flex:none; font-weight:700; }
+.ticket .total{ display:flex; justify-content:space-between; font-weight:700; font-size:14px; padding:10px 0; border-bottom:1px dashed #bbb; }
+.ticket .gracias{ text-align:center; margin-top:12px; color:#6a6a6a; }
+.paratu-cierre{ margin-top:clamp(64px, 9vw, 128px); }
 
 /* ============================================================
-   BENTO — sobre mí + redes
+   FOLIO — el objeto cambia mientras bajas
 ============================================================ */
-.bento{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-.cell{
-  background:var(--bg2); border:1px solid var(--line); border-radius:var(--r);
-  padding:26px; display:flex; flex-direction:column;
-  min-width:0; /* permite encoger las celdas: sin esto el grid revienta en teléfono */
-  transition:border-color .25s, transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s;
+.folio-head .origen{ margin-top:clamp(24px, 3vw, 40px); font-size:clamp(19px, 1.8vw, 23px); line-height:1.35; max-width:24em; }
+.folio-head .problema{ margin-top:1em; max-width:30em; }
+.folio-stage{ display:none; }
+.folio-steps{
+  list-style:none; display:flex; gap:14px; overflow-x:auto; overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin:clamp(36px, 6vw, 64px) calc(var(--gutter) * -1) 0;
+  padding:10px var(--gutter) 20px; scroll-padding-inline:var(--gutter);
 }
-.cell:hover{ border-color:var(--line-mid); }
-a.cell:hover{ transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,.5); }
-.cell .tag{ margin-bottom:14px; }
-.span2{ grid-column:span 2; }
-
-.cell.bio p{ font-size:15.5px; color:var(--mid); line-height:1.65; }
-.cell.bio p + p{ margin-top:10px; }
-
-.cell.now p{ font-size:14.5px; color:var(--mid); line-height:1.6; }
-
-.chips{ display:flex; flex-wrap:wrap; gap:8px; }
-.chip{
-  font-size:13px; font-weight:500; color:var(--mid);
-  padding:6px 14px; border:1px solid var(--line-mid); border-radius:100px; background:var(--bg);
-}
-
-.stat .num{ font-size:clamp(34px,4vw,46px); font-weight:800; letter-spacing:-0.04em; line-height:1; }
-.stat .cap{ font-size:13px; color:var(--dim); margin-top:8px; font-weight:500; }
-/* edad en vivo: dígitos tabulares para que no bailen al cambiar */
-.num.edad{ font-variant-numeric:tabular-nums; white-space:nowrap; letter-spacing:-0.02em; }
-.num.edad .dec{ font-size:.52em; font-weight:600; color:var(--dim); }
-
-/* — cards de redes: monocromas, color de marca solo al hover — */
-.social{ justify-content:space-between; gap:20px; min-height:150px; position:relative; }
-.social .ic{
-  width:44px; height:44px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center;
-  background:var(--ink); transition:background .25s, transform .25s;
-}
-.social .ic svg{ width:21px; height:21px; fill:#0B0B0C; transition:fill .25s; }
-.social:hover .ic svg{ fill:#fff; }
-.social h4{ font-size:16px; font-weight:700; letter-spacing:-0.01em; }
-.social .handle{ font-size:13px; color:var(--dim); font-weight:500; margin-top:2px; }
-.social .arrow{
-  position:absolute; top:20px; right:20px; font-size:16px; color:var(--dimmer);
-  transition:color .2s, transform .2s;
-}
-.social:hover .arrow{ color:var(--ink); transform:translate(2px,-2px); }
-.social:hover .ic{ transform:scale(1.06); }
-.social.tiktok:hover  .ic{ background:#000; box-shadow:2px 2px 0 rgba(238,29,82,.55), -2px -2px 0 rgba(105,201,208,.55); }
-.social.insta:hover   .ic{ background:linear-gradient(135deg,#FFDC80,#F56040,#C13584,#833AB4); }
-.social.youtube:hover .ic{ background:#FF0000; }
-.social.linkedin:hover .ic{ background:#0A66C2; }
-
-@media (max-width:900px){
-  .bento{ grid-template-columns:repeat(2,1fr); }
-  .span2{ grid-column:span 2; }
-}
-@media (max-width:520px){
-  .bento{ grid-template-columns:1fr 1fr; gap:12px; }
-  .cell{ padding:20px; }
-  .cell.bio, .cell.now, .cell.skills{ grid-column:span 2; }
-  .social{ min-height:132px; }
-  /* la edad a lo ancho, con los números tan grandes como quepan */
-  .cell.edad-cell{ grid-column:span 2; padding:24px 20px; }
-  .edad-cell .num{ font-size:clamp(30px, 9.2vw, 58px); }
-}
+.folio-steps::-webkit-scrollbar{ display:none; }
+.folio-steps li{ flex:0 0 84%; scroll-snap-align:start; }
+.step-img{ height:min(60vh, 112vw); display:flex; align-items:center; justify-content:center; background:var(--sweep); border-radius:4px; padding:9%; }
+.step-img img{ max-height:100%; width:auto; object-fit:contain; filter:var(--sh-rest); }
+.step-n{ display:block; margin-top:18px; font-size:14px; font-weight:650; color:var(--graphite); font-variant-numeric:tabular-nums; }
+.step-t{ font-weight:750; font-size:22px; letter-spacing:-.01em; margin-top:2px; }
+.step-p{ margin-top:6px; max-width:26em; }
+.fig{ margin-top:clamp(72px, 10vw, 144px); }
+.fig-box{ position:relative; }
+.fig-box img{ width:100%; }
+.fig-box svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.fig figcaption{ margin-top:18px; display:grid; gap:14px; }
+.fig .leyenda{ list-style:none; display:flex; flex-wrap:wrap; gap:6px 28px; font-size:15px; }
+.fig .leyenda b{ display:inline-block; min-width:1.4em; font-weight:750; }
+.fig .pie-fig{ font-size:15px; color:var(--graphite); max-width:40em; }
+.folio-cierre{ margin-top:clamp(48px, 6vw, 80px); max-width:34em; }
 
 /* ============================================================
-   CONTACTO
+   HABLEMOS DE NEGOCIOS
 ============================================================ */
-.contact{ text-align:center; }
-.contact .rule-top{ height:1px; background:var(--line); margin-bottom:clamp(64px,10vh,100px); }
-.contact h2{
-  font-size:clamp(40px,7vw,80px); font-weight:800; letter-spacing:-0.04em; line-height:1.02;
+.aperturas{ margin-top:clamp(40px, 5vw, 72px); }
+.aperturas-fila{
+  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:40%;
+  gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
 }
-.contact .sub{ margin-top:18px; font-size:16px; color:var(--dim); }
-.contact .mail{
-  display:inline-block; margin-top:30px;
-  font-size:clamp(18px,2.6vw,24px); font-weight:600; letter-spacing:-0.01em;
-  border-bottom:1.5px solid var(--ink); padding-bottom:3px;
-  transition:opacity .2s;
-}
-.contact .mail:hover{ opacity:.6; }
-/* ---- escenario de físicas ---- */
-.fisica-stage{
-  position:relative; overflow:hidden;
-  min-height:clamp(420px, 68vh, 640px);
-  display:flex; align-items:center; justify-content:center;
-  border:1px solid var(--line); border-radius:var(--r);
-  background:var(--bg2);
-}
-.contact-copy{ position:relative; z-index:2; pointer-events:none; padding:24px; }
-.contact-copy .mail{ pointer-events:auto; }
-/* chips de redes: más chicos que las cards del bento, con cuerpo físico */
-.chip-soc{
-  position:absolute; top:0; left:0; z-index:1;
-  display:inline-flex; align-items:center;
-  padding:11px 20px; border-radius:100px;
-  background:var(--ink); color:#0B0B0C;
-  font-size:14px; font-weight:700; letter-spacing:-0.01em;
-  cursor:grab; user-select:none; -webkit-user-select:none;
-  touch-action:none; will-change:transform;
-  visibility:hidden; /* se muestran cuando las físicas los colocan */
-}
-.chip-soc:active{ cursor:grabbing; }
-/* sin físicas (reduced motion / sin conexión): fila normal */
-.fisica-stage.sin-fisica .chip-soc{
-  position:static; visibility:visible; margin:6px 5px; touch-action:auto;
-}
-.fisica-stage.sin-fisica{ flex-direction:column; }
-.fisica-stage.sin-fisica .chips-row{ position:relative; z-index:2; }
+.aperturas-fila::-webkit-scrollbar{ display:none; }
+.aperturas-fila li{ scroll-snap-align:start; }
+.aperturas-fila video{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:10px; background:#e9e9e9; }
+.aperturas-fila span{ display:block; margin-top:8px; font-size:14px; font-weight:650; }
+.frase{ display:flex; flex-wrap:wrap; align-items:baseline; gap:0 .26em; margin-top:26px; font-size:clamp(32px, 6vw, 72px); font-weight:820; letter-spacing:-.035em; line-height:1; }
+.frase span{ transition:color .12s linear; }
+.frase.is-playing span{ color:#cfcfcf; }
+.frase.is-playing span.on{ color:var(--ink); }
+.frase-tr{ font-size:15px; color:var(--graphite); margin-top:8px; }
+.aperturas-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 20px; margin-top:14px; }
+.aperturas-foot p{ max-width:30em; }
+.btn-otra{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; text-decoration:underline; text-underline-offset:.2em; }
 
-footer{
-  border-top:1px solid var(--line); margin-top:clamp(64px,10vh,100px);
-  padding:30px 0 40px;
+.evidencia{ margin-top:clamp(64px, 9vw, 120px); font-size:clamp(22px, 2.5vw, 32px); line-height:1.25; font-weight:500; letter-spacing:-.015em; max-width:26em; }
+.evidencia a{ font-size:17px; font-weight:650; display:inline-flex; min-height:44px; align-items:center; letter-spacing:0; }
+
+.formula{ margin-top:clamp(64px, 9vw, 128px); display:grid; gap:36px; }
+.reel{ width:min(80vw, 330px); justify-self:center; }
+.reel-video{ position:relative; }
+.reel video{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:14px; background:#111; }
+.reel-play{
+  position:absolute; inset:0; border-radius:14px;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:10px;
+  padding:0 16px 22px; color:#fff; text-align:center;
+  background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0) 46%);
+  font-weight:650; font-size:15px;
 }
-.foot-inner{
-  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
-  font-size:13px; color:var(--dim);
+.reel-play i{ width:64px; height:64px; border-radius:50%; background:var(--yellow); display:grid; place-items:center; margin:auto 0; box-shadow:0 8px 30px rgba(0,0,0,.25); transition:transform .25s var(--spring); }
+.reel-play:hover i{ transform:scale(1.07); }
+.reel-play svg{ width:24px; height:24px; margin-left:4px; }
+.reel.is-playing .reel-play{ display:none; }
+.reel-nota{ margin-top:12px; font-size:14px; color:var(--graphite); }
+.reel-nota a{ color:var(--ink); font-weight:600; }
+.formula h3{ font-size:clamp(26px, 2.8vw, 38px); font-weight:780; letter-spacing:-.025em; line-height:1.05; }
+.formula .intro{ margin-top:12px; max-width:30em; }
+.bloques{ list-style:none; margin-top:22px; border-top:1px solid var(--line); }
+.bloques li{ border-bottom:1px solid var(--line); }
+.bloques button{
+  display:grid; grid-template-columns:2.2em 1fr; gap:2px 10px; width:100%; text-align:left;
+  padding:14px 10px 14px 4px; min-height:56px; align-items:baseline;
+  transition:background-color .25s;
+}
+.bloques button:hover{ background:var(--sweep); }
+.bloques .bn{ grid-row:span 2; font-weight:750; font-size:15px; color:var(--graphite); font-variant-numeric:tabular-nums; }
+.bloques .bt{ font-weight:700; }
+.bloques .bq{ font-size:15px; color:var(--graphite); }
+.bloques li.on button{ background:var(--yellow); }
+.bloques li.on .bn, .bloques li.on .bq{ color:var(--ink); }
+.guion{ margin-top:18px; font-size:15px; }
+.guion summary{ cursor:pointer; font-weight:650; min-height:44px; display:flex; align-items:center; }
+.guion p{ margin-top:8px; max-width:40em; color:#333; }
+
+.hdn-notas{ margin-top:clamp(64px, 9vw, 128px); display:grid; gap:44px; }
+.hdn-notas p{ max-width:30em; }
+.veg{ display:flex; gap:16px; align-items:flex-start; }
+.veg-mark{ flex:none; width:30px; height:30px; border:2.5px solid #0f8a3a; display:grid; place-items:center; margin-top:3px; }
+.veg-mark::after{ content:""; width:14px; height:14px; border-radius:50%; background:#0f8a3a; }
+.hdn .linea{ margin-top:clamp(72px, 10vw, 144px); }
+
+/* ============================================================
+   FINES DE SEMANA — hackathons y retos
+============================================================ */
+.fines{ padding-block:clamp(104px, 14vw, 200px); }
+.fines-t{ font-size:clamp(40px, 6vw, 84px); font-weight:820; font-stretch:125%; line-height:.92; letter-spacing:-.045em; }
+.fines-intro{ margin-top:16px; max-width:26em; font-size:clamp(19px, 1.9vw, 24px); line-height:1.3; }
+.exp-lista{ margin-top:clamp(48px, 7vw, 96px); display:grid; gap:80px; }
+.exp h3{ font-size:clamp(30px, 3.6vw, 48px); font-weight:800; font-stretch:112%; letter-spacing:-.035em; line-height:1; margin-top:14px; }
+.exp .meta{ margin-top:10px; font-size:15px; color:var(--graphite); }
+.exp .desc{ margin-top:12px; max-width:30em; }
+.fl{ display:grid; gap:40px; }
+.calc{ margin-top:24px; max-width:460px; background:var(--sweep); padding:22px 20px 20px; border-radius:4px; }
+.calc-intro{ font-size:15px; margin-bottom:14px; }
+.calc label{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:6px 0; border-bottom:1px solid #e2e2df; font-size:15px; }
+.calc .campo{ display:flex; align-items:baseline; gap:2px; font-weight:700; font-size:20px; }
+.calc input{ width:5.2em; text-align:right; border:0; background:transparent; font-weight:700; font-size:20px; padding:8px 0; border-bottom:2px solid transparent; }
+.calc input:focus{ outline:none; border-bottom-color:var(--ink); }
+.calc output{ display:block; margin-top:16px; font-size:clamp(34px, 5vw, 48px); font-weight:820; letter-spacing:-.03em; line-height:1; }
+.calc output small{ font-size:.42em; font-weight:600; letter-spacing:0; margin-left:.2em; }
+.calc-nota{ margin-top:8px; font-size:15px; }
+.cert{ width:min(88vw, 440px); transform:rotate(2deg); filter:var(--sh-rest); justify-self:center; }
+.exp-pares{ display:grid; gap:56px; }
+
+/* ============================================================
+   BITÁCORA
+============================================================ */
+.bitacora{ padding-block:clamp(104px, 14vw, 200px); }
+.bit-grid{ display:grid; gap:48px; }
+.bit-t{ font-size:clamp(40px, 6vw, 84px); font-weight:820; font-stretch:125%; line-height:.92; letter-spacing:-.045em; }
+.bit-intro{ margin-top:14px; color:var(--graphite); }
+.postit{
+  margin-top:32px; width:min(80vw, 290px); aspect-ratio:1;
+  background:var(--yellow); padding:24px 22px;
+  transform:rotate(-2.2deg);
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.12)) drop-shadow(6px 14px 14px rgba(0,0,0,.12));
+  clip-path:polygon(0 0,100% 0,100% 100%,6% 100%,0 96%);
+}
+.postit h3{ font-size:22px; font-weight:800; letter-spacing:-.02em; }
+.postit ul{ list-style:none; margin-top:10px; display:grid; gap:8px; font-size:16px; line-height:1.3; font-weight:500; }
+.log{ list-style:none; }
+.log li{ display:grid; grid-template-columns:6.4em 1fr; gap:14px; padding:16px 0; border-top:1px solid var(--line); }
+.log li:last-child{ border-bottom:1px solid var(--line); }
+.log time{ font-weight:650; font-size:15px; color:var(--graphite); font-variant-numeric:tabular-nums; padding-top:.1em; }
+
+/* ============================================================
+   HABLEMOS
+============================================================ */
+.hablemos{ padding-block:clamp(110px, 15vw, 220px) clamp(40px, 5vw, 72px); }
+.hablemos .tape{ margin-bottom:clamp(18px, 2.4vw, 30px); }
+.hablemos-t{ font-size:min(calc((100vw - 2 * var(--gutter)) / 7.1), 200px); font-weight:850; font-stretch:125%; line-height:.84; letter-spacing:-.055em; margin-left:-.03em; white-space:nowrap; }
+.hablemos-sub{ margin-top:clamp(20px, 3vw, 36px); font-size:clamp(20px, 2.2vw, 28px); line-height:1.25; max-width:22em; font-weight:450; }
+.correo{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:clamp(28px, 4vw, 48px); }
+.correo a{ font-size:clamp(19px, 3.4vw, 42px); font-weight:750; letter-spacing:-.025em; text-decoration:underline; text-decoration-thickness:.07em; text-underline-offset:.16em; overflow-wrap:anywhere; }
+.copiar{ min-height:44px; padding:0 16px; border-radius:999px; border:1.5px solid var(--ink); font-size:14px; font-weight:650; transition:background .2s, color .2s; }
+.copiar.is-ok{ background:var(--ink); color:var(--paper); }
+.hora{ margin-top:16px; color:var(--graphite); font-size:15px; }
+.redes{ list-style:none; margin-top:clamp(48px, 7vw, 96px); border-top:1px solid var(--line); max-width:880px; }
+.redes li{ border-bottom:1px solid var(--line); }
+.redes a{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; column-gap:16px; min-height:68px; padding:12px 0; text-decoration:none; }
+.redes b{ grid-column:1; font-weight:750; font-size:clamp(19px, 2vw, 24px); letter-spacing:-.015em; }
+.redes span{ grid-column:1; color:var(--graphite); font-size:15px; }
+.redes em{ grid-column:2; grid-row:1 / span 2; font-style:normal; font-size:15px; color:var(--graphite); text-align:right; max-width:14em; }
+.redes a:hover b{ text-decoration:underline; text-underline-offset:.15em; text-decoration-thickness:2px; }
+
+.pie{ padding:28px var(--gutter) calc(28px + env(safe-area-inset-bottom)); max-width:var(--maxw); margin-inline:auto; display:flex; flex-wrap:wrap; gap:4px 20px; justify-content:space-between; align-items:center; font-size:14px; color:var(--graphite); }
+.firma{ display:inline-flex; align-items:center; gap:10px; }
+.firma svg{ width:22px; height:22px; color:var(--ink); }
+.version{ min-height:44px; color:var(--graphite); text-decoration:underline dotted; text-underline-offset:.25em; font-size:14px; font-variant-numeric:tabular-nums; }
+.version-nota{ flex:1 1 100%; color:var(--ink); padding-bottom:8px; }
+
+/* ============================================================
+   PANTALLAS MÁS ANCHAS: la misma página, con más espacio
+============================================================ */
+@media (min-width:640px){
+  .aperturas-fila{ grid-auto-columns:30%; }
+  .canje-row{ grid-template-columns:repeat(13, minmax(0,1fr)); gap:12px; }
+  .acuna-sticker{ width:110px; top:-110px; }
+}
+@media (min-width:900px){
+  .hero{
+    grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+    grid-template-areas:". mesa" "title mesa" "copy mesa" ". mesa";
+    grid-template-rows:minmax(0,.55fr) auto auto minmax(0,1fr);
+    column-gap:clamp(24px, 3vw, 56px);
+    min-height:calc(100svh - var(--head));
+    padding-top:clamp(24px, 5vh, 64px);
+    padding-bottom:clamp(24px, 4vh, 48px);
+  }
+  .hero-title{ font-size:clamp(56px, 6.4vw, 108px); }
+  .hero-copy{ margin-top:clamp(24px, 4vh, 44px); }
+  .mesa{ aspect-ratio:auto; height:100%; min-height:560px; max-height:820px; margin-top:0; }
+  .obj--print  { --x:3%;  --y:9%;  --w:27%; --r:-8deg; }
+  .obj--folio  { --x:31%; --y:4%;  --w:39%; --r:-4deg; }
+  .obj--phone  { --x:71%; --y:11%; --w:22%; --r:7deg; }
+  .obj--script { --x:9%;  --y:50%; --w:30%; --r:5deg; }
+  .obj--sticker{ --x:48%; --y:57%; --w:20%; --r:-7deg; }
+  .obj-label{ font-size:11px; bottom:-13px; }
+  .nota-escondida{ --x:31%; --y:4%; }
+
+  .acuna-head{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:56px; align-items:center; }
+  .acuna-head > :not(.acuna-sticker){ grid-column:1; }
+  .acuna-sticker{ position:static; grid-column:2; grid-row:1 / span 3; width:210px; margin-right:12px; }
+  .acuna-prose{ grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:56px; max-width:none; }
+
+  .paratu-grid{
+    grid-template-columns:minmax(0,1fr) 340px;
+    grid-template-areas:"texto demo" "ticket demo";
+    column-gap:clamp(40px, 7vw, 120px); row-gap:40px;
+    align-items:start;
+  }
+  .demo{ width:340px; }
+  .ticket-wrap{ justify-self:start; align-self:end; margin-left:clamp(0px, 4vw, 64px); }
+
+  .folio-seq{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); column-gap:clamp(40px, 5vw, 80px); }
+  .folio-stage{
+    display:block; grid-column:1; grid-row:1 / span 2; align-self:start;
+    position:sticky; top:calc(var(--head) + 3vh); height:calc(100vh - var(--head) - 6vh);
+    background:var(--sweep); border-radius:4px;
+  }
+  .folio-stage img{
+    position:absolute; left:50%; top:50%; max-width:76%; max-height:80%; width:auto; height:auto;
+    translate:-50% -50%; opacity:0; scale:.94; rotate:-2deg;
+    filter:var(--sh-rest);
+    transition:opacity .45s var(--ease), scale .8s var(--ease-out), rotate .8s var(--ease-out);
+  }
+  .folio-stage img.on{ opacity:1; scale:1; rotate:0deg; }
+  .folio-head{ grid-column:2; min-height:calc(100vh - var(--head) - 6vh); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+  .folio-pasos{ grid-column:2; }
+  .folio-steps{ display:block; overflow:visible; margin:0; padding:0; }
+  .folio-steps li{ min-height:72vh; display:flex; flex-direction:column; justify-content:center; }
+  .folio-steps .step-img{ display:none; }
+  .step-t{ font-size:clamp(28px, 2.8vw, 40px); }
+  .step-p{ font-size:clamp(18px, 1.5vw, 21px); }
+
+  .aperturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px; overflow:visible; max-width:var(--maxw); margin-inline:auto; }
+  .formula{ grid-template-columns:auto minmax(0,1fr); gap:clamp(40px, 6vw, 96px); align-items:start; }
+  .reel{ width:330px; position:sticky; top:calc(var(--head) + 32px); }
+  .hdn-notas{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:64px; }
+
+  .fl{ grid-template-columns:minmax(0,1fr) minmax(0,.9fr); align-items:center; gap:64px; }
+  .exp-pares{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:64px; }
+
+  .bit-grid{ grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:72px; }
+  .bit-side{ position:sticky; top:calc(var(--head) + 40px); align-self:start; }
+  .log li{ grid-template-columns:8em 1fr; }
+}
+@media (min-width:1280px){
+  .hero-title{ font-size:clamp(88px, 6.6vw, 116px); }
+}
+
+/* al tocar: la cosa se levanta un poco antes de llevarte a su historia */
+.obj:active{ --s:1.04; filter:var(--sh-lift); transition:transform .15s var(--ease), filter .15s var(--ease); }
+
+/* con mouse: las cosas de la mesa se levantan y se mueven */
+@media (hover:hover) and (pointer:fine){
+  .hint{ display:block; }
+  .obj{ cursor:grab; }
+  .obj:hover{ --s:1.025; filter:var(--sh-lift); }
+  .obj.is-held{ --s:1.05; cursor:grabbing; filter:var(--sh-lift); transition:filter .3s var(--ease), transform .12s linear; }
+  .obj-label{ opacity:0; translate:-50% 6px; }
+  .obj:hover .obj-label, .obj:focus-visible .obj-label, .obj.is-held .obj-label{ opacity:1; translate:-50% 0; }
+  .nota-escondida{ display:block; }
+}
+@media (prefers-reduced-motion:no-preference){
+  html{ scroll-behavior:smooth; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation:none !important; transition:none !important; }
+  .js .mesa:not(.is-set) .obj{ opacity:1; --s:1; --dy:0px; filter:var(--sh-rest); }
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#contenido" data-en="Skip to content">Saltar al contenido</a>
 
-<div class="overscroll-top" aria-hidden="true"></div>
-
-<!-- ===================== NAV ===================== -->
-<nav id="nav">
-  <div class="nav-inner">
-    <a class="nav-name" href="#top"><span class="nn-text">Joaquin Álvarez Mercado</span></a>
-    <a class="nav-cta" href="#contacto" data-en="Contact">Contacto</a>
-  </div>
-</nav>
-
-<div id="top"></div>
-
-<!-- ===================== HERO ===================== -->
-<!-- foto-ancha.jpg se usa en computadora; foto.jpg (vertical) en teléfono -->
-<header class="hero">
-  <div class="hero-img">
-    <picture>
-      <source id="hero-src-mobile" media="(max-width: 760px)" srcset="foto.jpg" />
-      <img id="hero-img" src="foto-ancha.jpg" alt="Foto de Joaquin" />
-    </picture>
-  </div>
-  <div class="hero-scrim"></div>
-  <span class="photo-caption">Joaquin · MX</span>
-  <div class="wrap hero-content">
-    <h1 class="reveal">Joaquin<br /><span class="hollow">Álvarez Mercado</span></h1>
-    <div class="hero-actions reveal">
-      <a class="btn solid" href="#proyectos" data-en="View projects ↓">Ver proyectos ↓</a>
-      <a class="btn ghost" href="#contacto" data-en="Get in touch">Contactar</a>
-    </div>
-  </div>
+<header class="top" data-top>
+  <a class="top-name" href="#mesa">Joaquín Álvarez Mercado</a>
+  <nav class="top-nav" aria-label="Idioma y contacto" data-en-aria-label="Language and contact">
+    <button type="button" class="lang" data-lang-toggle lang="en" aria-label="Read this page in English">EN</button>
+    <a class="top-cta" href="#hablemos" data-en="Let's talk">Hablemos</a>
+  </nav>
 </header>
 
-<!-- ===================== INTRO (lo que salió del hero) ===================== -->
-<section class="intro">
-  <div class="wrap intro-inner">
-    <div>
-      <div class="intro-eyebrow reveal"><span data-en="Portfolio">Portafolio</span> — <span id="year-eyebrow">2026</span></div>
-      <p class="intro-lede reveal" data-en="I build products, share ideas and learn by creating.">Construyo productos, comparto ideas y aprendo creando.</p>
-    </div>
-    <div class="intro-meta reveal">
-      <span class="avail" data-en="Available for projects">Disponible para proyectos</span>
-      <span data-en="México">México</span>
-      <span data-en="Business · Technology · Content">Negocios · Tecnología · Contenido</span>
+<main id="contenido">
+
+<!-- ===================== LA MESA ===================== -->
+<section class="hero" id="mesa" aria-labelledby="hero-t">
+  <h1 class="hero-title" id="hero-t"><span data-en="I make things.">Hago cosas.</span> <span data-en="Some of them work.">Algunas funcionan.</span></h1>
+
+  <div class="mesa" data-mesa>
+    <p class="hint" data-en="Go ahead, move things around.">Puedes mover las cosas.</p>
+    <p class="nota-escondida" aria-hidden="true" data-en="Curious people always move things. Write to me: joaquinalvarezme@gmail.com">Los curiosos siempre mueven las cosas. Escríbeme: joaquinalvarezme@gmail.com</p>
+
+    <a class="obj obj--print" href="#bitacora" style="--i:0" data-obj aria-label="Yo. Ver mi bitácora" data-en-aria-label="Me. See my logbook">
+      <span class="print"><img src="assets/img/retrato-440.webp" srcset="assets/img/retrato-440.webp 440w, assets/img/retrato-720.webp 720w" sizes="(min-width:900px) 16vw, 36vw" width="440" height="587" alt="" fetchpriority="high" /></span>
+      <span class="obj-label" aria-hidden="true" data-en="Me">Yo</span>
+    </a>
+
+    <a class="obj obj--folio" href="#folio" style="--i:1" data-obj aria-label="FOLIO, prototipo 1" data-en-aria-label="FOLIO, prototype 1">
+      <img src="assets/img/folio-cerrada-520.webp" srcset="assets/img/folio-cerrada-520.webp 520w, assets/img/folio-cerrada-900.webp 900w" sizes="(min-width:900px) 23vw, 46vw" width="520" height="585" alt="" fetchpriority="high" />
+      <span class="obj-label" aria-hidden="true">FOLIO</span>
+    </a>
+
+    <a class="obj obj--phone" href="#paratu" style="--i:2" data-obj aria-label="Paratu, app para iOS" data-en-aria-label="Paratu, iOS app">
+      <span class="phone" aria-hidden="true">
+        <span class="screen">
+          <span class="ui-status"><span data-reloj>9:41</span><i class="ui-island"></i><span class="ui-bat"><b></b><i></i></span></span>
+          <span class="ui-body">
+            <span class="ui-h1" data-en="Today">Hoy</span>
+            <span class="ui-date" data-fecha>sábado 27 de septiembre</span>
+            <span class="ui-card">Es un gran día!!!</span>
+            <span class="ui-shortcuts"><span><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Tasks">Tareas</span></span><span><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.8"/></svg><span data-en="Money">Finanzas</span></span><span><svg viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 0 8 1.5 2-1.5 5-1.9 8-1.5V5c-3-.4-6 0-8 1.5zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></span></span>
+            <span class="ui-h2" data-en="Upcoming">Próximo</span>
+            <span class="ui-row"><i class="dot"></i><span><small data-en="Tomorrow">Mañana</small>Ir al parque</span></span>
+            <span class="ui-row"><i class="dot r"></i><span><small data-en="To watch">Para ver</small>Infinity Castle</span></span>
+            <span class="ui-row"><i class="dot b"></i><span><small data-en="Priority 1">Prioridad 1</small>Zapatero a sus zapatos</span></span>
+          </span>
+          <span class="ui-tabs"><span><svg viewBox="0 0 24 24"><circle cx="6" cy="7.5" r="2.4"/><circle cx="6" cy="16.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 7.5h9M11 16.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M4 13.5 6.4 6h11.2L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18zM4 13.5h4.6l1.4 2.2h4l1.4-2.2H20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="on"><svg viewBox="0 0 24 24"><path d="M4.5 11 12 4.8l7.5 6.2V19a1 1 0 0 1-1 1H15v-5.2H9V20H5.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span></span>
+        </span>
+      </span>
+      <span class="obj-label" aria-hidden="true">Paratu</span>
+    </a>
+
+    <a class="obj obj--script" href="#hdn" style="--i:3" data-obj aria-label="Guion de Hablemos de Negocios" data-en-aria-label="A Hablemos de Negocios script">
+      <div class="script" aria-hidden="true">
+        <span class="n" style="top:12.6cqw">1</span>
+        <b>Hablemos de negocios.</b>
+        <p><mark>Se tiran 40 millones de llantas</mark> al año en México. Eso es una llanta cada segundo.</p>
+        <span class="n" style="top:71cqw">2</span>
+        <p>¿Pero cómo funcionó?</p>
+        <p>Fue fundada por un estudiante al que corrieron tres veces…</p>
+      </div>
+      <span class="obj-label" aria-hidden="true" data-en="Script">Guion</span>
+    </a>
+
+    <a class="obj obj--sticker" href="#acuna" style="--i:4" data-obj aria-label="Acuña Sin Huella">
+      <span class="sticker"><img src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 11vw, 26vw" width="280" height="356" alt="" /></span>
+    </a>
+  </div>
+
+  <div class="hero-copy">
+    <p class="hero-sub" data-en="I'm Joaquín Álvarez Mercado, from Ciudad Acuña, Mexico. I study technology and business at TETR, and right now I'm in India. I made everything on this table; some of it with other people.">Soy Joaquín Álvarez Mercado, de Ciudad Acuña, Coahuila. Estudio tecnología y negocios en TETR y ahora estoy en India. Todo lo que ves en esta mesa lo hice yo; algunas cosas, con más gente.</p>
+    <div class="hero-foot">
+      <a class="cue" href="#acuna"><span data-en="But how did it work?">¿Pero cómo funcionó?</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </div>
 </section>
 
-<!-- ===================== PROYECTOS ===================== -->
-<section id="proyectos">
+<!-- ===================== ACUÑA SIN HUELLA ===================== -->
+<section class="proj acuna" id="acuna" aria-labelledby="acuna-t">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">01</span><span class="tag" data-en="Projects">Proyectos</span><span class="rule"></span></div>
-    <h2 class="sec-title reveal" data-en="What I've built.">Lo que he construido.</h2>
-    <p class="sec-sub reveal" data-en="These are my most relevant projects.">Estos son mis proyectos más relevantes.</p>
-
-    <div class="projects">
-      <!-- Proyecto destacado: Acuña Sin Huella -->
-      <a class="project featured reveal" href="https://www.instagram.com/acuna.sin.huella/" target="_blank" rel="noopener">
-        <div class="shot"><img class="contain" src="acuna.png" alt="Acuña Sin Huella — logo" /></div>
-        <div class="body">
-          <div class="body-main">
-            <div class="title-row"><h3>Acuña Sin Huella</h3><span class="tag" data-en="Environmental project">Proyecto ecológico</span><span class="badge-status" data-en="Co-founder">Cofundador</span></div>
-            <p data-en="An environmental project I co-founded in Acuña, Coahuila, Mexico. We planted more than 10 trees and organized two clean-up days.">Proyecto ecológico que cofundé en Acuña, Coahuila, México. Plantamos más de 10 árboles y realizamos dos jornadas de limpieza.</p>
-          </div>
-          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
-        </div>
-      </a>
-
-      <a class="project reveal" href="https://foliomx.vercel.app" target="_blank" rel="noopener">
-        <div class="shot"><img src="folio.jpg" alt="FOLIO — render de la carpeta cuaderno" /></div>
-        <div class="body">
-          <div class="body-main">
-            <div class="title-row"><h3>FOLIO</h3><span class="tag" data-en="Product · 2026">Producto · 2026</span><span class="badge-status" data-en="In development">En desarrollo</span></div>
-            <p data-en="The first folder you can use as a notebook. Patent pending.">La primera carpeta para usar como cuaderno. Patente en trámite.</p>
-          </div>
-          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
-        </div>
-      </a>
-
-      <!-- Proyecto 3: Paratu -->
-      <a class="project reveal" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
-        <div class="shot"><img src="paratu.jpg" alt="Paratu — pantallas de la app: organiza tu día, notas, imágenes y finanzas" /></div>
-        <div class="body">
-          <div class="body-main">
-            <div class="title-row"><h3>Paratu</h3><span class="tag" data-en="iOS App · 2026">App iOS · 2026</span><span class="badge-status" data-en="Live">Ya disponible</span></div>
-            <p data-en="A personal clarity system for iOS: tasks, journal and finances in one minimalist app. No subscriptions, no cloud, no distractions — your data lives only on your phone.">Un sistema personal de claridad para iOS: tareas, diario y finanzas en una sola app minimalista. Sin suscripciones, sin nube, sin distracciones — tus datos viven solo en tu teléfono.</p>
-          </div>
-          <span class="go-big"><span aria-hidden="true">↗</span><small data-en="View project">Ver proyecto</small></span>
-        </div>
-      </a>
+    <div class="acuna-head">
+      <p class="tape" data-en="Co-founder">Cofundador</p>
+      <h2 class="proj-name" id="acuna-t">Acuña Sin Huella</h2>
+      <p class="proj-what" data-en="An environmental movement I co-founded in my hometown in 2024.">Un movimiento ambiental que cofundé en mi ciudad, en 2024.</p>
+      <img class="acuna-sticker" src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 200px, 130px" width="280" height="356" loading="lazy" decoding="async" alt="Logo de Acuña Sin Huella: una huella de bota dentro del símbolo de reciclaje" data-en-alt="Acuña Sin Huella logo: a boot print inside the recycling symbol" />
     </div>
+
+    <figure class="canje" data-canje>
+      <div class="canje-row" role="img" aria-label="1,300 botellas de plástico que se convierten en 13 árboles" data-en-aria-label="1,300 plastic bottles turning into 13 trees" data-slots></div>
+      <figcaption data-en-html="&lt;b&gt;1,300 plastic bottles&lt;/b&gt; were traded for &lt;b&gt;13 trees&lt;/b&gt;, planted on campus."><b>1,300 botellas de plástico</b> se cambiaron por <b>13 árboles</b>, plantados en el campus.</figcaption>
+    </figure>
+
+    <div class="acuna-prose">
+      <p data-en="We brought together more than 50 volunteers. We ran two clean-up drives and filled more than 44 bags of trash.">Juntamos a más de 50 voluntarios. Hicimos dos jornadas de limpieza y llenamos más de 44 bolsas de basura.</p>
+      <p data-en="With the city's Ecology Department we set up the trade: bottles for trees. And we gave talks on saving water at three middle schools, together with Ciudad Acuña's Water Museum.">Con el Departamento de Ecología del municipio armamos el canje: botellas por árboles. Y dimos pláticas sobre el cuidado del agua en tres secundarias, junto con el Museo del Agua de Ciudad Acuña.</p>
+    </div>
+    <p class="links"><a href="https://www.instagram.com/acuna.sin.huella/" target="_blank" rel="noopener" data-en="Acuña Sin Huella on Instagram">Acuña Sin Huella en Instagram</a></p>
   </div>
 </section>
 
-<!-- ===================== SOBRE MÍ (BENTO) ===================== -->
-<section id="sobre-mi" style="padding-top:0;">
+<!-- ===================== PARATU ===================== -->
+<section class="proj paratu" id="paratu" aria-labelledby="paratu-t">
+  <div class="wrap paratu-grid">
+    <div class="paratu-texto">
+      <p class="tape" data-en="On the App Store">En la App Store</p>
+      <h2 class="proj-name" id="paratu-t">Paratu</h2>
+      <p class="proj-what" data-en="An iOS app that keeps your to-dos, your notes and your money in one place. I designed it, built it and shipped it on my own.">Una app para iOS que junta tus pendientes, tus notas y tu dinero. La diseñé, la programé y la publiqué yo solo.</p>
+      <p class="nombres"><s>FJTZ</s> <s>FLINT</s> <b>Paratu</b> <span data-en="Three names in one year.">Tres nombres en un año.</span></p>
+      <p class="demo-nota"><span data-en="The phone works. Check off a task or log an expense. Everything stays in your browser, like in Paratu, where nothing leaves your phone.">El teléfono funciona. Marca un pendiente o anota un gasto. Todo se queda en tu navegador, como en Paratu, donde nada sale de tu teléfono.</span> <button type="button" data-reset data-en="Start over">Empezar de nuevo</button></p>
+    </div>
+
+    <div class="demo">
+      <div class="phone">
+        <div class="screen app" data-app>
+          <div class="ui-status" aria-hidden="true"><span data-reloj>9:41</span><i class="ui-island"></i><span class="ui-bat"><b></b><i></i></span></div>
+          <div class="ui-body">
+
+            <section class="app-view is-on" id="v-hoy" role="tabpanel" aria-labelledby="t-hoy" data-view="hoy">
+              <h3 class="ui-h1" data-en="Today">Hoy</h3>
+              <p class="ui-date" data-fecha>sábado 27 de septiembre</p>
+              <p class="ui-card">Es un gran día!!!</p>
+              <div class="ui-shortcuts">
+                <button type="button" data-ir="tareas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Tasks">Tareas</span></button>
+                <button type="button" data-ir="finanzas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.8"/></svg><span data-en="Money">Finanzas</span></button>
+                <button type="button" data-ir="bitacora"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 0 8 1.5 2-1.5 5-1.9 8-1.5V5c-3-.4-6 0-8 1.5zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></button>
+              </div>
+              <h4 class="ui-h2" data-en="Upcoming">Próximo</h4>
+              <div data-proximo></div>
+            </section>
+
+            <section class="app-view" id="v-tareas" role="tabpanel" aria-labelledby="t-tareas" data-view="tareas" hidden>
+              <h3 class="ui-h1" data-en="Tasks">Tareas</h3>
+              <h4 class="ui-h2" data-en="To do">Pendientes</h4>
+              <div data-pendientes></div>
+              <form class="ui-add" data-add>
+                <label class="sr" for="nueva-tarea" data-en="New task">Nueva tarea</label>
+                <input id="nueva-tarea" type="text" maxlength="60" autocomplete="off" placeholder="Nueva tarea…" data-en-placeholder="New task…" />
+                <button type="submit" aria-label="Agregar" data-en-aria-label="Add">+</button>
+              </form>
+              <h4 class="ui-h2" data-en="Completed">Completadas</h4>
+              <div data-hechas></div>
+            </section>
+
+            <section class="app-view" id="v-bitacora" role="tabpanel" aria-labelledby="t-bitacora" data-view="bitacora" hidden>
+              <h3 class="ui-h1" data-en="Log">Bitácora</h3>
+              <div class="ui-seg" aria-hidden="true"><span data-en="All">Todo</span><span class="on" data-en="Photos">Fotos</span><span data-en="Notes">Notas</span></div>
+              <div class="bit-cards">
+                <img src="assets/img/paratu-bitacora-420.webp" srcset="assets/img/paratu-bitacora-420.webp 420w, assets/img/paratu-bitacora-840.webp 840w" sizes="340px" width="420" height="268" loading="lazy" decoding="async" alt="Dos notas reales de mi Bitácora: «Inicio», del 3 de mayo, y «Carpeta que no dobla las hojas», del 12 de abril, con foto de mi escritorio." data-en-alt="Two real notes from my Paratu log: “Inicio” (May 3) and “Carpeta que no dobla las hojas” (April 12), with a photo of my desk." />
+                <a class="bit-hot" href="#folio" aria-label="Esta nota se volvió FOLIO. Ir a FOLIO" data-en-aria-label="This note became FOLIO. Go to FOLIO"></a>
+              </div>
+              <p class="bit-pista" data-en-html="Real notes from my Paratu. The one on the right became &lt;a href=&quot;#folio&quot;&gt;FOLIO&lt;/a&gt;.">Notas reales de mi Paratu. La de la derecha se volvió <a href="#folio">FOLIO</a>.</p>
+            </section>
+
+            <section class="app-view" id="v-finanzas" role="tabpanel" aria-labelledby="t-finanzas" data-view="finanzas" hidden>
+              <h3 class="ui-h1" data-en="Money">Finanzas</h3>
+              <div class="cuentas" data-cuentas></div>
+              <form class="gasto" data-gasto>
+                <div class="gasto-tipo" role="group" aria-label="Tipo" data-en-aria-label="Type">
+                  <button type="button" aria-pressed="true" data-tipo="gasto" data-en="Expense">Gasto</button>
+                  <button type="button" class="ing" aria-pressed="false" data-tipo="ingreso" data-en="Income">Ingreso</button>
+                </div>
+                <label class="monto"><span aria-hidden="true">$</span><span class="sr" data-en="Amount">Monto</span><input type="text" inputmode="decimal" autocomplete="off" value="50" data-monto /></label>
+                <label><span class="sr" data-en="What was it?">¿En qué?</span><input class="concepto" type="text" maxlength="40" autocomplete="off" value="Hot Dog" data-concepto /></label>
+                <button class="guardar" type="submit" data-en="Save">Guardar</button>
+              </form>
+              <div class="movs" data-movs></div>
+            </section>
+
+          </div>
+          <nav class="ui-tabs" role="tablist" aria-label="Secciones de la app" data-en-aria-label="App sections">
+            <button type="button" role="tab" id="t-tareas" aria-controls="v-tareas" aria-selected="false" data-tab="tareas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7.5" r="2.4"/><circle cx="6" cy="16.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 7.5h9M11 16.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-en="Tasks">Tareas</span></button>
+            <button type="button" role="tab" id="t-bitacora" aria-controls="v-bitacora" aria-selected="false" data-tab="bitacora"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5 6.4 6h11.2L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18zM4 13.5h4.6l1.4 2.2h4l1.4-2.2H20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></button>
+            <button type="button" role="tab" id="t-finanzas" aria-controls="v-finanzas" aria-selected="false" data-tab="finanzas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.7"/><rect x="6.5" y="14" width="4" height="2" rx=".6"/></svg><span data-en="Money">Finanzas</span></button>
+            <button type="button" role="tab" id="t-hoy" aria-controls="v-hoy" aria-selected="true" data-tab="hoy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11 12 4.8l7.5 6.2V19a1 1 0 0 1-1 1H15v-5.2H9V20H5.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span data-en="Today">Hoy</span></button>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticket-wrap">
+      <figure class="ticket" aria-label="Corte de caja de Paratu: todo en ceros. Es gratis, sin anuncios, sin cuentas y sin nube; el usuario más fiel soy yo." data-en-aria-label="Paratu's end-of-day report: all zeros. It's free, with no ads, no accounts and no cloud; its most loyal user is me.">
+        <p class="ticket-t">Paratu</p>
+        <p class="sub" data-en="End-of-day report">Corte de caja</p>
+        <dl>
+          <div><dt data-en="Price">Precio</dt><dd>$0.00</dd></div>
+          <div><dt data-en="Revenue">Ingresos</dt><dd>$0.00</dd></div>
+          <div><dt data-en="Ad spend">Anuncios</dt><dd>$0.00</dd></div>
+          <div><dt data-en="Subscriptions">Suscripciones</dt><dd>0</dd></div>
+          <div><dt data-en="Accounts needed">Cuentas necesarias</dt><dd>0</dd></div>
+          <div><dt data-en="Trackers">Rastreadores</dt><dd>0</dd></div>
+          <div><dt data-en="Data in the cloud">Datos en la nube</dt><dd>0 KB</dd></div>
+          <div><dt data-en="Developers">Desarrolladores</dt><dd>1</dd></div>
+        </dl>
+        <p class="total"><span data-en="Most loyal user">Usuario más fiel</span><span data-en="me">yo</span></p>
+        <p class="gracias" data-en="Thanks for stopping by">¡Gracias por su visita!</p>
+      </figure>
+    </div>
+  </div>
+
+  <div class="wrap paratu-cierre">
+    <p class="linea" data-en-html="It didn't make money.&lt;br /&gt;It's the app I use.">No hizo dinero.<br />Es la app que uso yo.</p>
+    <p class="links">
+      <a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener" data-en="Get it on the App Store">Descargar en la App Store</a>
+      <a href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener" data-en="Support and privacy">Soporte y privacidad</a>
+    </p>
+  </div>
+</section>
+
+<!-- ===================== FOLIO ===================== -->
+<section class="proj folio" id="folio" aria-labelledby="folio-t">
+  <div class="wrap folio-seq" data-folio>
+    <div class="folio-stage" aria-hidden="true">
+      <img class="on" src="assets/img/folio-cerrada-900.webp" width="900" height="1013" loading="lazy" decoding="async" alt="" data-paso="0" />
+      <img src="assets/img/folio-abierta-900.webp" width="900" height="1190" loading="lazy" decoding="async" alt="" data-paso="1" />
+      <img src="assets/img/folio-argollas-900.webp" width="900" height="846" loading="lazy" decoding="async" alt="" data-paso="2" />
+      <img src="assets/img/folio-paneles-560.webp" width="560" height="1529" loading="lazy" decoding="async" alt="" data-paso="3" />
+    </div>
+
+    <header class="folio-head" data-paso="0">
+      <p class="tape" data-en="Prototype 1">Prototipo 1</p>
+      <h2 class="proj-name" id="folio-t">FOLIO</h2>
+      <p class="proj-what" data-en="The binder, rethought.">La carpeta, pensada otra vez.</p>
+      <p class="origen" data-en-html="It started as a note in Paratu on April 12, photo included: &lt;q&gt;A binder that doesn't bend the pages.&lt;/q&gt;">Empezó como una nota en Paratu, el 12 de abril, con foto y todo: <q>Carpeta que no dobla las hojas.</q></p>
+      <p class="problema" data-en="A regular binder won't stay open, the rings get in your hand's way and the pages bend. FOLIO separates the rings from the way the covers turn.">Una carpeta normal no se queda abierta, las argollas le estorban a tu mano y las hojas se doblan. FOLIO separa las argollas del giro de las tapas.</p>
+    </header>
+
+    <div class="folio-pasos">
+      <ol class="folio-steps" aria-label="El prototipo, paso por paso" data-en-aria-label="The prototype, step by step">
+        <li data-paso="0">
+          <div class="step-img"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" loading="lazy" decoding="async" alt="La carpeta cerrada: portada amarilla con cinta azul que dice «Prototipo 1» y @folioproject_ escrito a mano." data-en-alt="The closed binder: yellow cover, blue tape that reads “Prototipo 1” and @folioproject_ handwritten." /></div>
+          <span class="step-n">1 / 4</span>
+          <p class="step-t" data-en="Closed">Cerrada</p>
+          <p class="step-p" data-en="Prototype 1, handmade in Ciudad Acuña.">Prototipo 1, hecho a mano en Ciudad Acuña.</p>
+        </li>
+        <li data-paso="1">
+          <div class="step-img"><img src="assets/img/folio-abierta-540.webp" width="540" height="714" loading="lazy" decoding="async" alt="La carpeta abierta y plana, con bocetos del mecanismo en la tapa interior." data-en-alt="The binder open flat, with sketches of the mechanism on the inside cover." /></div>
+          <span class="step-n">2 / 4</span>
+          <p class="step-t" data-en="Open">Abierta</p>
+          <p class="step-p" data-en="It opens flat. You write like in a notebook, without holding it down.">Se abre plana. Escribes como en un cuaderno, sin sujetarla.</p>
+        </li>
+        <li data-paso="2">
+          <div class="step-img"><img src="assets/img/folio-argollas-540.webp" width="540" height="508" loading="lazy" decoding="async" alt="Las argollas montadas en su propio módulo, separado de las tapas." data-en-alt="The rings mounted on their own module, separate from the covers." /></div>
+          <span class="step-n">3 / 4</span>
+          <p class="step-t" data-en="Rings apart">Argollas aparte</p>
+          <p class="step-p" data-en="The rings live in their own module. The metal never gets in your hand's way.">Las argollas viven en su propio módulo. El metal nunca estorba tu mano.</p>
+        </li>
+        <li data-paso="3">
+          <div class="step-img"><img src="assets/img/folio-paneles-340.webp" width="340" height="929" loading="lazy" decoding="async" alt="Los tres paneles desplegados en cadena." data-en-alt="The three panels unfolded in a chain." /></div>
+          <span class="step-n">4 / 4</span>
+          <p class="step-t" data-en="Three panels">Tres paneles</p>
+          <p class="step-p" data-en="Three chained panels. It turns 360° and folds compact, so you can write standing up.">Tres paneles en cadena. Gira 360° y se vuelve compacta para escribir de pie.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">02</span><span class="tag" data-en="About me">Sobre mí</span><span class="rule"></span></div>
-    <h2 class="sec-title reveal" style="margin-bottom:52px;" data-en="Who I am.">Quién soy.</h2>
-
-    <div class="bento">
-
-      <!-- BIO -->
-      <div class="cell bio span2 reveal">
-        <span class="tag" data-en="My story">Mi historia</span>
-        <p data-en="I started in software development at 13. I've worked on projects as well as social movements, and I've gained experience from every project I've been part of.">Desde los 13 años comencé en el desarrollo de software. He trabajado en proyectos así como en movimientos sociales, y he conseguido experiencia de cada proyecto del que he sido parte.</p>
-        <p data-en="I'm interested in business, technology and helping people.">Me interesan los negocios, la tecnología y ayudar a las personas.</p>
+    <figure class="fig">
+      <div class="fig-box">
+        <img src="assets/img/folio-fig-1200.webp" srcset="assets/img/folio-fig-700.webp 700w, assets/img/folio-fig-1200.webp 1084w" sizes="(min-width:1320px) 1200px, 92vw" width="1084" height="409" loading="lazy" decoding="async" alt="Dibujo técnico del mecanismo de FOLIO: el módulo de tres argollas, las bisagras y los paneles apilados." data-en-alt="Technical drawing of FOLIO's mechanism: the three-ring module, the hinges and the stacked panels." />
+        <svg viewBox="0 0 1084 409" aria-hidden="true">
+          <g fill="none" stroke="#000" stroke-width="1.6">
+            <path d="M232 132 L300 40 H360"/>
+            <path d="M118 318 L150 392 H214"/>
+            <path d="M1030 350 L980 392 H920"/>
+          </g>
+          <g font-family="Archivo, sans-serif" font-weight="700" font-size="30">
+            <text x="368" y="50">1</text>
+            <text x="222" y="402">2</text>
+            <text x="896" y="402">3</text>
+          </g>
+        </svg>
       </div>
+      <figcaption>
+        <ol class="leyenda">
+          <li><b>1</b><span data-en="Ring module">Módulo de argollas</span></li>
+          <li><b>2</b><span data-en="Free-turning hinges">Bisagras que giran libres</span></li>
+          <li><b>3</b><span data-en="Three panels">Tres paneles</span></li>
+        </ol>
+        <p class="pie-fig" data-en="Fig. 1. The mechanism, rendered. A utility-model application is pending at IMPI, Mexico's patent office.">Fig. 1. El mecanismo, en render. Hay una solicitud de modelo de utilidad en trámite ante el IMPI.</p>
+      </figcaption>
+    </figure>
 
-      <!-- AHORA MISMO -->
-      <div class="cell now reveal">
-        <span class="tag" data-en="Right now">Ahora mismo</span>
-        <p data-en="I study at TETR College of Business while building my projects, creating content and working with several teams.">Estudio en TETR College of Business mientras desarrollo mis proyectos, creo contenido y trabajo con varios equipos.</p>
-      </div>
-
-      <!-- EDAD EN VIVO (nacimiento: 20 sep 2008 — cámbialo en el JS si no es el año) -->
-      <div class="cell stat edad-cell reveal">
-        <span class="tag" data-en="My age">Mi edad</span>
-        <div class="num edad"><span id="edad-ent">17</span><span class="dec" id="edad-dec">.0000000000</span></div>
-        <div class="cap" data-en="years">años</div>
-      </div>
-
-      <!-- SKILLS -->
-      <div class="cell skills span2 reveal">
-        <span class="tag" data-en="What I do">Lo que sé hacer</span>
-        <div class="chips">
-          <span class="chip" data-en="Software development">Desarrollo de software</span>
-          <span class="chip" data-en="Product design">Diseño de producto</span>
-          <span class="chip">UI/UX</span>
-          <span class="chip" data-en="Entrepreneurship">Emprendimiento</span>
-          <span class="chip" data-en="Content creation">Creación de contenido</span>
-        </div>
-      </div>
-
-      <!-- NACIONALIDAD -->
-      <div class="cell stat reveal">
-        <span class="tag" data-en="Nationality">Nacionalidad</span>
-        <div class="num" data-en="México">México</div>
-        <div class="cap" data-en="Mexican 🇲🇽">mexicano 🇲🇽</div>
-      </div>
-
-      <!-- IDIOMAS / EXTRA -->
-      <div class="cell stat reveal">
-        <span class="tag" data-en="Languages">Idiomas</span>
-        <div class="num">ES · EN</div>
-        <div class="cap" data-en="Native Spanish · Advanced English">Español nativo · Inglés avanzado</div>
-      </div>
-
-      <!-- ============ REDES (4 cards) ============ -->
-      <a class="cell social tiktok reveal" href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">
-        <span class="arrow">↗</span>
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.9 2.9 0 0 1-5.2 1.74 2.9 2.9 0 0 1 2.31-4.64c.3 0 .58.05.86.13V9.4a6.33 6.33 0 0 0-.86-.06 6.34 6.34 0 1 0 6.34 6.34V8.9a8.16 8.16 0 0 0 4.77 1.52v-3.45a4.85 4.85 0 0 1-1-.28z"/></svg></div>
-        <div><h4>TikTok</h4><div class="handle">@joaquinalvarez614</div></div>
-      </a>
-
-      <a class="cell social insta reveal" href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">
-        <span class="arrow">↗</span>
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.2 8.8 2.2 12 2.2zm0 3.13A6.67 6.67 0 1 0 18.67 12 6.67 6.67 0 0 0 12 5.33zm0 11A4.33 4.33 0 1 1 16.33 12 4.33 4.33 0 0 1 12 16.33zm6.93-11.6a1.56 1.56 0 1 1-1.56-1.55 1.56 1.56 0 0 1 1.56 1.55z"/></svg></div>
-        <div><h4>Instagram</h4><div class="handle">@joaquin.alvarezm</div></div>
-      </a>
-
-      <a class="cell social youtube reveal" href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">
-        <span class="arrow">↗</span>
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg></div>
-        <div><h4>YouTube</h4><div class="handle">@joaquinalvarezmercado</div></div>
-      </a>
-
-      <a class="cell social linkedin reveal" href="https://www.linkedin.com/in/joaquin-alvarez-mercado" target="_blank" rel="noopener">
-        <span class="arrow">↗</span>
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg></div>
-        <div><h4>LinkedIn</h4><div class="handle">/in/joaquin-alvarez-mercado</div></div>
-      </a>
-
-    </div>
+    <p class="folio-cierre" data-en="It's not for sale yet. If you want one, leave your email on its page.">Todavía no se vende. Si quieres una, deja tu correo en su página.</p>
+    <p class="links">
+      <a href="https://foliomx.vercel.app" target="_blank" rel="noopener" data-en="Visit FOLIO's page">Ver la página de FOLIO</a>
+      <a href="https://instagram.com/folioproject_" target="_blank" rel="noopener">@folioproject_</a>
+    </p>
   </div>
 </section>
 
-<!-- ===================== CONTACTO ===================== -->
-<section id="contacto" class="contact" style="padding-top:0;">
+<!-- ===================== HABLEMOS DE NEGOCIOS ===================== -->
+<section class="proj hdn" id="hdn" aria-labelledby="hdn-t">
   <div class="wrap">
-    <div class="rule-top"></div>
-    <!-- escenario con físicas: los chips de redes caen y rebotan aquí detrás del texto -->
-    <div class="fisica-stage" id="fisica-stage">
-      <div class="contact-copy reveal">
-        <h2 data-en-html="Let's build something<br />worthwhile.">Hagamos algo<br />que valga la pena.</h2>
-        <p class="sub" data-en="Open to ideas, collaborations and good conversations.">Abierto a ideas, colaboraciones y buenas conversaciones.</p>
-        <a class="mail" href="mailto:joaquinalvarezme@gmail.com">joaquinalvarezme@gmail.com</a>
+    <p class="tape" data-en="Ongoing">En curso</p>
+    <h2 class="proj-name" id="hdn-t">Hablemos de Negocios</h2>
+    <p class="proj-what" data-en="One-minute videos that explain how a real business works.">Videos de un minuto que explican cómo funciona un negocio real.</p>
+  </div>
+
+  <div class="aperturas" data-aperturas>
+    <ul class="aperturas-fila">
+      <li><video muted playsinline preload="none" data-poster="assets/img/abre-trisol-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-trisol.mp4" type="video/mp4" /></video><span>Trisol</span></li>
+      <li><video muted playsinline preload="none" data-poster="assets/img/abre-kidzania-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kidzania.mp4" type="video/mp4" /></video><span>KidZania</span></li>
+      <li><video muted playsinline preload="none" data-poster="assets/img/abre-kavak-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kavak.mp4" type="video/mp4" /></video><span>Kavak</span></li>
+      <li><video muted playsinline preload="none" data-poster="assets/img/abre-clip-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-clip.mp4" type="video/mp4" /></video><span>Clip</span></li>
+      <li><video muted playsinline preload="none" data-poster="assets/img/abre-theory11-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-theory11.mp4" type="video/mp4" /></video><span>theory11</span></li>
+    </ul>
+    <div class="wrap">
+      <p class="frase" data-frase><span>Hablemos</span> <span>de</span> <span>negocios.</span></p>
+      <p class="frase-tr" hidden data-en-show>“Let's talk business.”</p>
+      <div class="aperturas-foot">
+        <p data-en="Every episode opens the same way. That line never changes.">Cada episodio empieza igual. Esa frase no se cambia.</p>
+        <button class="btn-otra" type="button" data-otra data-en="Play again">Otra vez</button>
       </div>
-      <a class="chip-soc" href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
-      <a class="chip-soc" href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">Instagram</a>
-      <a class="chip-soc" href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
-      <a class="chip-soc" href="https://www.linkedin.com/in/joaquin-alvarez-mercado" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </div>
-  <footer>
-    <div class="wrap foot-inner">
-      <span>© <span id="year">2026</span> Joaquin Álvarez Mercado</span>
-      <span data-en="México">México</span>
+
+  <div class="wrap">
+    <p class="evidencia"><span data-en-html="One video passed &lt;mark&gt;500,000 views&lt;/mark&gt;. At Creator Lab, that week's assignment was to study it and make a video in my style.">Un video pasó las <mark>500 mil vistas</mark>. En el Creator Lab, la tarea de esa semana fue estudiarlo y hacer un video con mi estilo.</span> <a href="https://www.instagram.com/reel/DbmOgAZBFpU/" target="_blank" rel="noopener" data-en="Watch it on Instagram">Ver ese video en Instagram</a></p>
+
+    <div class="formula" data-formula>
+      <div class="reel" data-reel>
+        <div class="reel-video">
+        <video playsinline preload="none" data-poster="assets/img/episodio-trisol-540.webp" width="540" height="960" data-episodio>
+          <source src="assets/video/episodio-trisol.mp4" type="video/mp4" />
+        </video>
+        <button class="reel-play" type="button" data-play><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></i><span data-en="Watch the Trisol episode (1:01, muted)">Ver el episodio de Trisol (1:01, sin sonido)</span></button>
+        </div>
+        <p class="reel-nota" data-en-html="No audio here because the background music has copyright. With sound, &lt;a href=&quot;https://www.instagram.com/joaquin.alvarezm&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;on my Instagram&lt;/a&gt;.">Aquí va sin audio porque la música de fondo tiene derechos. Con sonido, <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">en mi Instagram</a>.</p>
+      </div>
+      <div>
+        <h3 data-en="The formula">La fórmula</h3>
+        <p class="intro" data-en="After the first video went viral, I took it apart into seven blocks. They always go in the same order. Play the Trisol episode and watch them line up.">Después del primer video viral, lo desarmé en siete bloques. Siempre van en el mismo orden. Dale play al episodio de Trisol y mira cómo encajan.</p>
+        <ol class="bloques" data-bloques>
+          <li data-t="0"><button type="button"><span class="bn">1</span><span class="bt" data-en="Scale-fact hook">Hook de dato a escala</span><span class="bq" data-en="“40 million tires are thrown away in Mexico every year. That's one tire every second.”">«Se tiran 40 millones de llantas al año en México. Eso es una llanta cada segundo.»</span></button></li>
+          <li data-t="7.3"><button type="button"><span class="bn">2</span><span class="bt" data-en="“But how did it work?”">¿Pero cómo funcionó?</span><span class="bq" data-en="The viewer commits to watching before anything is explained.">El espectador promete atención antes de que expliques nada.</span></button></li>
+          <li data-t="8.2"><button type="button"><span class="bn">3</span><span class="bt" data-en="Founder with friction">Fundador con fricción</span><span class="bq" data-en="“…expelled three times, failed 12 classes, and lost his father while he was studying.”">«…al que corrieron tres veces, reprobó 12 materias y perdió a su padre mientras estudiaba.»</span></button></li>
+          <li data-t="22.8"><button type="button"><span class="bn">4</span><span class="bt" data-en="It worked because…">Funcionó porque…</span><span class="bq" data-en="“Companies have a problem: they don't know what to do with their used tires.”">«Las empresas tienen un problema y no saben qué hacer con sus llantas usadas.»</span></button></li>
+          <li data-t="30.8"><button type="button"><span class="bn">5</span><span class="bt">Insight drop</span><span class="bq" data-en="“Trisol has already made money, and it hasn't even done anything with the tires yet.”">«Trisol ya hizo dinero y ni siquiera ha hecho nada con las llantas.»</span></button></li>
+          <li data-t="46.8"><button type="button"><span class="bn">6</span><span class="bt" data-en="Circular recap">Resumen circular</span><span class="bq" data-en="“A student who failed 12 classes, with two secondhand machines… built the most efficient recycling business in all of Mexico.”">«Un estudiante que reprobó 12 materias, con dos máquinas de segunda mano… construyó el negocio de reciclaje más eficiente de todo México.»</span></button></li>
+          <li data-t="57"><button type="button"><span class="bn">7</span><span class="bt" data-en="Sign-off with a promise">Cierre con propuesta</span><span class="bq" data-en="“This was the first video about real businesses and how they work.”">«Este fue el primer video hablando de negocios reales y cómo funcionan.»</span></button></li>
+        </ol>
+        <details class="guion">
+          <summary data-en="Read the full script">Leer el guion completo</summary>
+          <p data-en="Let's talk business. 40 million tires are thrown away in Mexico every year. That's one tire every second. And one company is taking advantage of this to make money. But how did it work? It was founded by Andrés García Gasca, a student at Tecnológico de Monterrey who was expelled three times, failed 12 classes, and lost his father while he was studying. The company started as a school assignment, but in 2013 it began with three employees and two secondhand machines. It worked because companies have a problem: they don't know what to do with their used tires. Companies pay Trisol to pick up their waste. Trisol has already made money, and it hasn't even done anything with the tires yet. Then it shreds them and runs them through a process that turns the rubber into raw material. That raw material is sold to make waterproofing, speed bumps, artificial turf, court flooring and other things. Trisol makes money from the same material twice. A student who failed 12 classes, with two secondhand machines, picking up tires on weekends along the highway, built the most efficient recycling business in all of Mexico. Incredible. This was the first video about real businesses and how they work. Bye.">Hablemos de negocios. Se tiran 40 millones de llantas al año en México. Eso es una llanta cada segundo. Y una empresa aprovecha esto para ganar dinero. Pero ¿cómo funcionó? Fue fundada por Andrés García Gasca, que fue un estudiante del Tecnológico de Monterrey al que corrieron tres veces, reprobó 12 materias y perdió a su padre mientras estudiaba. La empresa empezó como tarea, pero en 2013 empezó con tres empleados y dos máquinas de segunda mano. Funcionó porque las empresas tienen un problema y no saben qué hacer con sus llantas usadas. Las empresas le pagan a Trisol para recoger sus residuos. Trisol ya hizo dinero y ni siquiera ha hecho nada con las llantas. Después las tritura y las pasa por un proceso para convertir el hule en materia prima. Esa materia prima se vende para hacer impermeabilizantes, topes, pasto sintético, pisos de cancha u otras cosas. Trisol hace dinero con el mismo material dos veces. Un estudiante que reprobó 12 materias, con dos máquinas de segunda mano, recogiendo llantas los fines de semana en la carretera, construyó el negocio de reciclaje más eficiente de todo México. Increíble. Este fue el primer video hablando de negocios reales y cómo funcionan. Bye.</p>
+        </details>
+      </div>
     </div>
-  </footer>
+
+    <div class="hdn-notas">
+      <p data-en="I compare episodes like experiments. The KidZania one got 10,000 views and 600 likes: 6% engagement. The problem wasn't quality. It was reach.">Comparo los episodios como si fueran experimentos. El de KidZania tuvo 10 mil vistas y 600 likes: 6% de engagement. El problema no fue la calidad. Fue el alcance.</p>
+      <div class="veg">
+        <span class="veg-mark" role="img" aria-label="Símbolo vegetariano de India: un punto verde dentro de un cuadro verde" data-en-aria-label="India's vegetarian mark: a green dot inside a green square"></span>
+        <p data-en="Now I'm filming from India. Every Coca-Cola here has a small green dot in the corner, because every product has to say whether it's vegetarian. Coca-Cola had to adapt, and that's why it's been here for decades.">Ahora grabo desde India. Aquí cada Coca-Cola trae un punto verde en la esquina, porque todo producto tiene que decir si es vegetariano. Coca-Cola tuvo que adaptarse, y por eso lleva décadas aquí.</p>
+      </div>
+    </div>
+
+    <p class="linea" data-en-html="Attention isn't bought.&lt;br /&gt;It's earned in the first few seconds.">La atención no se compra.<br />Se gana en los primeros segundos.</p>
+    <p class="links">
+      <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
+    </p>
+  </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js" defer></script>
+<!-- ===================== FINES DE SEMANA ===================== -->
+<section class="fines" id="fines" aria-labelledby="fines-t">
+  <div class="wrap">
+    <h2 class="fines-t" id="fines-t" data-en="Weekends">Fines de semana</h2>
+    <p class="fines-intro" data-en="Hackathons and challenges. Little time, a team, and something to present at the end.">Hackathons y retos. Poco tiempo, un equipo y algo que presentar al final.</p>
+
+    <div class="exp-lista">
+      <article class="exp fl">
+        <div>
+          <p class="tape" data-en="2nd place">2º lugar</p>
+          <h3>FounderLytics</h3>
+          <p class="meta" data-en="TETR Startup Hackathon, March 21–22, 2026. Team The Big Leagues.">Startup Hackathon de TETR, 21 y 22 de marzo de 2026. Equipo The Big Leagues.</p>
+          <p class="desc" data-en="Financial clarity for freelancers and founders in 60 seconds. You answer a few questions and AI reads your numbers.">Claridad financiera para freelancers y fundadores en 60 segundos. Contestas unas preguntas y la IA analiza tus números.</p>
+          <form class="calc" data-calc>
+            <p class="calc-intro" data-en="The question that changed everything: how much do you make per hour? The demo's example: María bakes cakes in her kitchen.">La pregunta que lo cambiaba todo: ¿cuánto ganas por hora? El ejemplo del demo: María hornea pasteles en su cocina.</p>
+            <label><span data-en="Monthly revenue">Ingresos al mes</span><span class="campo">$<input type="text" inputmode="decimal" value="1200" data-in="ing" /></span></label>
+            <label><span data-en="Monthly expenses">Gastos al mes</span><span class="campo">$<input type="text" inputmode="decimal" value="680" data-in="gas" /></span></label>
+            <label><span data-en="Hours worked per month">Horas de trabajo al mes</span><span class="campo"><input type="text" inputmode="decimal" value="80" data-in="hrs" />h</span></label>
+            <output aria-live="polite"><span data-rate>$6.50</span><small data-en=" an hour"> por hora</small></output>
+            <p class="calc-nota" data-nota-maria data-en="A year of baking, and she didn't know.">Un año horneando, y no lo sabía.</p>
+            <p class="calc-nota" data-nota-tuya hidden data-en="That's your real number.">Ese es tu número real.</p>
+            <p class="calc-nota" data-nota-pierdes hidden data-en="You're losing money on every hour.">Estás perdiendo dinero cada hora.</p>
+          </form>
+        </div>
+        <figure class="cert">
+          <img src="assets/img/certificado-640.webp" srcset="assets/img/certificado-640.webp 640w, assets/img/certificado-1100.webp 1100w" sizes="(min-width:900px) 440px, 88vw" width="640" height="453" loading="lazy" decoding="async" alt="Certificado de TETR College of Business: Joaquín Álvarez Mercado ganó el 2º lugar en la Startup Hackathon del 21 y 22 de marzo de 2026, con el equipo The Big Leagues." data-en-alt="TETR College of Business certificate: Joaquín Álvarez Mercado won 2nd place at the Startup Hackathon, March 21–22, 2026, with Team The Big Leagues." />
+        </figure>
+      </article>
+
+      <div class="exp-pares">
+        <article class="exp">
+          <h3>PitchVoice</h3>
+          <p class="meta" data-en="TETR hackathon, May 2026.">Hackathon de TETR, mayo de 2026.</p>
+          <p class="desc" data-en="A voice agent that interviews you the way an investor would: it interrupts, pushes back and counts your filler words while you talk.">Un agente de voz que te entrevista como lo haría un inversionista: te interrumpe, te presiona y cuenta tus muletillas mientras hablas.</p>
+        </article>
+        <article class="exp">
+          <h3 data-en="The Uber Eats challenge">El reto de Uber Eats</h3>
+          <p class="meta" data-en="TETR College of Business challenge, June 2026.">Reto de TETR College of Business, junio de 2026.</p>
+          <p class="desc" data-en="Three behavioral-economics features to turn a $10 order into a $16 one. It's a proposal, with a clickable prototype.">Tres funciones basadas en economía conductual para que un pedido de $10 llegue a $16. Es una propuesta, con prototipo navegable.</p>
+          <p class="links"><a href="casos/uber-eats.html" data-en="See the proposal">Ver la propuesta</a></p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BITÁCORA ===================== -->
+<section class="bitacora" id="bitacora" aria-labelledby="bit-t">
+  <div class="wrap bit-grid">
+    <div class="bit-side">
+      <h2 class="bit-t" id="bit-t" data-en="Logbook">Bitácora</h2>
+      <p class="bit-intro" data-en="What's happened, newest first.">Lo que ha pasado, de lo más nuevo a lo más viejo.</p>
+      <!-- AHORA: cambia estas líneas cuando algo cambie -->
+      <aside class="postit" aria-labelledby="ahora-t">
+        <h3 id="ahora-t" data-en="Now">Ahora</h3>
+        <ul>
+          <li data-en="In India, studying at TETR College of Business.">En India, estudiando en TETR College of Business.</li>
+          <li data-en="Filming businesses I run into on the street.">Grabando negocios que me encuentro en la calle.</li>
+          <li data-en="FOLIO is still in development.">FOLIO sigue en desarrollo.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <ol class="log">
+      <li><time datetime="2026-09" data-en="Sep 2026">sep 2026</time><p data-en="I start Technology and Business Management at TETR College of Business, from India.">Empiezo Technology and Business Management en TETR College of Business, desde India.</p></li>
+      <li><time datetime="2026-08" data-en="Aug 2026">ago 2026</time><p data-en="Hablemos de Negocios starts. One video passes 500,000 views.">Arranca Hablemos de Negocios. Un video pasa las 500 mil vistas.</p></li>
+      <li><time datetime="2026-07" data-en="Jul 2026">jul 2026</time><p data-en="FLINT becomes Paratu: new name, free app.">FLINT se vuelve Paratu: nombre nuevo y app gratis.</p></li>
+      <li><time datetime="2026-07" data-en="Jul 2026">jul 2026</time><p data-en="FOLIO: prototype 1 and a utility-model application at IMPI.">FOLIO: prototipo 1 y solicitud de modelo de utilidad ante el IMPI.</p></li>
+      <li><time datetime="2026-06" data-en="Jun 2026">jun 2026</time><p data-en="The Uber Eats challenge at TETR.">El reto de Uber Eats en TETR.</p></li>
+      <li><time datetime="2026-05" data-en="May 2026">may 2026</time><p data-en="TETR hackathon: PitchVoice.">Hackathon de TETR: PitchVoice.</p></li>
+      <li><time datetime="2026-03" data-en="Mar 2026">mar 2026</time><p data-en="2nd place at the TETR Startup Hackathon, with FounderLytics.">2º lugar en la Startup Hackathon de TETR, con FounderLytics.</p></li>
+      <li><time datetime="2025-11" data-en="Nov 2025">nov 2025</time><p data-en="FJTZ becomes FLINT.">FJTZ se vuelve FLINT.</p></li>
+      <li><time datetime="2025">2025</time><p data-en="My app hits the App Store.">Mi app llega a la App Store.</p></li>
+      <li><time datetime="2024">2024</time><p data-en="I co-found Acuña Sin Huella.">Cofundo Acuña Sin Huella.</p></li>
+      <li><time datetime="2024">2024</time><p data-en="I'm elected student representative on the University Council of UAdeC, one of Mexico's largest public universities.">Me eligen representante estudiantil ante el Consejo Universitario de la UAdeC, una de las universidades públicas más grandes de México.</p></li>
+      <li><time data-en="Age 13">13 años</time><p data-en="I start coding.">Empiezo a programar.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== HABLEMOS ===================== -->
+<section class="hablemos" id="hablemos" aria-labelledby="hab-t">
+  <div class="wrap">
+    <p class="tape" data-en="Open to projects">Disponible para proyectos</p>
+    <h2 class="hablemos-t" id="hab-t" data-en="Let's talk.">Hablemos.</h2>
+    <p class="hablemos-sub" data-en="If something on this table got you curious, write to me. I'll be the one who answers.">Si algo de esta mesa te dio curiosidad, escríbeme. Contesto yo.</p>
+    <div class="correo">
+      <a href="mailto:joaquinalvarezme@gmail.com">joaquinalvarezme@gmail.com</a>
+      <button class="copiar" type="button" data-copiar="joaquinalvarezme@gmail.com" data-en="Copy">Copiar</button>
+    </div>
+    <p class="hora" data-hora data-tz="Asia/Kolkata" data-lugar="India">Estoy en India.</p>
+
+    <ul class="redes">
+      <li><a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener"><b>Instagram</b><span>@joaquin.alvarezm</span><em data-en="Where Hablemos de Negocios lives">Donde vive Hablemos de Negocios</em></a></li>
+      <li><a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener"><b>TikTok</b><span>@joaquinalvarez614</span><em data-en="Short videos">Videos cortos</em></a></li>
+      <li><a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener"><b>YouTube</b><span>@joaquinalvarezmercado</span><em data-en="Short videos">Videos cortos</em></a></li>
+      <li><a href="https://www.linkedin.com/in/joaquin-alvarez-mercado" target="_blank" rel="noopener"><b>LinkedIn</b><span>/in/joaquin-alvarez-mercado</span><em data-en="The formal version">La versión formal</em></a></li>
+      <li><a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener"><b>App Store</b><span>Paratu</span><em data-en="Free">Gratis</em></a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="pie">
+  <span class="firma"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 22.5l-1.2 7.5M40.5 22.5l-.8 7.2" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/><path d="M18.5 38.5c5.5 7.6 21.5 8.4 27.8-.6" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/></svg><span>© <span data-anio>2026</span> Joaquín Álvarez Mercado</span></span>
+  <button class="version" type="button" aria-expanded="false" aria-controls="version-nota" data-version>v18</button>
+  <p class="version-nota" id="version-nota" hidden data-version-nota></p>
+</footer>
+
 <script>
-  // ============================================================
-  // IDIOMA: si el dispositivo tiene español entre sus idiomas,
-  // la página queda en español; si no, se traduce a inglés.
-  // Los textos en inglés viven en atributos data-en / data-en-html.
-  // ============================================================
-  var hablaEspanol = (navigator.languages && navigator.languages.length
-      ? navigator.languages : [navigator.language || 'es']
-    ).some(function(l){ return /^es/i.test(l); });
-  if (!hablaEspanol){
-    document.documentElement.lang = 'en';
-    document.title = 'Joaquin Álvarez Mercado — Portfolio';
-    var mdesc = document.querySelector('meta[name="description"]');
-    if (mdesc) mdesc.setAttribute('content', 'Joaquin Álvarez Mercado — personal portfolio. Projects, profile and contact.');
+/* Idioma: español si el dispositivo lo tiene entre sus idiomas; si no,
+   inglés. Corre aquí para que no se vea el cambio. El botón lo recuerda. */
+(function(){
+  var d = document.documentElement;
+  d.classList.add('js');
+  var guardado = null;
+  try { guardado = localStorage.getItem('idioma'); } catch(e){}
+  var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'es'];
+  var inicial = guardado || (langs.some(function(l){ return /^es/i.test(l); }) ? 'es' : 'en');
+  var ATTRS = ['aria-label','alt','placeholder','content','title'];
+  window.setIdioma = function(lang){
+    d.lang = lang;
     document.querySelectorAll('[data-en]').forEach(function(el){
-      el.textContent = el.getAttribute('data-en');
+      if (!el.hasAttribute('data-es')) el.setAttribute('data-es', el.textContent);
+      el.textContent = el.getAttribute(lang === 'en' ? 'data-en' : 'data-es');
     });
     document.querySelectorAll('[data-en-html]').forEach(function(el){
-      el.innerHTML = el.getAttribute('data-en-html');
+      if (!el.hasAttribute('data-es-html')) el.setAttribute('data-es-html', el.innerHTML);
+      el.innerHTML = el.getAttribute(lang === 'en' ? 'data-en-html' : 'data-es-html');
     });
-  }
-
-  // año automático
-  var y = new Date().getFullYear();
-  document.getElementById('year').textContent = y;
-  document.getElementById('year-eyebrow').textContent = y;
-
-  // efecto "decode" por letra: cada letra es una celda con el ancho exacto
-  // de la letra final; los símbolos ciclan dentro de su celda y se van
-  // fijando de izquierda a derecha. Los espacios nunca se tocan.
-  var nnText = document.querySelector('.nn-text');
-  var NOMBRE = nnText.textContent;
-  var GLIFOS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789#$%&@*+=?!<>/\\|';
-  var decodeTimer = null;
-  var reducirMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // construye una celda por letra (con la letra real, para medir su ancho)
-  var celdas = [];
-  nnText.textContent = '';
-  NOMBRE.split('').forEach(function(c){
-    var s = document.createElement('span');
-    if (c === ' '){ s.innerHTML = '&nbsp;'; }
-    else { s.className = 'ch'; s.textContent = c; }
-    nnText.appendChild(s);
-    celdas.push({ el: s, letra: c });
-  });
-
-  // fija el ancho de cada celda al de su letra final (una sola vez,
-  // cuando la nav ya es visible y se puede medir)
-  var anchosFijados = false;
-  function fijarAnchos(){
-    if (anchosFijados) return;
-    var anchos = celdas.map(function(c){ return c.el.getBoundingClientRect().width; });
-    if (anchos[0] === 0) return; // aún no se puede medir
-    celdas.forEach(function(c, i){ if (c.letra !== ' ') c.el.style.width = anchos[i] + 'px'; });
-    anchosFijados = true;
-  }
-
-  function desencriptar(){
-    if (reducirMovimiento) return;
-    clearInterval(decodeTimer);
-    fijarAnchos();
-    var tick = 0;
-    decodeTimer = setInterval(function(){
-      tick++;
-      var listas = 0;
-      celdas.forEach(function(c, i){
-        if (c.letra === ' '){ listas++; return; }
-        // cada letra se fija cuando le llega su turno (de izquierda a derecha)
-        // duración total ≈ (letras × 4 + 8) × 40ms ≈ 4 segundos
-        if (tick > i * 4 + 8){ c.el.textContent = c.letra; listas++; }
-        else c.el.textContent = GLIFOS[Math.floor(Math.random() * GLIFOS.length)];
+    ATTRS.forEach(function(a){
+      document.querySelectorAll('[data-en-' + a + ']').forEach(function(el){
+        if (!el.hasAttribute('data-es-' + a)) el.setAttribute('data-es-' + a, el.getAttribute(a) || '');
+        el.setAttribute(a, el.getAttribute(lang === 'en' ? 'data-en-' + a : 'data-es-' + a));
       });
-      if (listas === celdas.length) clearInterval(decodeTimer);
-    }, 40);
-  }
-
-  // desplazamiento suave con easing propio para todos los links internos
-  // (Contacto, Ver proyectos, el nombre → arriba): arranca lento,
-  // acelera y frena elegante, con duración según la distancia
-  function scrollSuave(destinoY){
-    var inicio = scrollY, delta = destinoY - inicio;
-    if (Math.abs(delta) < 2) return;
-    var dur = Math.max(600, Math.min(1500, Math.abs(delta) * 0.45));
-    var t0 = null;
-    function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
-    function paso(ts){
-      if (t0 === null) t0 = ts;
-      var p = Math.min((ts - t0) / dur, 1);
-      scrollTo({ top: inicio + delta * ease(p), behavior: 'instant' });
-      if (p < 1) requestAnimationFrame(paso);
+    });
+    document.querySelectorAll('[data-en-show]').forEach(function(el){ el.hidden = lang !== 'en'; });
+    var t = document.querySelector('[data-lang-toggle]');
+    if (t){
+      var otro = lang === 'en' ? 'es' : 'en';
+      t.textContent = otro.toUpperCase();
+      t.setAttribute('lang', otro);
+      t.setAttribute('aria-label', otro === 'en' ? 'Read this page in English' : 'Leer esta página en español');
     }
-    requestAnimationFrame(paso);
-  }
-  document.querySelectorAll('a[href^="#"]').forEach(function(a){
-    a.addEventListener('click', function(e){
-      var id = a.getAttribute('href').slice(1);
-      var destino = document.getElementById(id);
-      if (!destino) return;
-      e.preventDefault();
-      if (reducirMovimiento){ destino.scrollIntoView(); return; }
-      scrollSuave(id === 'top' ? 0 : destino.getBoundingClientRect().top + scrollY);
-    });
-  });
-
-  // onda al presionar el botón de contacto
-  var cta = document.querySelector('.nav-cta');
-  cta.addEventListener('click', function(e){
-    var rect = cta.getBoundingClientRect();
-    var size = Math.max(rect.width, rect.height);
-    var r = document.createElement('span');
-    r.className = 'ripple';
-    r.style.width = r.style.height = size + 'px';
-    r.style.left = (e.clientX - rect.left - size / 2) + 'px';
-    r.style.top  = (e.clientY - rect.top  - size / 2) + 'px';
-    cta.appendChild(r);
-    setTimeout(function(){ r.remove(); }, 600);
-  });
-
-  // la nav aparece hasta que bajas un poco (pasada media pantalla del hero)
-  // y la barra del navegador del teléfono cambia de amarillo (foto) a negro (contenido)
-  var nav = document.getElementById('nav');
-  var themeMetas = document.querySelectorAll('meta[name="theme-color"]');
-  var navEstabaVisible = false;
-  function pintarBarra(){
-    var past = scrollY > innerHeight * 0.55;
-    nav.classList.toggle('visible', past);
-    themeMetas.forEach(function(m){ m.setAttribute('content', past ? '#0B0B0C' : '#F0C64D'); });
-    if (past && !navEstabaVisible) desencriptar();   // se desencripta cada vez que aparece
-    navEstabaVisible = past;
-  }
-  addEventListener('scroll', pintarBarra, {passive:true});
-  pintarBarra();
-
-  // edad calculándose en vivo — CAMBIA AQUÍ si el año no es 2008
-  // (año, mes-1, día): septiembre es el mes 8 porque JavaScript cuenta desde 0
-  var NACIMIENTO = new Date(2008, 8, 20).getTime();
-  var MS_POR_ANIO = 365.2425 * 24 * 60 * 60 * 1000; // año promedio del calendario gregoriano
-  var edadEnt = document.getElementById('edad-ent');
-  var edadDec = document.getElementById('edad-dec');
-  function tickEdad(){
-    var edad = (Date.now() - NACIMIENTO) / MS_POR_ANIO;
-    var partes = edad.toFixed(10).split('.');
-    edadEnt.textContent = partes[0];
-    edadDec.textContent = '.' + partes[1];
-    requestAnimationFrame(tickEdad);
-  }
-  requestAnimationFrame(tickEdad);
-
-  // aparición escalonada al hacer scroll
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, {threshold:.1, rootMargin:'0px 0px -6% 0px'});
-  document.querySelectorAll('.reveal').forEach(function(el,i){
-    el.style.transitionDelay = (i % 4) * 60 + 'ms';
-    io.observe(el);
-  });
-
-  // ============================================================
-  // FÍSICAS de los chips de redes (sección contacto)
-  // Caen, rebotan, se pueden aventar, y responden a la
-  // inclinación del teléfono. Clic corto = abrir la red.
-  // ============================================================
-  addEventListener('load', function(){
-    var stage = document.getElementById('fisica-stage');
-    var chips = Array.prototype.slice.call(stage.querySelectorAll('.chip-soc'));
-    var sinFisica = typeof Matter === 'undefined' ||
-                    matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (sinFisica){ stage.classList.add('sin-fisica'); return; }
-
-    var Engine = Matter.Engine, Bodies = Matter.Bodies, Body = Matter.Body,
-        Composite = Matter.Composite;
-    var engine = Engine.create();
-    engine.world.gravity.y = 1;
-
-    var muros = [];
-    function hacerMuros(){
-      muros.forEach(function(m){ Composite.remove(engine.world, m); });
-      var w = stage.clientWidth, h = stage.clientHeight, g = 60; // grosor
-      muros = [
-        Bodies.rectangle(w/2, h + g/2 - 2, w + g*2, g, {isStatic:true}), // piso
-        Bodies.rectangle(w/2, -h - g/2, w + g*2, g, {isStatic:true}),    // techo (alto, para que caigan)
-        Bodies.rectangle(-g/2 + 2, 0, g, h*4, {isStatic:true}),          // izquierda
-        Bodies.rectangle(w + g/2 - 2, 0, g, h*4, {isStatic:true})        // derecha
-      ];
-      Composite.add(engine.world, muros);
-    }
-    hacerMuros();
-
-    // un cuerpo por chip, soltados desde arriba en fila desordenada
-    var cuerpos = chips.map(function(el, i){
-      var bw = el.offsetWidth, bh = el.offsetHeight;
-      var x = stage.clientWidth * (0.2 + 0.2 * i) + (Math.random() * 30 - 15);
-      var y = -80 - i * 90;
-      var b = Bodies.rectangle(x, y, bw, bh, {
-        restitution: 0.55, friction: 0.35, frictionAir: 0.012,
-        angle: (Math.random() - 0.5) * 0.6,
-        chamfer: { radius: Math.min(bh/2, 22) }
-      });
-      b.chipEl = el; b.chipW = bw; b.chipH = bh;
-      return b;
-    });
-    Composite.add(engine.world, cuerpos);
-
-    // pinta cada frame; solo corre cuando la sección se ve
-    var visible = false;
-    new IntersectionObserver(function(en){
-      visible = en[0].isIntersecting;
-      if (visible) requestAnimationFrame(frame);
-    }, {threshold:.05}).observe(stage);
-
-    var ultimo = performance.now();
-    function frame(t){
-      if (!visible) return;
-      Engine.update(engine, Math.min(t - ultimo, 33)); ultimo = t;
-      cuerpos.forEach(function(b){
-        b.chipEl.style.visibility = 'visible';
-        b.chipEl.style.transform = 'translate(' + (b.position.x - b.chipW/2) + 'px,' +
-          (b.position.y - b.chipH/2) + 'px) rotate(' + b.angle + 'rad)';
-      });
-      requestAnimationFrame(frame);
-    }
-
-    // arrastrar / aventar / clic
-    cuerpos.forEach(function(b){
-      var el = b.chipEl, arrastrando = false, movido = 0, px = 0, py = 0, t0 = 0;
-      el.addEventListener('click', function(e){ e.preventDefault(); }); // el clic real se decide abajo
-      el.addEventListener('pointerdown', function(e){
-        pedirPermisoMovimiento();
-        arrastrando = true; movido = 0; px = e.clientX; py = e.clientY; t0 = Date.now();
-        el.setPointerCapture(e.pointerId);
-        Body.setStatic(b, true);
-        e.preventDefault();
-      });
-      el.addEventListener('pointermove', function(e){
-        if (!arrastrando) return;
-        var r = stage.getBoundingClientRect();
-        movido += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
-        Body.setPosition(b, { x: e.clientX - r.left, y: e.clientY - r.top });
-        b.lanzX = (e.clientX - px); b.lanzY = (e.clientY - py);
-        px = e.clientX; py = e.clientY;
-      });
-      el.addEventListener('pointerup', function(){
-        if (!arrastrando) return;
-        arrastrando = false;
-        Body.setStatic(b, false);
-        // toque corto y sin arrastre = abrir el link
-        if (movido < 10 && Date.now() - t0 < 400){
-          window.open(el.href, '_blank', 'noopener');
-        } else {
-          Body.setVelocity(b, { x: (b.lanzX || 0) * 1.2, y: (b.lanzY || 0) * 1.2 }); // aventón
-        }
-      });
-    });
-
-    // gravedad según la inclinación del teléfono
-    var permisoPedido = false;
-    function pedirPermisoMovimiento(){
-      if (permisoPedido) return; permisoPedido = true;
-      if (typeof DeviceOrientationEvent !== 'undefined' &&
-          typeof DeviceOrientationEvent.requestPermission === 'function'){
-        DeviceOrientationEvent.requestPermission().catch(function(){});
-      }
-    }
-    addEventListener('deviceorientation', function(e){
-      if (e.gamma === null) return;
-      engine.world.gravity.x = Math.max(-1, Math.min(1, e.gamma / 35));
-      engine.world.gravity.y = Math.max(-1, Math.min(1, e.beta / 35));
-    });
-
-    addEventListener('resize', hacerMuros);
-  });
+    document.dispatchEvent(new CustomEvent('idioma', { detail: lang }));
+  };
+  if (inicial === 'en') window.setIdioma('en');
+})();
 </script>
+<script src="assets/app.js" defer></script>
 </body>
 </html>
