@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Joaquín Álvarez Mercado</title>
-<meta name="description" content="Hago cosas. Algunas funcionan. Una app para iOS, una carpeta que se abre plana, una serie que explica negocios y un movimiento ambiental en Ciudad Acuña." data-en-content="I make things. Some of them work. An iOS app, a binder that opens flat, a series that explains businesses and an environmental movement in Ciudad Acuña, Mexico." />
+<meta name="description" content="Hago cosas. Algunas funcionan. Un movimiento ambiental en Ciudad Acuña, una serie que explica negocios, páginas web, una carpeta que se abre plana y una app para iOS." data-en-content="I make things. Some of them work. An environmental movement in Ciudad Acuña, a series that explains businesses, websites, a binder that opens flat and an iOS app." />
 <meta name="theme-color" content="#ffffff" />
 <meta name="color-scheme" content="light" />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -19,12 +19,12 @@
 
 <!-- ============================================================
   GUÍA RÁPIDA DE EDICIÓN
-  · AHORA: el post-it de la Bitácora (#bitacora). La línea de la hora
-    en Hablemos usa data-tz="Asia/Kolkata" y data-lugar="India".
-    Si te mudas, cambia ambos (ej. data-tz="America/Monterrey").
-  · BITÁCORA: cada <li> del <ol class="log"> es una entrada. Copia
-    una, cambia la fecha y el texto (data-en = versión en inglés).
-  · MÉTRICAS DE PARATU: en el ticket (<figure class="ticket">).
+  · AHORA (#ahora): la nota adhesiva y las fotos. Cambia las líneas
+    de la nota cuando algo cambie; cada foto es un <li class="impresa">.
+    La hora del cierre usa data-tz="Asia/Kolkata" y data-lugar="India";
+    si te mudas, cambia ambos (ej. data-tz="America/Monterrey").
+  · PROYECTOS: cada <section class="proj"> tiene el texto a la
+    izquierda (proj-head y proj-rest) y las imágenes (proj-media).
   · IDIOMA: el español va en el HTML; el inglés vive en data-en /
     data-en-html. El botón de la cabecera cambia entre ambos.
   · IMÁGENES en /assets/img (WebP) y VIDEOS en /assets/video.
@@ -35,6 +35,12 @@
   font-family:"Archivo";
   src:url("assets/fonts/archivo-latin.woff2") format("woff2");
   font-weight:100 900; font-stretch:62% 125%; font-style:normal; font-display:swap;
+}
+
+@font-face{
+  font-family:"Kalam";
+  src:url("assets/fonts/kalam-latin.woff2") format("woff2");
+  font-weight:400; font-style:normal; font-display:swap;
 }
 
 /* ------------------------------------------------------------
@@ -52,13 +58,13 @@
   --yellow:#fcd404;
   --tape:#2a8fd6;
   --gutter:clamp(16px, 4.6vw, 64px);
-  --maxw:1320px;
+  --maxw:1280px;
   --head:56px;
   --ease:cubic-bezier(.2,.8,.2,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
-  --spring:cubic-bezier(.34,1.56,.64,1);
   --sh-rest:drop-shadow(0 1px 1px rgba(0,0,0,.16)) drop-shadow(3px 7px 9px rgba(0,0,0,.12)) drop-shadow(10px 22px 26px rgba(0,0,0,.10));
   --sh-lift:drop-shadow(0 2px 2px rgba(0,0,0,.10)) drop-shadow(12px 26px 24px rgba(0,0,0,.14)) drop-shadow(26px 52px 50px rgba(0,0,0,.12));
+  --sh-print:0 1px 1px rgba(0,0,0,.12), 2px 6px 12px rgba(0,0,0,.10), 6px 18px 30px rgba(0,0,0,.08);
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
@@ -66,26 +72,24 @@
 html{
   background:var(--paper);
   -webkit-text-size-adjust:100%;
-  scroll-padding-top:calc(var(--head) + 12px);
+  scroll-padding-top:calc(var(--head) + 8px);
 }
 body{
   font-family:"Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size:17px; line-height:1.5; font-weight:400; font-stretch:100%;
+  font-size:16px; line-height:1.5; font-weight:400; font-stretch:100%;
   color:var(--ink); background:var(--paper);
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   font-synthesis:none;
   overflow-x:clip;
 }
-@media (min-width:900px){ body{ font-size:18px; } }
+@media (min-width:900px){ body{ font-size:17px; } }
 img,video,svg{ display:block; max-width:100%; }
-img{ height:auto; }
+img, video{ height:auto; }
 a{ color:inherit; text-decoration-thickness:1px; text-underline-offset:.18em; }
-button,input,select{ font:inherit; color:inherit; }
-button{ cursor:pointer; background:none; border:0; }
+button{ font:inherit; color:inherit; cursor:pointer; background:none; border:0; }
 ::selection{ background:var(--yellow); color:var(--ink); }
 :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:2px; }
 .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-mark{ background:linear-gradient(transparent 56%, var(--yellow) 56%, var(--yellow) 92%, transparent 92%); color:inherit; padding:0 .06em; }
 q{ quotes:"«" "»"; }
 html[lang="en"] q{ quotes:"“" "”"; }
 
@@ -99,8 +103,8 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
 /* Cinta de pintor: dice en qué estado está cada cosa, como en el prototipo */
 .tape{
-  display:inline-block; position:relative; width:max-content; justify-self:start; align-self:flex-start;
-  font-stretch:78%; font-weight:650; font-size:13px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
+  display:inline-block; width:max-content; justify-self:start; align-self:flex-start;
+  font-stretch:78%; font-weight:650; font-size:12px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
   color:var(--ink); background:var(--tape);
   padding:.62em 1.05em .56em;
   transform:rotate(-1.6deg);
@@ -138,37 +142,65 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .top-cta:active{ transform:scale(.96); }
 
 /* ============================================================
-   HERO — la mesa
+   HERO — quién soy, la mesa y el índice de lo que hice
 ============================================================ */
 .hero{
   position:relative;
-  padding:clamp(18px, 4vw, 40px) var(--gutter) 28px;
-  max-width:1480px; margin-inline:auto;
+  padding:clamp(16px, 3vw, 32px) var(--gutter) clamp(40px, 6vw, 72px);
+  max-width:1440px; margin-inline:auto;
   display:grid; grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"title" "mesa" "copy";
+  grid-template-areas:"title" "sub" "mesa" "indice";
 }
 .hero-title{
   grid-area:title;
-  font-size:clamp(46px, 13vw, 76px);
-  font-weight:820; font-stretch:106%; line-height:.9; letter-spacing:-.045em;
+  font-size:clamp(40px, 11.5vw, 52px);
+  font-weight:820; font-stretch:106%; line-height:.92; letter-spacing:-.045em;
 }
-.hero-title span{ display:block; }
-.hero-copy{ grid-area:copy; margin-top:18px; }
-.hero-sub{ max-width:34em; font-size:17px; line-height:1.5; }
-.hero-foot{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:18px; flex-wrap:wrap; }
-.hint{ position:absolute; right:0; bottom:0; font-size:14px; color:var(--graphite); display:none; }
-.cue{
-  display:inline-flex; align-items:center; gap:10px; min-height:44px;
-  font-weight:650; font-size:17px; text-decoration:none;
+/* marcatextos. Dos capas con el mismo texto y el mismo ancho, así que
+   cortan los renglones en el mismo lugar:
+   · atrás, ::before: el texto invisible con una franja amarilla por renglón
+     (del alto del renglón, así quedan pegadas como al seleccionar)
+   · al frente, .t-frente: el texto real, encima de todas las franjas, para
+     que ninguna tape la cola de la "g" del renglón de arriba */
+.hero-title{ position:relative; isolation:isolate; }
+.hero-title::before{
+  content:attr(data-l1) "\A" attr(data-l2);
+  content:attr(data-l1) "\A" attr(data-l2) / "";
+  white-space:pre-line; color:transparent;
+  background:linear-gradient(var(--yellow), var(--yellow)) 0 50% / 100% .95em no-repeat;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  padding:0 .09em; margin:0 -.09em;
 }
-.cue svg{ width:22px; height:22px; transition:transform .3s var(--ease); }
-.cue:hover svg{ transform:translateY(3px); }
+.t-frente{ position:absolute; inset:0; }
+.hero-title .t-l{ display:block; }
+.hero-title ::selection{ background:var(--ink); color:var(--yellow); }
+@media (prefers-reduced-motion:no-preference){
+  .hero-title::before{ animation:marcar .6s cubic-bezier(.45,.05,.35,1) .25s both; }
+}
+@keyframes marcar{ from{ background-size:0 .95em; } }
+.hero-sub{ grid-area:sub; margin-top:14px; max-width:32em; font-size:16px; line-height:1.45; color:var(--ink); }
 
+/* el índice: los cuatro proyectos, en una sola mirada */
+.indice{ grid-area:indice; margin-top:28px; border-top:1px solid var(--line); list-style:none; }
+.indice li{ border-bottom:1px solid var(--line); }
+.indice a{
+  display:grid; grid-template-columns:44px minmax(0,1fr) auto; align-items:center; column-gap:14px;
+  min-height:64px; padding:10px 0; text-decoration:none;
+}
+.indice img{ width:44px; height:44px; object-fit:contain; }
+.indice .ic-foto{ object-fit:cover; object-position:50% 22%; border-radius:6px; }
+.indice .ic-app{ border-radius:10px; }
+.indice b{ display:block; font-weight:750; font-size:17px; letter-spacing:-.01em; line-height:1.2; }
+.indice small{ display:block; font-size:14px; color:var(--graphite); line-height:1.3; margin-top:2px; }
+.indice svg{ width:18px; height:18px; color:var(--graphite); transition:transform .25s var(--ease), color .2s; }
+
+/* ---- la mesa ---- */
 .mesa{
   grid-area:mesa; position:relative;
-  width:100%; aspect-ratio:358/452;
-  margin-top:22px;
+  width:100%; aspect-ratio:358/350;
+  margin-top:26px;
 }
+.hint{ position:absolute; right:0; bottom:0; font-size:13px; color:var(--graphite); display:none; }
 .obj{
   position:absolute; left:var(--x); top:var(--y); width:var(--w);
   display:block; text-decoration:none; color:var(--ink);
@@ -179,30 +211,31 @@ html[lang="en"] q{ quotes:"“" "”"; }
   -webkit-tap-highlight-color:transparent;
   -webkit-user-drag:none; user-select:none; -webkit-user-select:none;
 }
-.obj img{ width:100%; height:auto; -webkit-user-drag:none; pointer-events:none; }
+.obj img{ width:100%; -webkit-user-drag:none; pointer-events:none; }
 .obj:focus-visible{ outline:none; --s:1.03; filter:var(--sh-lift); }
-.obj:focus-visible .obj-label{ outline:2px solid var(--ink); outline-offset:3px; }
 .obj-label{
-  position:absolute; left:50%; bottom:-11px; z-index:2;
+  position:absolute; left:50%; bottom:-10px; z-index:2;
   translate:-50% 0; rotate:calc(var(--r,0deg) * -1 - 1.5deg);
   white-space:nowrap;
-  font-stretch:78%; font-weight:650; font-size:10.5px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
+  font-stretch:78%; font-weight:650; font-size:10px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
   background:var(--tape); color:var(--ink); padding:.62em .95em .56em;
   clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
   transition:opacity .25s var(--ease), translate .3s var(--ease);
 }
-/* la entrada: cada cosa cae sobre la mesa (un solo momento, al cargar) */
-.js .mesa:not(.is-set) .obj{ opacity:0; --s:1.12; --dy:-26px; filter:var(--sh-lift); transition:none; }
+/* la entrada: las cosas se ven desde el primer momento, un poco levantadas,
+   y se asientan en la mesa una tras otra (un solo momento, al cargar) */
+.js .mesa:not(.is-set) .obj{ --s:1.07; --dy:-16px; filter:var(--sh-lift); transition:none; }
 .js .mesa.is-set:not(.is-ready) .obj{
-  transition:transform .75s var(--ease-out) calc(var(--i) * 90ms), filter .6s var(--ease) calc(var(--i) * 90ms), opacity .3s linear calc(var(--i) * 90ms);
+  transition:transform .8s var(--ease-out) calc(var(--i) * 90ms), filter .7s var(--ease) calc(var(--i) * 90ms);
 }
+.obj:active{ --s:1.04; filter:var(--sh-lift); transition:transform .15s var(--ease), filter .15s var(--ease); }
 
 /* posiciones en el teléfono (en % de la mesa) */
-.obj--print  { --x:0%;  --y:5%;  --w:37%; --r:-7deg; z-index:2; }
-.obj--folio  { --x:31%; --y:0%;  --w:46%; --r:4deg;  z-index:3; }
-.obj--phone  { --x:71%; --y:9%;  --w:28%; --r:7deg;  z-index:4; }
-.obj--script { --x:3%;  --y:47%; --w:41%; --r:-4deg; z-index:5; }
-.obj--sticker{ --x:49%; --y:59%; --w:28%; --r:8deg;  z-index:6; }
+.obj--print  { --x:0%;  --y:3%;  --w:32%; --r:-7deg; z-index:2; }
+.obj--folio  { --x:28%; --y:0%;  --w:39%; --r:4deg;  z-index:3; }
+.obj--phone  { --x:71%; --y:4%;  --w:26%; --r:7deg;  z-index:4; }
+.obj--script { --x:5%;  --y:50%; --w:34%; --r:-4deg; z-index:5; }
+.obj--sticker{ --x:46%; --y:56%; --w:24%; --r:8deg;  z-index:6; }
 
 .print, .sticker, .script, .ui-body, .ui-island, .dot{ display:block; }
 .print{ background:#fff; padding:5%; }
@@ -216,6 +249,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .script b{ display:block; font-weight:800; font-size:8.2cqw; line-height:1.15; margin-bottom:.7em; letter-spacing:-.01em; }
 .script p{ margin-bottom:.6em; }
 .script p:last-child{ color:#9a9a9a; }
+.script mark{ background:linear-gradient(transparent 56%, var(--yellow) 56%, var(--yellow) 92%, transparent 92%); color:inherit; }
 .script .n{ position:absolute; left:4.5cqw; font-weight:750; font-size:5.2cqw; color:var(--tape); }
 
 /* nota escondida debajo del prototipo: solo la ve quien mueve las cosas */
@@ -230,8 +264,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 }
 
 /* ------------------------------------------------------------
-   Teléfono (lo usan la mesa y el demo de Paratu).
-   Todo adentro se mide contra el ancho del teléfono (cqw).
+   Teléfono de la mesa. Todo adentro se mide contra su ancho (cqw).
 ------------------------------------------------------------ */
 .phone{
   display:block; position:relative; container-type:inline-size;
@@ -275,299 +308,302 @@ html[lang="en"] q{ quotes:"“" "”"; }
   background:rgba(255,255,255,.92); box-shadow:0 1cqw 5cqw rgba(0,0,0,.10), inset 0 0 0 .3cqw rgba(0,0,0,.04);
   display:grid; grid-template-columns:repeat(4,1fr); align-items:center; padding:0 1.4cqw;
 }
-.ui-tabs > *{ display:flex; flex-direction:column; align-items:center; gap:.6cqw; font-size:2.7cqw; font-weight:600; color:#111; padding:1.6cqw 0; border-radius:99px; }
+.ui-tabs > *{ display:flex; flex-direction:column; align-items:center; padding:1.6cqw 0; border-radius:99px; }
 .ui-tabs svg{ width:5.8cqw; height:5.8cqw; }
-.ui-tabs [aria-selected="true"], .ui-tabs .on{ background:#ececef; }
+.ui-tabs .on{ background:#ececef; }
 
 /* ============================================================
-   PROYECTOS — piezas comunes
+   PROYECTOS — el mismo esqueleto para que se lean igual:
+   texto a la izquierda, pruebas a la derecha (en el teléfono,
+   nombre → imágenes → datos)
 ============================================================ */
-.proj{ padding-block:clamp(104px, 14vw, 200px); }
+.proj{ padding-block:clamp(56px, 8vw, 104px); border-top:1px solid var(--line); }
+.proj-grid{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"head" "media" "rest"; row-gap:24px;
+}
+.proj-head{ grid-area:head; }
+.proj-media{ grid-area:media; min-width:0; }
+.proj-rest{ grid-area:rest; }
 .proj-name{
-  font-size:clamp(44px, 7.4vw, 104px);
-  font-weight:820; font-stretch:125%; line-height:.9; letter-spacing:-.045em;
-  margin-top:16px;
-  overflow-wrap:anywhere;
+  font-size:clamp(34px, 4.4vw, 60px);
+  font-weight:820; font-stretch:125%; line-height:.95; letter-spacing:-.04em;
+  margin-top:14px; overflow-wrap:anywhere;
 }
-.proj-what{
-  margin-top:clamp(14px, 1.6vw, 22px);
-  max-width:22em;
-  font-size:clamp(20px, 2vw, 27px); line-height:1.25; font-weight:450; letter-spacing:-.01em;
-}
-.prose p + p{ margin-top:1em; }
-.links{ display:flex; flex-wrap:wrap; gap:4px 26px; margin-top:24px; }
+.proj-what{ margin-top:12px; max-width:28em; font-size:clamp(18px, 1.5vw, 21px); line-height:1.35; letter-spacing:-.005em; }
+.hechos{ list-style:none; display:grid; gap:10px; max-width:32em; }
+.hechos > li{ position:relative; padding-left:18px; }
+.hechos > li::before{ content:""; position:absolute; left:0; top:.6em; width:7px; height:7px; background:var(--ink); }
+.hechos b{ font-weight:750; }
+.hechos s{ color:var(--graphite); text-decoration-thickness:2px; }
+.links{ display:flex; flex-wrap:wrap; gap:0 22px; margin-top:16px; }
 .links a{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; }
-.linea{
-  font-size:clamp(28px, 4vw, 54px); line-height:1.04; font-weight:780; letter-spacing:-.035em;
-  max-width:16em; text-wrap:balance;
+.fuerte{ font-weight:750; }
+
+/* ---- Acuña Sin Huella: fotos reales, como fotos impresas sobre la mesa ---- */
+/* en el teléfono: una tira que se desliza; la primera foto es la de los fundadores */
+.fotos{
+  display:flex; align-items:flex-start; gap:18px;
+  overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding:12px var(--gutter) 16px; scroll-padding-inline:var(--gutter);
 }
+.fotos::-webkit-scrollbar{ display:none; }
+.foto{ flex:none; margin:0; scroll-snap-align:start; }
+.fotos .foto img{ height:min(52vw, 280px); width:auto; }
+.foto .marco{ display:block; background:#fff; padding:6px; box-shadow:var(--sh-print); }
+.foto--fundadores .marco{ transform:rotate(-.8deg); }
+.foto--grupo .marco{ transform:rotate(.6deg); }
+.foto--arboles .marco{ transform:rotate(.9deg); }
+.foto--letrero .marco{ transform:rotate(-1deg); }
+.foto img{ width:100%; aspect-ratio:3/2; object-fit:cover; }
+.foto--alta img{ aspect-ratio:3/4; }
+.foto figcaption{ margin-top:8px; font-size:13px; color:var(--graphite); line-height:1.3; }
 
-/* ============================================================
-   ACUÑA SIN HUELLA — 1,300 botellas por 13 árboles
-============================================================ */
-.acuna-head{ position:relative; }
-.acuna-sticker{ position:absolute; right:10px; top:-86px; width:84px; transform:rotate(8deg); filter:var(--sh-rest); }
-.canje{ margin-top:clamp(44px, 6vw, 88px); }
-.canje-row{ display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:16px 10px; }
-.slot{ position:relative; aspect-ratio:60/110; }
-.slot svg{ position:absolute; inset:0; width:100%; height:100%; transform-origin:50% 100%; }
-.slot .crate{ transition:transform .5s var(--ease), opacity .35s linear; }
-.slot .tree{ transform:scale(0); transition:transform .7s var(--spring); }
-.canje.is-planted .slot .crate{ transform:scale(.25); opacity:0; transition-delay:calc(var(--i) * 110ms); }
-.canje.is-planted .slot .tree{ transform:scale(1); transition-delay:calc(var(--i) * 110ms + 180ms); }
-.canje figcaption{ margin-top:24px; max-width:26em; font-size:clamp(20px, 2vw, 26px); line-height:1.3; letter-spacing:-.01em; }
-.canje figcaption b{ font-weight:750; }
-.acuna-prose{ display:grid; gap:1em; margin-top:clamp(36px, 5vw, 64px); max-width:36em; }
+/* ---- FOLIO: el prototipo en cuatro fotos ---- */
+.pasos-folio{
+  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:42%; gap:10px;
+  overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
+}
+.pasos-folio::-webkit-scrollbar{ display:none; }
+.pasos-folio li{ scroll-snap-align:start; }
+.pasos-folio .pf{ aspect-ratio:3/4; background:var(--sweep); display:flex; align-items:center; justify-content:center; padding:12%; border-radius:4px; }
+.pasos-folio img{ max-height:100%; width:auto; object-fit:contain; filter:var(--sh-rest); }
+.pasos-folio li > span{ display:block; margin-top:8px; font-size:14px; font-weight:600; }
+.pasos-folio li > span b{ color:var(--graphite); font-weight:650; margin-right:6px; font-variant-numeric:tabular-nums; }
 
-/* ============================================================
-   PARATU — la app que funciona + el ticket
-============================================================ */
-.paratu-grid{ display:grid; grid-template-columns:minmax(0,1fr); grid-template-areas:"texto" "demo" "ticket"; row-gap:44px; }
-.paratu-texto{ grid-area:texto; }
-.nombres{ margin-top:20px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; font-size:15px; color:var(--graphite); }
-.nombres s{ font-weight:650; text-decoration-thickness:2px; }
-.nombres b{ font-weight:750; color:var(--ink); }
-.demo-nota{ margin-top:26px; max-width:26em; font-size:15px; color:var(--graphite); }
-.demo-nota button{ display:inline; padding:12px 0; margin:-12px 0; text-decoration:underline; text-underline-offset:.2em; color:var(--ink); font-weight:600; }
-.demo{ grid-area:demo; justify-self:center; width:min(80vw, 330px); }
-.demo .phone{ filter:var(--sh-rest); }
-.ticket-wrap{ grid-area:ticket; justify-self:center; }
+/* ---- Hablemos de Negocios: las aperturas ---- */
+.aperturas-fila{
+  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:36%;
+  gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
+}
+.aperturas-fila::-webkit-scrollbar{ display:none; }
+.aperturas-fila li{ scroll-snap-align:start; }
+.aperturas-fila video{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:8px; background:#e9e9e9; }
+.aperturas-fila span{ display:block; margin-top:6px; font-size:13px; font-weight:650; }
+.frase-fila{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 16px; margin-top:14px; }
+.frase{ display:flex; flex-wrap:wrap; gap:0 .26em; font-size:clamp(24px, 3vw, 34px); font-weight:820; letter-spacing:-.03em; line-height:1.05; }
+.frase span{ transition:color .12s linear; }
+.frase.is-playing span{ color:#cfcfcf; }
+.frase.is-playing span.on{ color:var(--ink); }
+.btn-otra{ display:inline-flex; align-items:center; min-height:44px; font-size:14px; font-weight:650; text-decoration:underline; text-underline-offset:.2em; }
+.frase-nota{ font-size:14px; color:var(--graphite); margin-top:2px; }
+.formula{ list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; counter-reset:b; }
+.formula li{ counter-increment:b; font-size:13.5px; font-weight:600; padding:6px 11px 6px 9px; border:1.5px solid var(--ink); border-radius:999px; line-height:1.2; }
+.formula li::before{ content:counter(b); font-weight:750; color:var(--graphite); margin-right:6px; font-variant-numeric:tabular-nums; }
 
-/* ---- la app ---- */
-.app .ui-body{ overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; padding-bottom:4cqw; }
-.app .ui-body::-webkit-scrollbar{ display:none; }
-.app-view{ display:none; }
-.app-view.is-on{ display:block; animation:vista .28s var(--ease); }
-@keyframes vista{ from{ opacity:0; transform:translateY(2cqw); } }
-.app button{ font-family:inherit; }
-.ui-shortcuts button{ cursor:pointer; }
-.task{ display:flex; align-items:center; gap:3cqw; background:#fff; border-radius:4.4cqw; padding:3.1cqw 3.8cqw; margin-bottom:2.2cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); font-weight:600; }
-.task input{ appearance:none; -webkit-appearance:none; flex:none; width:5.6cqw; height:5.6cqw; border-radius:50%; border:.55cqw solid #b7b7bd; display:grid; place-items:center; cursor:pointer; margin:0; transition:background .2s, border-color .2s, transform .2s var(--spring); }
-.task input:checked{ background:#34c759; border-color:#34c759; }
-.task input:checked::after{ content:""; width:1.4cqw; height:2.6cqw; border:solid #fff; border-width:0 .6cqw .6cqw 0; transform:translateY(-.3cqw) rotate(45deg); }
-.task input:active{ transform:scale(.85); }
-.task input:focus-visible{ outline:2px solid #111; outline-offset:2px; }
-.task .tt{ flex:1; min-width:0; cursor:pointer; }
-.task small{ display:block; font-weight:500; color:#8a8a8e; font-size:3.2cqw; }
-.task.is-done .tt > span{ text-decoration:line-through; color:#9a9aa0; }
-.pin{ flex:none; font-size:2.9cqw; font-weight:700; background:var(--yellow); color:#000; padding:.9cqw 1.8cqw; border-radius:1.2cqw; text-decoration:none; white-space:nowrap; }
-.ui-add{ display:flex; gap:2cqw; margin-top:1cqw; }
-.ui-add input{ flex:1; min-width:0; border:0; background:#fff; border-radius:4.4cqw; padding:3.2cqw 4cqw; font-size:max(4cqw, 16px); box-shadow:inset 0 0 0 .3cqw rgba(0,0,0,.06); }
-.ui-add button{ flex:none; width:11cqw; border-radius:50%; background:#111; color:#fff; font-size:6cqw; line-height:1; }
-.ui-seg{ display:grid; grid-template-columns:repeat(3,1fr); background:#ececef; border-radius:99px; padding:.8cqw; margin:3cqw 0; font-size:3.4cqw; font-weight:600; text-align:center; }
-.ui-seg span{ padding:1.8cqw 0; border-radius:99px; color:#8a8a8e; }
-.ui-seg .on{ background:#fff; color:#111; box-shadow:0 .3cqw 1cqw rgba(0,0,0,.08); }
-.bit-cards{ position:relative; border-radius:4cqw; overflow:hidden; }
-.bit-cards img{ width:100%; }
-.bit-hot{ position:absolute; right:0; top:0; width:50%; height:100%; border-radius:4cqw; }
-.bit-hot:focus-visible{ outline:.8cqw solid var(--yellow); outline-offset:-.8cqw; }
-.bit-pista{ margin-top:3cqw; font-size:3.4cqw; color:#6b6b70; }
-.bit-pista a{ color:#111; font-weight:700; }
-.cuentas{ display:grid; grid-template-columns:repeat(3,1fr); gap:2cqw; margin-top:3cqw; }
-.cuentas button{ text-align:left; background:#fff; border-radius:3.6cqw; padding:2.6cqw 2.8cqw; font-size:3.3cqw; font-weight:600; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
-.cuentas button small{ display:block; color:#8a8a8e; font-weight:500; font-size:3cqw; }
-.cuentas button[aria-pressed="true"]{ box-shadow:inset 0 0 0 .5cqw #111; }
-.gasto{ background:#fff; border-radius:5cqw; padding:3.6cqw 4cqw; margin-top:3cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
-.gasto-tipo{ display:flex; justify-content:center; gap:1cqw; background:#f1f1f3; border-radius:99px; padding:.8cqw; width:max-content; margin:0 auto 2cqw; font-size:2.9cqw; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
-.gasto-tipo button{ padding:1.4cqw 3cqw; border-radius:99px; color:#8a8a8e; }
-.gasto-tipo button[aria-pressed="true"]{ background:#fff; color:#e5484d; box-shadow:0 .3cqw 1cqw rgba(0,0,0,.08); }
-.gasto-tipo button.ing[aria-pressed="true"]{ color:#1f9d55; }
-.gasto label{ display:block; }
-.gasto .monto{ display:flex; align-items:baseline; font-weight:750; font-size:9cqw; letter-spacing:-.02em; }
-.gasto .monto input{ width:100%; border:0; background:none; font-weight:750; font-size:max(9cqw,16px); letter-spacing:-.02em; padding:0; }
-.gasto .concepto{ width:100%; border:0; border-top:.3cqw solid #eee; background:none; padding:2.4cqw 0 .6cqw; font-size:max(3.8cqw,16px); margin-top:1cqw; }
-.gasto .guardar{ margin-top:2.6cqw; width:100%; background:#111; color:#fff; border-radius:99px; padding:2.8cqw 0; font-size:3.6cqw; font-weight:700; }
-.movs{ margin-top:3cqw; }
-.mov{ display:flex; justify-content:space-between; gap:2cqw; background:#fff; border-radius:3.8cqw; padding:3cqw 4cqw; margin-bottom:2cqw; font-weight:600; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); }
-.mov small{ display:block; color:#8a8a8e; font-weight:500; font-size:3cqw; }
-.mov .neg{ color:#e5484d; } .mov .pos{ color:#1f9d55; }
-
-/* ---- el ticket: las métricas de la App Store, impresas ---- */
-.ticket-wrap{ filter:var(--sh-rest); }
+/* ---- Paratu: capturas reales de la App Store + el ticket ---- */
+.capturas{ position:relative; }
+.capturas-fila{
+  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:42%;
+  gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
+}
+.capturas-fila::-webkit-scrollbar{ display:none; }
+.capturas-fila li{ scroll-snap-align:start; }
+.capturas-fila img{ width:100%; aspect-ratio:480/1039; border-radius:10px; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.ticket-wrap{ filter:var(--sh-rest); width:max-content; margin:22px auto 0; }
 .ticket{
-  width:min(80vw, 280px);
+  width:228px;
   background:#fdfdfb;
-  padding:22px 20px 34px;
+  padding:18px 16px 28px;
   font-family:ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  font-size:12.5px; line-height:1.6; text-transform:uppercase; letter-spacing:.02em; color:#1b1b1b;
+  font-size:11px; line-height:1.6; text-transform:uppercase; letter-spacing:.02em; color:#1b1b1b;
   transform:rotate(-2.5deg);
-  --dent:9px;
+  --dent:8px;
   -webkit-mask:conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--dent) 100%;
           mask:conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--dent) 100%;
 }
-.ticket .ticket-t{ font:inherit; font-weight:700; text-align:center; font-size:15px; letter-spacing:.14em; }
-.ticket .sub{ text-align:center; color:#6a6a6a; margin-bottom:12px; }
-.ticket dl{ border-top:1px dashed #bbb; border-bottom:1px dashed #bbb; padding:10px 0; }
+.ticket .ticket-t{ font-weight:700; text-align:center; font-size:13px; letter-spacing:.14em; }
+.ticket .sub{ text-align:center; color:#6a6a6a; margin-bottom:10px; }
+.ticket dl{ border-top:1px dashed #bbb; border-bottom:1px dashed #bbb; padding:8px 0; }
 .ticket dl div{ display:flex; gap:6px; }
 .ticket dt{ flex:1; display:flex; overflow:hidden; white-space:nowrap; }
 .ticket dt::after{ content:" ....................................................."; color:#aaa; }
 .ticket dd{ flex:none; font-weight:700; }
-.ticket .total{ display:flex; justify-content:space-between; font-weight:700; font-size:14px; padding:10px 0; border-bottom:1px dashed #bbb; }
-.ticket .gracias{ text-align:center; margin-top:12px; color:#6a6a6a; }
-.paratu-cierre{ margin-top:clamp(64px, 9vw, 128px); }
+.ticket .total{ display:flex; justify-content:space-between; font-weight:700; font-size:12px; padding:8px 0; border-bottom:1px dashed #bbb; }
+.ticket .gracias{ text-align:center; margin-top:10px; color:#6a6a6a; }
+
+/* ---- Páginas web: cada sitio en su ventana de navegador ---- */
+.sitios{
+  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:78%;
+  gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding:4px var(--gutter) 14px; scroll-padding-inline:var(--gutter);
+}
+.sitios::-webkit-scrollbar{ display:none; }
+.sitios li{ scroll-snap-align:start; }
+.sitio{ display:block; text-decoration:none; }
+.navegador{ display:block; background:#fff; border-radius:8px; overflow:hidden; box-shadow:var(--sh-print); transition:transform .3s var(--ease); }
+.barra{ display:flex; align-items:center; gap:5px; height:24px; padding:0 9px; background:#efefed; }
+.barra i{ width:7px; height:7px; border-radius:50%; background:#cdcdc9; flex:none; }
+.barra span{ margin-left:6px; min-width:0; font-size:10.5px; line-height:1; color:var(--graphite); background:#fff; border-radius:99px; padding:3px 9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.navegador img{ width:100%; aspect-ratio:16/10; object-fit:cover; object-position:top; }
+.sitio b{ display:block; margin-top:10px; font-weight:750; font-size:16px; letter-spacing:-.01em; }
+.sitio small{ display:block; font-size:14px; color:var(--graphite); line-height:1.3; }
+
+/* ---- palabras marcadas que se pueden tocar ---- */
+.clave{
+  font-weight:700; color:var(--ink); text-decoration:underline dotted; text-decoration-thickness:1.5px; text-underline-offset:.22em;
+  background:linear-gradient(transparent 12%, var(--yellow) 12%, var(--yellow) 92%, transparent 92%);
+  padding:0 .2em; margin:0 -.04em; border-radius:2px;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  transition:box-shadow .2s;
+}
+.clave:hover, .clave:active{ box-shadow:0 0 0 2px var(--ink); text-decoration-color:transparent; }
+.resalta{
+  display:inline; padding:0 .22em; margin:0 -.04em;
+  font:inherit; font-weight:700; color:var(--ink);
+  background:linear-gradient(transparent 12%, var(--yellow) 12%, var(--yellow) 92%, transparent 92%);
+  text-decoration:underline dotted; text-decoration-thickness:1.5px; text-underline-offset:.22em;
+  cursor:pointer; border-radius:2px;
+  transition:background-color .2s, box-shadow .2s;
+}
+.resalta:hover, .resalta[aria-pressed="true"]{ box-shadow:0 0 0 2px var(--ink); text-decoration-color:transparent; }
+.sitios li{ transition:opacity .35s var(--ease); }
+.sitios.hay-resaltado li:not(.is-resaltado){ opacity:.3; }
+.sitios li.is-resaltado .navegador{ transform:translateY(-4px); box-shadow:0 0 0 3px var(--yellow), var(--sh-print); }
+.sitios li.is-resaltado b{ background:linear-gradient(transparent 52%, var(--yellow) 52%, var(--yellow) 94%, transparent 94%); }
+
+/* ---- plegables: la fórmula de Hablemos ---- */
+.mini > summary{
+  display:inline-flex; align-items:center; gap:10px; min-height:32px; cursor:pointer; list-style:none;
+  text-decoration:underline dotted; text-decoration-thickness:1.5px; text-underline-offset:.22em;
+}
+.mini > summary::-webkit-details-marker{ display:none; }
+.mini > summary::after{
+  content:""; flex:none; width:7px; height:7px; margin-top:-3px;
+  border-right:2px solid currentColor; border-bottom:2px solid currentColor;
+  transform:rotate(45deg); transition:transform .25s var(--ease), margin .25s var(--ease);
+}
+.mini[open] > summary::after{ transform:rotate(225deg); margin-top:3px; }
+.mini[open] .formula{ animation:abrir .3s var(--ease); }
 
 /* ============================================================
-   FOLIO — el objeto cambia mientras bajas
+   EN PAUSA — filas que se abren
 ============================================================ */
-.folio-head .origen{ margin-top:clamp(24px, 3vw, 40px); font-size:clamp(19px, 1.8vw, 23px); line-height:1.35; max-width:24em; }
-.folio-head .problema{ margin-top:1em; max-width:30em; }
-.folio-stage{ display:none; }
-.folio-steps{
-  list-style:none; display:flex; gap:14px; overflow-x:auto; overscroll-behavior-x:contain;
-  scroll-snap-type:x mandatory; scrollbar-width:none;
-  margin:clamp(36px, 6vw, 64px) calc(var(--gutter) * -1) 0;
-  padding:10px var(--gutter) 20px; scroll-padding-inline:var(--gutter);
+.pausa{ padding-block:clamp(56px, 8vw, 104px); border-top:1px solid var(--line); }
+.pausa-t{ font-size:clamp(28px, 3vw, 40px); font-weight:820; font-stretch:125%; line-height:.95; letter-spacing:-.035em; }
+.pausa-intro{ margin-top:8px; color:var(--graphite); }
+.pausados{ margin-top:22px; border-top:1px solid var(--line); }
+.pausado{ border-bottom:1px solid var(--line); }
+.pausado > summary{
+  display:grid; grid-template-columns:56px minmax(0,1fr) auto; align-items:center; column-gap:16px;
+  min-height:84px; padding:12px 6px; cursor:pointer; list-style:none;
+  transition:background-color .2s;
 }
-.folio-steps::-webkit-scrollbar{ display:none; }
-.folio-steps li{ flex:0 0 84%; scroll-snap-align:start; }
-.step-img{ height:min(60vh, 112vw); display:flex; align-items:center; justify-content:center; background:var(--sweep); border-radius:4px; padding:9%; }
-.step-img img{ max-height:100%; width:auto; object-fit:contain; filter:var(--sh-rest); }
-.step-n{ display:block; margin-top:18px; font-size:14px; font-weight:650; color:var(--graphite); font-variant-numeric:tabular-nums; }
-.step-t{ font-weight:750; font-size:22px; letter-spacing:-.01em; margin-top:2px; }
-.step-p{ margin-top:6px; max-width:26em; }
-.fig{ margin-top:clamp(72px, 10vw, 144px); }
-.fig-box{ position:relative; }
-.fig-box img{ width:100%; }
-.fig-box svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-.fig figcaption{ margin-top:18px; display:grid; gap:14px; }
-.fig .leyenda{ list-style:none; display:flex; flex-wrap:wrap; gap:6px 28px; font-size:15px; }
-.fig .leyenda b{ display:inline-block; min-width:1.4em; font-weight:750; }
-.fig .pie-fig{ font-size:15px; color:var(--graphite); max-width:40em; }
-.folio-cierre{ margin-top:clamp(48px, 6vw, 80px); max-width:34em; }
+.pausado > summary::-webkit-details-marker{ display:none; }
+.p-img img{ width:56px; height:56px; object-fit:contain; }
+.p-img .ic-app{ border-radius:12px; }
+.p-txt b{ display:block; font-weight:780; font-size:clamp(19px, 1.8vw, 24px); letter-spacing:-.015em; line-height:1.15; }
+.p-txt small{ display:block; margin-top:2px; font-size:14px; color:var(--graphite); line-height:1.3; }
+.p-mas{
+  width:38px; height:38px; border-radius:50%; border:1.5px solid var(--ink);
+  display:grid; place-items:center; transition:transform .3s var(--ease), background-color .2s, color .2s;
+}
+.p-mas svg{ width:17px; height:17px; }
+.pausado[open] .p-mas{ transform:rotate(180deg); background:var(--ink); color:var(--paper); }
+.pausado-cuerpo{
+  display:grid; grid-template-columns:minmax(0,1fr); grid-template-areas:"media" "rest"; row-gap:22px;
+  padding:10px 0 34px;
+}
+.pausado[open] .pausado-cuerpo{ animation:abrir .35s var(--ease); }
+@keyframes abrir{ from{ opacity:0; transform:translateY(-8px); } }
 
 /* ============================================================
-   HABLEMOS DE NEGOCIOS
+   AHORA — una nota adhesiva y unas fotos impresas sobre la mesa
 ============================================================ */
-.aperturas{ margin-top:clamp(40px, 5vw, 72px); }
-.aperturas-fila{
-  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:40%;
-  gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
-  padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
+.ahora{ padding-block:clamp(64px, 9vw, 120px); border-top:1px solid var(--line); }
+.ahora-grid{ display:grid; gap:36px; }
+.sec-t{ font-size:clamp(34px, 4.4vw, 60px); font-weight:820; font-stretch:125%; line-height:.95; letter-spacing:-.04em; }
+
+/* la nota: papel con grano, luz de arriba y la orilla de abajo levantada */
+.nota-wrap{ position:relative; width:min(82vw, 320px); margin-inline:auto; transform:rotate(-2.5deg); container-type:inline-size; }
+.nota-wrap::after{
+  content:""; position:absolute; z-index:-1; right:4%; bottom:5%; width:66%; height:30%;
+  box-shadow:12px 16px 20px rgba(60,45,0,.30); transform:rotate(5deg) skewX(10deg);
+  border-bottom-right-radius:40% 30%;
 }
-.aperturas-fila::-webkit-scrollbar{ display:none; }
-.aperturas-fila li{ scroll-snap-align:start; }
-.aperturas-fila video{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:10px; background:#e9e9e9; }
-.aperturas-fila span{ display:block; margin-top:8px; font-size:14px; font-weight:650; }
-.frase{ display:flex; flex-wrap:wrap; align-items:baseline; gap:0 .26em; margin-top:26px; font-size:clamp(32px, 6vw, 72px); font-weight:820; letter-spacing:-.035em; line-height:1; }
-.frase span{ transition:color .12s linear; }
-.frase.is-playing span{ color:#cfcfcf; }
-.frase.is-playing span.on{ color:var(--ink); }
-.frase-tr{ font-size:15px; color:var(--graphite); margin-top:8px; }
-.aperturas-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 20px; margin-top:14px; }
-.aperturas-foot p{ max-width:30em; }
-.btn-otra{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; text-decoration:underline; text-underline-offset:.2em; }
-
-.evidencia{ margin-top:clamp(64px, 9vw, 120px); font-size:clamp(22px, 2.5vw, 32px); line-height:1.25; font-weight:500; letter-spacing:-.015em; max-width:26em; }
-.evidencia a{ font-size:17px; font-weight:650; display:inline-flex; min-height:44px; align-items:center; letter-spacing:0; }
-
-.formula{ margin-top:clamp(64px, 9vw, 128px); display:grid; gap:36px; }
-.reel{ width:min(80vw, 330px); justify-self:center; }
-.reel-video{ position:relative; }
-.reel video{ width:100%; aspect-ratio:9/16; object-fit:cover; border-radius:14px; background:#111; }
-.reel-play{
-  position:absolute; inset:0; border-radius:14px;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:10px;
-  padding:0 16px 22px; color:#fff; text-align:center;
-  background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0) 46%);
-  font-weight:650; font-size:15px;
+.nota{
+  position:relative; aspect-ratio:1; padding:8.5cqw 8cqw 7cqw; overflow:hidden;
+  color:#232323;
+  background:
+    linear-gradient(0deg, rgba(110,80,0,.13), rgba(110,80,0,0) 17%),
+    linear-gradient(135deg, rgba(255,255,255,.42), rgba(255,255,255,0) 46%),
+    linear-gradient(180deg, rgba(110,80,0,.07), rgba(110,80,0,0) 11%),
+    #fde56a;
+  box-shadow:0 1px 1px rgba(0,0,0,.16), 0 3px 6px rgba(0,0,0,.05);
+  border-bottom-right-radius:60% 12px;
 }
-.reel-play i{ width:64px; height:64px; border-radius:50%; background:var(--yellow); display:grid; place-items:center; margin:auto 0; box-shadow:0 8px 30px rgba(0,0,0,.25); transition:transform .25s var(--spring); }
-.reel-play:hover i{ transform:scale(1.07); }
-.reel-play svg{ width:24px; height:24px; margin-left:4px; }
-.reel.is-playing .reel-play{ display:none; }
-.reel-nota{ margin-top:12px; font-size:14px; color:var(--graphite); }
-.reel-nota a{ color:var(--ink); font-weight:600; }
-.formula h3{ font-size:clamp(26px, 2.8vw, 38px); font-weight:780; letter-spacing:-.025em; line-height:1.05; }
-.formula .intro{ margin-top:12px; max-width:30em; }
-.bloques{ list-style:none; margin-top:22px; border-top:1px solid var(--line); }
-.bloques li{ border-bottom:1px solid var(--line); }
-.bloques button{
-  display:grid; grid-template-columns:2.2em 1fr; gap:2px 10px; width:100%; text-align:left;
-  padding:14px 10px 14px 4px; min-height:56px; align-items:baseline;
-  transition:background-color .25s;
+.nota::before{ content:""; position:absolute; inset:0; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); opacity:.35; mix-blend-mode:multiply; pointer-events:none; }
+.nota-t, .nota ul, .pie-foto{ font-family:"Kalam", "Bradley Hand", "Segoe Print", cursive; font-weight:400; }
+.nota-t{ position:relative; display:inline-block; font-size:clamp(26px, 11cqw, 36px); line-height:1; letter-spacing:.01em; -webkit-text-stroke:.7px currentColor; }
+.nota-t svg{ position:absolute; left:-4%; bottom:-10px; width:112%; height:12px; }
+.nota ul{ list-style:none; margin-top:6cqw; display:grid; gap:2.6cqw; font-size:clamp(15px, 6.5cqw, 21px); line-height:1.22; }
+.nota li{ position:relative; padding-left:1.05em; }
+.nota li::before{ content:"–"; position:absolute; left:2px; }
+
+/* las fotos: impresas, con su cinta azul y el pie escrito a mano */
+.fotos-ahora{
+  list-style:none; display:flex; align-items:flex-start; gap:22px;
+  overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
+  margin-inline:calc(var(--gutter) * -1); padding:26px var(--gutter) 34px; scroll-padding-inline:var(--gutter);
 }
-.bloques button:hover{ background:var(--sweep); }
-.bloques .bn{ grid-row:span 2; font-weight:750; font-size:15px; color:var(--graphite); font-variant-numeric:tabular-nums; }
-.bloques .bt{ font-weight:700; }
-.bloques .bq{ font-size:15px; color:var(--graphite); }
-.bloques li.on button{ background:var(--yellow); }
-.bloques li.on .bn, .bloques li.on .bq{ color:var(--ink); }
-.guion{ margin-top:18px; font-size:15px; }
-.guion summary{ cursor:pointer; font-weight:650; min-height:44px; display:flex; align-items:center; }
-.guion p{ margin-top:8px; max-width:40em; color:#333; }
-
-.hdn-notas{ margin-top:clamp(64px, 9vw, 128px); display:grid; gap:44px; }
-.hdn-notas p{ max-width:30em; }
-.veg{ display:flex; gap:16px; align-items:flex-start; }
-.veg-mark{ flex:none; width:30px; height:30px; border:2.5px solid #0f8a3a; display:grid; place-items:center; margin-top:3px; }
-.veg-mark::after{ content:""; width:14px; height:14px; border-radius:50%; background:#0f8a3a; }
-.hdn .linea{ margin-top:clamp(72px, 10vw, 144px); }
-
-/* ============================================================
-   FINES DE SEMANA — hackathons y retos
-============================================================ */
-.fines{ padding-block:clamp(104px, 14vw, 200px); }
-.fines-t{ font-size:clamp(40px, 6vw, 84px); font-weight:820; font-stretch:125%; line-height:.92; letter-spacing:-.045em; }
-.fines-intro{ margin-top:16px; max-width:26em; font-size:clamp(19px, 1.9vw, 24px); line-height:1.3; }
-.exp-lista{ margin-top:clamp(48px, 7vw, 96px); display:grid; gap:80px; }
-.exp h3{ font-size:clamp(30px, 3.6vw, 48px); font-weight:800; font-stretch:112%; letter-spacing:-.035em; line-height:1; margin-top:14px; }
-.exp .meta{ margin-top:10px; font-size:15px; color:var(--graphite); }
-.exp .desc{ margin-top:12px; max-width:30em; }
-.fl{ display:grid; gap:40px; }
-.calc{ margin-top:24px; max-width:460px; background:var(--sweep); padding:22px 20px 20px; border-radius:4px; }
-.calc-intro{ font-size:15px; margin-bottom:14px; }
-.calc label{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:6px 0; border-bottom:1px solid #e2e2df; font-size:15px; }
-.calc .campo{ display:flex; align-items:baseline; gap:2px; font-weight:700; font-size:20px; }
-.calc input{ width:5.2em; text-align:right; border:0; background:transparent; font-weight:700; font-size:20px; padding:8px 0; border-bottom:2px solid transparent; }
-.calc input:focus{ outline:none; border-bottom-color:var(--ink); }
-.calc output{ display:block; margin-top:16px; font-size:clamp(34px, 5vw, 48px); font-weight:820; letter-spacing:-.03em; line-height:1; }
-.calc output small{ font-size:.42em; font-weight:600; letter-spacing:0; margin-left:.2em; }
-.calc-nota{ margin-top:8px; font-size:15px; }
-.cert{ width:min(88vw, 440px); transform:rotate(2deg); filter:var(--sh-rest); justify-self:center; }
-.exp-pares{ display:grid; gap:56px; }
-
-/* ============================================================
-   BITÁCORA
-============================================================ */
-.bitacora{ padding-block:clamp(104px, 14vw, 200px); }
-.bit-grid{ display:grid; gap:48px; }
-.bit-t{ font-size:clamp(40px, 6vw, 84px); font-weight:820; font-stretch:125%; line-height:.92; letter-spacing:-.045em; }
-.bit-intro{ margin-top:14px; color:var(--graphite); }
-.postit{
-  margin-top:32px; width:min(80vw, 290px); aspect-ratio:1;
-  background:var(--yellow); padding:24px 22px;
-  transform:rotate(-2.2deg);
-  filter:drop-shadow(0 1px 1px rgba(0,0,0,.12)) drop-shadow(6px 14px 14px rgba(0,0,0,.12));
-  clip-path:polygon(0 0,100% 0,100% 100%,6% 100%,0 96%);
+.fotos-ahora::-webkit-scrollbar{ display:none; }
+.impresa{
+  position:relative; flex:none; scroll-snap-align:start; container-type:inline-size;
+  background:#fcfcfa; box-shadow:var(--sh-print);
+  transform:rotate(var(--r, 0deg));
 }
-.postit h3{ font-size:22px; font-weight:800; letter-spacing:-.02em; }
-.postit ul{ list-style:none; margin-top:10px; display:grid; gap:8px; font-size:16px; line-height:1.3; font-weight:500; }
-.log{ list-style:none; }
-.log li{ display:grid; grid-template-columns:6.4em 1fr; gap:14px; padding:16px 0; border-top:1px solid var(--line); }
-.log li:last-child{ border-bottom:1px solid var(--line); }
-.log time{ font-weight:650; font-size:15px; color:var(--graphite); font-variant-numeric:tabular-nums; padding-top:.1em; }
+.impresa img{ margin:4cqw 4cqw 0; width:calc(100% - 8cqw); }
+/* misma altura para todas en la tira: el marco mide 8cqw más que la foto */
+.impresa{ --alto:min(52vw, 280px); width:calc(var(--alto) * var(--ar, 1) / .92); }
+.pie-foto{ font-size:clamp(14px, 6.2cqw, 18px); line-height:1.2; color:#2c2c2c; text-align:center; padding:3cqw 4cqw 4cqw; }
+.cinta{
+  position:absolute; z-index:1; top:-11px; left:50%; width:38%; height:24px;
+  translate:-50% 0; rotate:var(--rc, -3deg);
+  background:rgba(42,143,214,.84); box-shadow:0 1px 1px rgba(0,0,0,.08);
+  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
+}
 
 /* ============================================================
    HABLEMOS
 ============================================================ */
-.hablemos{ padding-block:clamp(110px, 15vw, 220px) clamp(40px, 5vw, 72px); }
-.hablemos .tape{ margin-bottom:clamp(18px, 2.4vw, 30px); }
-.hablemos-t{ font-size:min(calc((100vw - 2 * var(--gutter)) / 7.1), 200px); font-weight:850; font-stretch:125%; line-height:.84; letter-spacing:-.055em; margin-left:-.03em; white-space:nowrap; }
-.hablemos-sub{ margin-top:clamp(20px, 3vw, 36px); font-size:clamp(20px, 2.2vw, 28px); line-height:1.25; max-width:22em; font-weight:450; }
-.correo{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:clamp(28px, 4vw, 48px); }
-.correo a{ font-size:clamp(19px, 3.4vw, 42px); font-weight:750; letter-spacing:-.025em; text-decoration:underline; text-decoration-thickness:.07em; text-underline-offset:.16em; overflow-wrap:anywhere; }
+.hablemos{ padding-block:clamp(64px, 10vw, 136px) clamp(32px, 4vw, 56px); border-top:1px solid var(--line); }
+.hablemos .tape{ margin-bottom:clamp(14px, 2vw, 22px); }
+.hablemos-t{ font-size:min(calc((100vw - 2 * var(--gutter)) / 6.6), 128px); font-weight:850; font-stretch:125%; line-height:.86; letter-spacing:-.055em; margin-left:-.03em; }
+.hablemos-sub{ margin-top:clamp(16px, 2vw, 24px); font-size:clamp(18px, 1.8vw, 22px); line-height:1.35; max-width:24em; }
+.correo{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:clamp(20px, 3vw, 32px); }
+.correo a{ font-size:clamp(19px, 2.8vw, 34px); font-weight:750; letter-spacing:-.02em; text-decoration:underline; text-decoration-thickness:.07em; text-underline-offset:.16em; overflow-wrap:anywhere; }
 .copiar{ min-height:44px; padding:0 16px; border-radius:999px; border:1.5px solid var(--ink); font-size:14px; font-weight:650; transition:background .2s, color .2s; }
 .copiar.is-ok{ background:var(--ink); color:var(--paper); }
-.hora{ margin-top:16px; color:var(--graphite); font-size:15px; }
-.redes{ list-style:none; margin-top:clamp(48px, 7vw, 96px); border-top:1px solid var(--line); max-width:880px; }
+.hora{ margin-top:12px; color:var(--graphite); font-size:14px; }
+.redes{ list-style:none; margin-top:clamp(36px, 5vw, 64px); border-top:1px solid var(--line); max-width:760px; }
 .redes li{ border-bottom:1px solid var(--line); }
-.redes a{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; column-gap:16px; min-height:68px; padding:12px 0; text-decoration:none; }
-.redes b{ grid-column:1; font-weight:750; font-size:clamp(19px, 2vw, 24px); letter-spacing:-.015em; }
-.redes span{ grid-column:1; color:var(--graphite); font-size:15px; }
-.redes em{ grid-column:2; grid-row:1 / span 2; font-style:normal; font-size:15px; color:var(--graphite); text-align:right; max-width:14em; }
+.redes a{ display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; column-gap:16px; min-height:58px; padding:9px 0; text-decoration:none; }
+.redes b{ grid-column:1; font-weight:750; font-size:18px; letter-spacing:-.01em; }
+.redes span{ grid-column:1; color:var(--graphite); font-size:14px; }
+.redes em{ grid-column:2; grid-row:1 / span 2; font-style:normal; font-size:14px; color:var(--graphite); text-align:right; max-width:14em; }
 .redes a:hover b{ text-decoration:underline; text-underline-offset:.15em; text-decoration-thickness:2px; }
 
-.pie{ padding:28px var(--gutter) calc(28px + env(safe-area-inset-bottom)); max-width:var(--maxw); margin-inline:auto; display:flex; flex-wrap:wrap; gap:4px 20px; justify-content:space-between; align-items:center; font-size:14px; color:var(--graphite); }
+/* ---- Media kit: se ve en un visor y se descarga ---- */
+.ver-kit{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; text-decoration:underline; text-underline-offset:.2em; }
+.correo .ver-kit{ font-size:14px; }
+.kit{ width:min(100% - 24px, 760px); max-height:calc(100dvh - 24px); margin:auto; padding:0; border:0; border-radius:14px; background:var(--paper); color:var(--ink); box-shadow:0 30px 80px rgba(0,0,0,.35); overflow:hidden; }
+.kit[open]{ display:flex; flex-direction:column; }
+.kit::backdrop{ background:rgba(0,0,0,.6); }
+.kit-barra{ display:flex; align-items:center; gap:8px; padding:8px 8px 8px 18px; border-bottom:1px solid var(--line); }
+.kit-barra h2{ flex:1; font-size:16px; font-weight:750; letter-spacing:-.01em; }
+.kit-bajar{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 18px; border-radius:999px; background:var(--ink); color:var(--paper); font-size:14px; font-weight:650; text-decoration:none; }
+.kit-bajar svg{ width:16px; height:16px; }
+.kit-cerrar{ display:grid; place-items:center; width:44px; height:44px; border-radius:999px; }
+.kit-cerrar:hover{ background:var(--sweep); }
+.kit-cerrar svg{ width:20px; height:20px; }
+.kit-hoja{ overflow-y:auto; overscroll-behavior:contain; background:var(--sweep); padding:clamp(10px, 2vw, 20px); }
+.kit-hoja:focus{ outline:none; }
+.kit-hoja img{ display:block; width:100%; height:auto; box-shadow:var(--sh-print); }
+
+.pie{ padding:24px var(--gutter) calc(24px + env(safe-area-inset-bottom)); max-width:var(--maxw); margin-inline:auto; display:flex; flex-wrap:wrap; gap:4px 20px; justify-content:space-between; align-items:center; font-size:14px; color:var(--graphite); }
 .firma{ display:inline-flex; align-items:center; gap:10px; }
 .firma svg{ width:22px; height:22px; color:var(--ink); }
 .version{ min-height:44px; color:var(--graphite); text-decoration:underline dotted; text-underline-offset:.25em; font-size:14px; font-variant-numeric:tabular-nums; }
@@ -577,23 +613,23 @@ html[lang="en"] q{ quotes:"“" "”"; }
    PANTALLAS MÁS ANCHAS: la misma página, con más espacio
 ============================================================ */
 @media (min-width:640px){
-  .aperturas-fila{ grid-auto-columns:30%; }
-  .canje-row{ grid-template-columns:repeat(13, minmax(0,1fr)); gap:12px; }
-  .acuna-sticker{ width:110px; top:-110px; }
+  .aperturas-fila{ grid-auto-columns:22%; }
+  .sitios{ grid-auto-columns:46%; }
+  .capturas-fila{ grid-auto-columns:28%; }
+  .pasos-folio{ grid-auto-columns:28%; }
 }
 @media (min-width:900px){
   .hero{
     grid-template-columns:minmax(0,5fr) minmax(0,7fr);
-    grid-template-areas:". mesa" "title mesa" "copy mesa" ". mesa";
-    grid-template-rows:minmax(0,.55fr) auto auto minmax(0,1fr);
-    column-gap:clamp(24px, 3vw, 56px);
+    grid-template-areas:". mesa" "title mesa" "sub mesa" "indice mesa" ". mesa";
+    grid-template-rows:minmax(0,1fr) auto auto auto minmax(0,1fr);
+    column-gap:clamp(24px, 3.5vw, 64px);
     min-height:calc(100svh - var(--head));
-    padding-top:clamp(24px, 5vh, 64px);
-    padding-bottom:clamp(24px, 4vh, 48px);
   }
-  .hero-title{ font-size:clamp(56px, 6.4vw, 108px); }
-  .hero-copy{ margin-top:clamp(24px, 4vh, 44px); }
-  .mesa{ aspect-ratio:auto; height:100%; min-height:560px; max-height:820px; margin-top:0; }
+  .hero-title{ font-size:clamp(52px, 5.2vw, 84px); }
+  .hero-sub{ font-size:17px; margin-top:18px; }
+  .indice{ margin-top:26px; }
+  .mesa{ aspect-ratio:auto; height:100%; min-height:540px; max-height:760px; margin-top:0; }
   .obj--print  { --x:3%;  --y:9%;  --w:27%; --r:-8deg; }
   .obj--folio  { --x:31%; --y:4%;  --w:39%; --r:-4deg; }
   .obj--phone  { --x:71%; --y:11%; --w:22%; --r:7deg; }
@@ -602,62 +638,63 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .obj-label{ font-size:11px; bottom:-13px; }
   .nota-escondida{ --x:31%; --y:4%; }
 
-  .acuna-head{ display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:56px; align-items:center; }
-  .acuna-head > :not(.acuna-sticker){ grid-column:1; }
-  .acuna-sticker{ position:static; grid-column:2; grid-row:1 / span 3; width:210px; margin-right:12px; }
-  .acuna-prose{ grid-template-columns:repeat(2, minmax(0,1fr)); column-gap:56px; max-width:none; }
-
-  .paratu-grid{
-    grid-template-columns:minmax(0,1fr) 340px;
-    grid-template-areas:"texto demo" "ticket demo";
-    column-gap:clamp(40px, 7vw, 120px); row-gap:40px;
-    align-items:start;
+  .proj-grid{
+    grid-template-columns:minmax(0,5fr) minmax(0,7fr);
+    grid-template-areas:"head media" "rest media";
+    grid-template-rows:auto 1fr;
+    column-gap:clamp(40px, 5vw, 88px); row-gap:22px;
   }
-  .demo{ width:340px; }
-  .ticket-wrap{ justify-self:start; align-self:end; margin-left:clamp(0px, 4vw, 64px); }
+  .proj-media{ align-self:center; }
+  /* en computadora: dos renglones de fotos impresas, alternando lados */
+  .fotos{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:20px 16px; overflow:visible; margin:0; padding:0; }
+  .fotos .foto img{ height:auto; width:100%; }
+  .foto--ancha{ grid-column:span 2; }
+  .foto--alta img{ aspect-ratio:7/10; }
+  .foto--fundadores{ order:1; } .foto--arboles{ order:2; } .foto--letrero{ order:3; } .foto--grupo{ order:4; }
+  .aperturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(5, minmax(0,1fr)); overflow:visible; margin-inline:0; padding-inline:0; }
+  .capturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(4, minmax(0,1fr)); overflow:visible; margin-inline:0; padding-inline:0; }
+  .pasos-folio{ grid-auto-flow:row; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; overflow:visible; margin-inline:0; padding-inline:0; }
+  .sitios{ grid-auto-flow:row; grid-template-columns:repeat(2, minmax(0,1fr)); gap:22px 18px; overflow:visible; margin-inline:0; padding:0; }
+  .capturas{ display:grid; grid-template-columns:minmax(0,1fr) 190px; align-items:center; }
+  .capturas-fila{ gap:10px; }
+  .ticket-wrap{ margin:0 0 0 -22px; position:relative; z-index:1; }
+  .ticket{ width:212px; font-size:10.5px; }
 
-  .folio-seq{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); column-gap:clamp(40px, 5vw, 80px); }
-  .folio-stage{
-    display:block; grid-column:1; grid-row:1 / span 2; align-self:start;
-    position:sticky; top:calc(var(--head) + 3vh); height:calc(100vh - var(--head) - 6vh);
-    background:var(--sweep); border-radius:4px;
+  .pausado-cuerpo{
+    grid-template-columns:minmax(0,5fr) minmax(0,7fr); grid-template-areas:"rest media";
+    column-gap:clamp(40px, 5vw, 88px); align-items:center; padding:18px 6px 44px;
   }
-  .folio-stage img{
-    position:absolute; left:50%; top:50%; max-width:76%; max-height:80%; width:auto; height:auto;
-    translate:-50% -50%; opacity:0; scale:.94; rotate:-2deg;
-    filter:var(--sh-rest);
-    transition:opacity .45s var(--ease), scale .8s var(--ease-out), rotate .8s var(--ease-out);
-  }
-  .folio-stage img.on{ opacity:1; scale:1; rotate:0deg; }
-  .folio-head{ grid-column:2; min-height:calc(100vh - var(--head) - 6vh); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
-  .folio-pasos{ grid-column:2; }
-  .folio-steps{ display:block; overflow:visible; margin:0; padding:0; }
-  .folio-steps li{ min-height:72vh; display:flex; flex-direction:column; justify-content:center; }
-  .folio-steps .step-img{ display:none; }
-  .step-t{ font-size:clamp(28px, 2.8vw, 40px); }
-  .step-p{ font-size:clamp(18px, 1.5vw, 21px); }
+  .pausado > summary{ grid-template-columns:64px minmax(0,1fr) auto; min-height:96px; column-gap:22px; }
+  .p-img img{ width:64px; height:64px; }
 
-  .aperturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px; overflow:visible; max-width:var(--maxw); margin-inline:auto; }
-  .formula{ grid-template-columns:auto minmax(0,1fr); gap:clamp(40px, 6vw, 96px); align-items:start; }
-  .reel{ width:330px; position:sticky; top:calc(var(--head) + 32px); }
-  .hdn-notas{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:64px; }
+  /* en computadora: una mesa, como la del inicio (posiciones en % de la mesa) */
+  .ahora-grid{ display:block; position:relative; aspect-ratio:1152/560; }
+  .nota-wrap{ position:absolute; z-index:5; left:1%; top:6%; width:25%; margin:0; }
+  .fotos-ahora{ display:block; overflow:visible; margin:0; padding:0; }
+  .impresa{ position:absolute; left:var(--x); top:var(--y); width:var(--w); }
+  /* grupo arriba al centro, Delhi abajo a la izquierda (encimada en la
+     orilla de la nota), Pee Safe y el retrato a la derecha */
+  .fotos-ahora li:nth-child(1){ --x:30%;   --y:1%;  --w:30%;   z-index:3; }
+  .fotos-ahora li:nth-child(2){ --x:56%;   --y:47%; --w:15.5%; z-index:4; }
+  .fotos-ahora li:nth-child(3){ --x:15%;   --y:58%; --w:27%;   z-index:6; }
+  .fotos-ahora li:nth-child(4){ --x:78%;   --y:9%;  --w:17%;   z-index:5; }
 
-  .fl{ grid-template-columns:minmax(0,1fr) minmax(0,.9fr); align-items:center; gap:64px; }
-  .exp-pares{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:64px; }
-
-  .bit-grid{ grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:72px; }
-  .bit-side{ position:sticky; top:calc(var(--head) + 40px); align-self:start; }
-  .log li{ grid-template-columns:8em 1fr; }
-}
-@media (min-width:1280px){
-  .hero-title{ font-size:clamp(88px, 6.6vw, 116px); }
 }
 
-/* al tocar: la cosa se levanta un poco antes de llevarte a su historia */
-.obj:active{ --s:1.04; filter:var(--sh-lift); transition:transform .15s var(--ease), filter .15s var(--ease); }
+@media (min-width:900px) and (max-width:1180px){
+  .capturas{ grid-template-columns:minmax(0,1fr) 200px; }
+  .ticket-wrap{ margin-left:-6px; }
+  .ticket{ width:200px; }
+}
 
-/* con mouse: las cosas de la mesa se levantan y se mueven */
+/* con mouse: las cosas de la mesa se levantan y se mueven; los demás
+   efectos de "hover" solo aquí, para que no se queden pegados al tocar */
 @media (hover:hover) and (pointer:fine){
+  .pausado > summary:hover{ background:var(--sweep); }
+  .sitio:hover .navegador{ transform:translateY(-3px); }
+  .sitio:hover b{ text-decoration:underline; text-underline-offset:.16em; }
+  .indice a:hover svg{ transform:translateY(2px); color:var(--ink); }
+  .indice a:hover b{ text-decoration:underline; text-underline-offset:.16em; }
   .hint{ display:block; }
   .obj{ cursor:grab; }
   .obj:hover{ --s:1.025; filter:var(--sh-lift); }
@@ -671,7 +708,8 @@ html[lang="en"] q{ quotes:"“" "”"; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation:none !important; transition:none !important; }
-  .js .mesa:not(.is-set) .obj{ opacity:1; --s:1; --dy:0px; filter:var(--sh-rest); }
+  .sitios li.is-resaltado .navegador{ transform:none; }
+  .js .mesa:not(.is-set) .obj{ --s:1; --dy:0px; filter:var(--sh-rest); }
 }
 </style>
 </head>
@@ -688,21 +726,22 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
 <main id="contenido">
 
-<!-- ===================== LA MESA ===================== -->
+<!-- ===================== QUIÉN SOY + LA MESA + ÍNDICE ===================== -->
 <section class="hero" id="mesa" aria-labelledby="hero-t">
-  <h1 class="hero-title" id="hero-t"><span data-en="I make things.">Hago cosas.</span> <span data-en="Some of them work.">Algunas funcionan.</span></h1>
+  <h1 class="hero-title" id="hero-t" data-l1="Hago cosas." data-l2="Algunas funcionan."><span class="t-frente"><span class="t-l" data-en="I make things.">Hago cosas.</span> <span class="t-l" data-en="Some of them work.">Algunas funcionan.</span></span></h1>
+  <p class="hero-sub" data-en-html="I'm Joaquín Álvarez Mercado, from Mexico. I have experience in &lt;a class=&quot;clave&quot; href=&quot;#web&quot;&gt;design&lt;/a&gt; and &lt;a class=&quot;clave&quot; href=&quot;#paratu&quot;&gt;platform development&lt;/a&gt;.">Soy Joaquín Álvarez Mercado, de México. Tengo experiencia en <a class="clave" href="#web">diseño</a> y <a class="clave" href="#paratu">desarrollo de plataformas</a>.</p>
 
   <div class="mesa" data-mesa>
     <p class="hint" data-en="Go ahead, move things around.">Puedes mover las cosas.</p>
     <p class="nota-escondida" aria-hidden="true" data-en="Curious people always move things. Write to me: joaquinalvarezme@gmail.com">Los curiosos siempre mueven las cosas. Escríbeme: joaquinalvarezme@gmail.com</p>
 
-    <a class="obj obj--print" href="#bitacora" style="--i:0" data-obj aria-label="Yo. Ver mi bitácora" data-en-aria-label="Me. See my logbook">
-      <span class="print"><img src="assets/img/retrato-440.webp" srcset="assets/img/retrato-440.webp 440w, assets/img/retrato-720.webp 720w" sizes="(min-width:900px) 16vw, 36vw" width="440" height="587" alt="" fetchpriority="high" /></span>
+    <a class="obj obj--print" href="#ahora" style="--i:0" data-obj aria-label="Yo. Ver en qué ando ahora" data-en-aria-label="Me. See what I'm up to now">
+      <span class="print"><img src="assets/img/retrato-440.webp" srcset="assets/img/retrato-440.webp 440w, assets/img/retrato-720.webp 720w" sizes="(min-width:900px) 16vw, 32vw" width="440" height="587" alt="" fetchpriority="high" /></span>
       <span class="obj-label" aria-hidden="true" data-en="Me">Yo</span>
     </a>
 
     <a class="obj obj--folio" href="#folio" style="--i:1" data-obj aria-label="FOLIO, prototipo 1" data-en-aria-label="FOLIO, prototype 1">
-      <img src="assets/img/folio-cerrada-520.webp" srcset="assets/img/folio-cerrada-520.webp 520w, assets/img/folio-cerrada-900.webp 900w" sizes="(min-width:900px) 23vw, 46vw" width="520" height="585" alt="" fetchpriority="high" />
+      <img src="assets/img/folio-cerrada-520.webp" srcset="assets/img/folio-cerrada-520.webp 520w, assets/img/folio-cerrada-900.webp 900w" sizes="(min-width:900px) 23vw, 39vw" width="520" height="585" alt="" fetchpriority="high" />
       <span class="obj-label" aria-hidden="true">FOLIO</span>
     </a>
 
@@ -739,384 +778,277 @@ html[lang="en"] q{ quotes:"“" "”"; }
     </a>
 
     <a class="obj obj--sticker" href="#acuna" style="--i:4" data-obj aria-label="Acuña Sin Huella">
-      <span class="sticker"><img src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 11vw, 26vw" width="280" height="356" alt="" /></span>
+      <span class="sticker"><img src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 11vw, 24vw" width="280" height="356" alt="" /></span>
     </a>
   </div>
 
-  <div class="hero-copy">
-    <p class="hero-sub" data-en="I'm Joaquín Álvarez Mercado, from Ciudad Acuña, Mexico. I study technology and business at TETR, and right now I'm in India. I made everything on this table; some of it with other people.">Soy Joaquín Álvarez Mercado, de Ciudad Acuña, Coahuila. Estudio tecnología y negocios en TETR y ahora estoy en India. Todo lo que ves en esta mesa lo hice yo; algunas cosas, con más gente.</p>
-    <div class="hero-foot">
-      <a class="cue" href="#acuna"><span data-en="But how did it work?">¿Pero cómo funcionó?</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5.5 12.5 12 19l6.5-6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    </div>
-  </div>
+  <ul class="indice" aria-label="Lo que he hecho" data-en-aria-label="What I've made">
+    <li><a href="#acuna"><img src="assets/img/acuna-280.webp" width="280" height="356" alt="" /><span><b>Acuña Sin Huella</b><small data-en="An environmental movement I co-founded">Movimiento ambiental que cofundé</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+    <li><a href="#hdn"><img class="ic-foto" src="assets/img/abre-trisol-360.webp" width="360" height="640" alt="" loading="lazy" /><span><b>Hablemos de Negocios</b><small data-en="Videos about real businesses, 1.4M views">Videos sobre negocios reales, 1.4 M de vistas</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+    <li><a href="#web"><img src="assets/img/indice-web.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="Websites">Páginas web</b><small data-en="Web design, from this page to Berri">Diseño web, de esta página a Berri</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+    <li><a href="#pausa"><img src="assets/img/indice-pausa.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="On hold">En pausa</b><small data-en="FOLIO, a binder · Paratu, an app">FOLIO, una carpeta · Paratu, una app</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+  </ul>
 </section>
 
 <!-- ===================== ACUÑA SIN HUELLA ===================== -->
 <section class="proj acuna" id="acuna" aria-labelledby="acuna-t">
-  <div class="wrap">
-    <div class="acuna-head">
+  <div class="wrap proj-grid">
+    <div class="proj-head">
       <p class="tape" data-en="Co-founder">Cofundador</p>
       <h2 class="proj-name" id="acuna-t">Acuña Sin Huella</h2>
-      <p class="proj-what" data-en="An environmental movement I co-founded in my hometown in 2024.">Un movimiento ambiental que cofundé en mi ciudad, en 2024.</p>
-      <img class="acuna-sticker" src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 200px, 130px" width="280" height="356" loading="lazy" decoding="async" alt="Logo de Acuña Sin Huella: una huella de bota dentro del símbolo de reciclaje" data-en-alt="Acuña Sin Huella logo: a boot print inside the recycling symbol" />
+      <p class="proj-what" data-en="An environmental movement I co-founded in Ciudad Acuña.">Un movimiento ambiental que cofundé en Ciudad Acuña.</p>
     </div>
-
-    <figure class="canje" data-canje>
-      <div class="canje-row" role="img" aria-label="1,300 botellas de plástico que se convierten en 13 árboles" data-en-aria-label="1,300 plastic bottles turning into 13 trees" data-slots></div>
-      <figcaption data-en-html="&lt;b&gt;1,300 plastic bottles&lt;/b&gt; were traded for &lt;b&gt;13 trees&lt;/b&gt;, planted on campus."><b>1,300 botellas de plástico</b> se cambiaron por <b>13 árboles</b>, plantados en el campus.</figcaption>
-    </figure>
-
-    <div class="acuna-prose">
-      <p data-en="We brought together more than 50 volunteers. We ran two clean-up drives and filled more than 44 bags of trash.">Juntamos a más de 50 voluntarios. Hicimos dos jornadas de limpieza y llenamos más de 44 bolsas de basura.</p>
-      <p data-en="With the city's Ecology Department we set up the trade: bottles for trees. And we gave talks on saving water at three middle schools, together with Ciudad Acuña's Water Museum.">Con el Departamento de Ecología del municipio armamos el canje: botellas por árboles. Y dimos pláticas sobre el cuidado del agua en tres secundarias, junto con el Museo del Agua de Ciudad Acuña.</p>
-    </div>
-    <p class="links"><a href="https://www.instagram.com/acuna.sin.huella/" target="_blank" rel="noopener" data-en="Acuña Sin Huella on Instagram">Acuña Sin Huella en Instagram</a></p>
-  </div>
-</section>
-
-<!-- ===================== PARATU ===================== -->
-<section class="proj paratu" id="paratu" aria-labelledby="paratu-t">
-  <div class="wrap paratu-grid">
-    <div class="paratu-texto">
-      <p class="tape" data-en="On the App Store">En la App Store</p>
-      <h2 class="proj-name" id="paratu-t">Paratu</h2>
-      <p class="proj-what" data-en="An iOS app that keeps your to-dos, your notes and your money in one place. I designed it, built it and shipped it on my own.">Una app para iOS que junta tus pendientes, tus notas y tu dinero. La diseñé, la programé y la publiqué yo solo.</p>
-      <p class="nombres"><s>FJTZ</s> <s>FLINT</s> <b>Paratu</b> <span data-en="Three names in one year.">Tres nombres en un año.</span></p>
-      <p class="demo-nota"><span data-en="The phone works. Check off a task or log an expense. Everything stays in your browser, like in Paratu, where nothing leaves your phone.">El teléfono funciona. Marca un pendiente o anota un gasto. Todo se queda en tu navegador, como en Paratu, donde nada sale de tu teléfono.</span> <button type="button" data-reset data-en="Start over">Empezar de nuevo</button></p>
-    </div>
-
-    <div class="demo">
-      <div class="phone">
-        <div class="screen app" data-app>
-          <div class="ui-status" aria-hidden="true"><span data-reloj>9:41</span><i class="ui-island"></i><span class="ui-bat"><b></b><i></i></span></div>
-          <div class="ui-body">
-
-            <section class="app-view is-on" id="v-hoy" role="tabpanel" aria-labelledby="t-hoy" data-view="hoy">
-              <h3 class="ui-h1" data-en="Today">Hoy</h3>
-              <p class="ui-date" data-fecha>sábado 27 de septiembre</p>
-              <p class="ui-card">Es un gran día!!!</p>
-              <div class="ui-shortcuts">
-                <button type="button" data-ir="tareas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Tasks">Tareas</span></button>
-                <button type="button" data-ir="finanzas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.8"/></svg><span data-en="Money">Finanzas</span></button>
-                <button type="button" data-ir="bitacora"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 0 8 1.5 2-1.5 5-1.9 8-1.5V5c-3-.4-6 0-8 1.5zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></button>
-              </div>
-              <h4 class="ui-h2" data-en="Upcoming">Próximo</h4>
-              <div data-proximo></div>
-            </section>
-
-            <section class="app-view" id="v-tareas" role="tabpanel" aria-labelledby="t-tareas" data-view="tareas" hidden>
-              <h3 class="ui-h1" data-en="Tasks">Tareas</h3>
-              <h4 class="ui-h2" data-en="To do">Pendientes</h4>
-              <div data-pendientes></div>
-              <form class="ui-add" data-add>
-                <label class="sr" for="nueva-tarea" data-en="New task">Nueva tarea</label>
-                <input id="nueva-tarea" type="text" maxlength="60" autocomplete="off" placeholder="Nueva tarea…" data-en-placeholder="New task…" />
-                <button type="submit" aria-label="Agregar" data-en-aria-label="Add">+</button>
-              </form>
-              <h4 class="ui-h2" data-en="Completed">Completadas</h4>
-              <div data-hechas></div>
-            </section>
-
-            <section class="app-view" id="v-bitacora" role="tabpanel" aria-labelledby="t-bitacora" data-view="bitacora" hidden>
-              <h3 class="ui-h1" data-en="Log">Bitácora</h3>
-              <div class="ui-seg" aria-hidden="true"><span data-en="All">Todo</span><span class="on" data-en="Photos">Fotos</span><span data-en="Notes">Notas</span></div>
-              <div class="bit-cards">
-                <img src="assets/img/paratu-bitacora-420.webp" srcset="assets/img/paratu-bitacora-420.webp 420w, assets/img/paratu-bitacora-840.webp 840w" sizes="340px" width="420" height="268" loading="lazy" decoding="async" alt="Dos notas reales de mi Bitácora: «Inicio», del 3 de mayo, y «Carpeta que no dobla las hojas», del 12 de abril, con foto de mi escritorio." data-en-alt="Two real notes from my Paratu log: “Inicio” (May 3) and “Carpeta que no dobla las hojas” (April 12), with a photo of my desk." />
-                <a class="bit-hot" href="#folio" aria-label="Esta nota se volvió FOLIO. Ir a FOLIO" data-en-aria-label="This note became FOLIO. Go to FOLIO"></a>
-              </div>
-              <p class="bit-pista" data-en-html="Real notes from my Paratu. The one on the right became &lt;a href=&quot;#folio&quot;&gt;FOLIO&lt;/a&gt;.">Notas reales de mi Paratu. La de la derecha se volvió <a href="#folio">FOLIO</a>.</p>
-            </section>
-
-            <section class="app-view" id="v-finanzas" role="tabpanel" aria-labelledby="t-finanzas" data-view="finanzas" hidden>
-              <h3 class="ui-h1" data-en="Money">Finanzas</h3>
-              <div class="cuentas" data-cuentas></div>
-              <form class="gasto" data-gasto>
-                <div class="gasto-tipo" role="group" aria-label="Tipo" data-en-aria-label="Type">
-                  <button type="button" aria-pressed="true" data-tipo="gasto" data-en="Expense">Gasto</button>
-                  <button type="button" class="ing" aria-pressed="false" data-tipo="ingreso" data-en="Income">Ingreso</button>
-                </div>
-                <label class="monto"><span aria-hidden="true">$</span><span class="sr" data-en="Amount">Monto</span><input type="text" inputmode="decimal" autocomplete="off" value="50" data-monto /></label>
-                <label><span class="sr" data-en="What was it?">¿En qué?</span><input class="concepto" type="text" maxlength="40" autocomplete="off" value="Hot Dog" data-concepto /></label>
-                <button class="guardar" type="submit" data-en="Save">Guardar</button>
-              </form>
-              <div class="movs" data-movs></div>
-            </section>
-
-          </div>
-          <nav class="ui-tabs" role="tablist" aria-label="Secciones de la app" data-en-aria-label="App sections">
-            <button type="button" role="tab" id="t-tareas" aria-controls="v-tareas" aria-selected="false" data-tab="tareas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7.5" r="2.4"/><circle cx="6" cy="16.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 7.5h9M11 16.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-en="Tasks">Tareas</span></button>
-            <button type="button" role="tab" id="t-bitacora" aria-controls="v-bitacora" aria-selected="false" data-tab="bitacora"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13.5 6.4 6h11.2L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18zM4 13.5h4.6l1.4 2.2h4l1.4-2.2H20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></button>
-            <button type="button" role="tab" id="t-finanzas" aria-controls="v-finanzas" aria-selected="false" data-tab="finanzas"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.7"/><rect x="6.5" y="14" width="4" height="2" rx=".6"/></svg><span data-en="Money">Finanzas</span></button>
-            <button type="button" role="tab" id="t-hoy" aria-controls="v-hoy" aria-selected="true" data-tab="hoy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 11 12 4.8l7.5 6.2V19a1 1 0 0 1-1 1H15v-5.2H9V20H5.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><span data-en="Today">Hoy</span></button>
-          </nav>
-        </div>
+    <div class="proj-media">
+      <div class="fotos">
+        <figure class="foto foto--ancha foto--fundadores">
+          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-fundadores-600.webp" srcset="assets/img/acuna-fundadores-600.webp 600w, assets/img/acuna-fundadores-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Los dos fundadores de Acuña Sin Huella, con las playeras verdes del proyecto, junto al agua." data-en-alt="The two founders of Acuña Sin Huella in the project's green T-shirts, by the water." /></span>
+          <figcaption data-en="The two founders">Los dos fundadores</figcaption>
+        </figure>
+        <figure class="foto foto--ancha foto--grupo">
+          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-grupo-600.webp" srcset="assets/img/acuna-grupo-600.webp 600w, assets/img/acuna-grupo-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Más de 50 voluntarios detrás de una montaña de bolsas de basura, al terminar una jornada de limpieza." data-en-alt="More than 50 volunteers behind a pile of trash bags at the end of a clean-up drive." /></span>
+          <figcaption data-en="A clean-up drive">Una de las jornadas de limpieza</figcaption>
+        </figure>
+        <figure class="foto foto--alta foto--arboles">
+          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-arboles-320.webp" srcset="assets/img/acuna-arboles-320.webp 320w, assets/img/acuna-arboles-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Los árboles del canje, todavía en sus bolsas de vivero, listos para plantarse en el campus." data-en-alt="The trees from the trade, still in their nursery bags, ready to be planted on campus." /></span>
+          <figcaption data-en="The 13 trees">Los 13 árboles</figcaption>
+        </figure>
+        <figure class="foto foto--alta foto--letrero">
+          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-letrero-320.webp" srcset="assets/img/acuna-letrero-320.webp 320w, assets/img/acuna-letrero-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Joaquín sostiene un letrero pintado a mano que dice «No tirar basura en este lugar», frente a bolsas de basura." data-en-alt="Joaquín holds a hand-painted sign that reads “No tirar basura en este lugar” (Don't dump trash here), in front of trash bags." /></span>
+          <figcaption data-en="Me, at a clean-up">Yo, en una jornada</figcaption>
+        </figure>
       </div>
     </div>
-
-    <div class="ticket-wrap">
-      <figure class="ticket" aria-label="Corte de caja de Paratu: todo en ceros. Es gratis, sin anuncios, sin cuentas y sin nube; el usuario más fiel soy yo." data-en-aria-label="Paratu's end-of-day report: all zeros. It's free, with no ads, no accounts and no cloud; its most loyal user is me.">
-        <p class="ticket-t">Paratu</p>
-        <p class="sub" data-en="End-of-day report">Corte de caja</p>
-        <dl>
-          <div><dt data-en="Price">Precio</dt><dd>$0.00</dd></div>
-          <div><dt data-en="Revenue">Ingresos</dt><dd>$0.00</dd></div>
-          <div><dt data-en="Ad spend">Anuncios</dt><dd>$0.00</dd></div>
-          <div><dt data-en="Subscriptions">Suscripciones</dt><dd>0</dd></div>
-          <div><dt data-en="Accounts needed">Cuentas necesarias</dt><dd>0</dd></div>
-          <div><dt data-en="Trackers">Rastreadores</dt><dd>0</dd></div>
-          <div><dt data-en="Data in the cloud">Datos en la nube</dt><dd>0 KB</dd></div>
-          <div><dt data-en="Developers">Desarrolladores</dt><dd>1</dd></div>
-        </dl>
-        <p class="total"><span data-en="Most loyal user">Usuario más fiel</span><span data-en="me">yo</span></p>
-        <p class="gracias" data-en="Thanks for stopping by">¡Gracias por su visita!</p>
-      </figure>
+    <div class="proj-rest">
+      <ul class="hechos">
+        <li data-en-html="&lt;b&gt;50+&lt;/b&gt; volunteers and &lt;b&gt;44+&lt;/b&gt; bags of trash across two clean-up drives.">Más de <b>50</b> voluntarios y más de <b>44</b> bolsas de basura en dos jornadas de limpieza.</li>
+        <li data-en-html="&lt;b&gt;1,300&lt;/b&gt; plastic bottles traded for &lt;b&gt;13&lt;/b&gt; trees planted on campus, with the city's Ecology Department.">Cambiamos <b>1,300</b> botellas de plástico por <b>13</b> árboles plantados en el campus, con el Departamento de Ecología del municipio.</li>
+        <li data-en-html="Talks on saving water at &lt;b&gt;3&lt;/b&gt; middle schools, together with the Museo del Agua.">Pláticas sobre el cuidado del agua en <b>3</b> secundarias, junto con el Museo del Agua.</li>
+      </ul>
+      <p class="links"><a href="https://www.instagram.com/acuna.sin.huella/" target="_blank" rel="noopener" data-en="Acuña Sin Huella on Instagram">Acuña Sin Huella en Instagram</a></p>
     </div>
-  </div>
-
-  <div class="wrap paratu-cierre">
-    <p class="linea" data-en-html="It didn't make money.&lt;br /&gt;It's the app I use.">No hizo dinero.<br />Es la app que uso yo.</p>
-    <p class="links">
-      <a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener" data-en="Get it on the App Store">Descargar en la App Store</a>
-      <a href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener" data-en="Support and privacy">Soporte y privacidad</a>
-    </p>
-  </div>
-</section>
-
-<!-- ===================== FOLIO ===================== -->
-<section class="proj folio" id="folio" aria-labelledby="folio-t">
-  <div class="wrap folio-seq" data-folio>
-    <div class="folio-stage" aria-hidden="true">
-      <img class="on" src="assets/img/folio-cerrada-900.webp" width="900" height="1013" loading="lazy" decoding="async" alt="" data-paso="0" />
-      <img src="assets/img/folio-abierta-900.webp" width="900" height="1190" loading="lazy" decoding="async" alt="" data-paso="1" />
-      <img src="assets/img/folio-argollas-900.webp" width="900" height="846" loading="lazy" decoding="async" alt="" data-paso="2" />
-      <img src="assets/img/folio-paneles-560.webp" width="560" height="1529" loading="lazy" decoding="async" alt="" data-paso="3" />
-    </div>
-
-    <header class="folio-head" data-paso="0">
-      <p class="tape" data-en="Prototype 1">Prototipo 1</p>
-      <h2 class="proj-name" id="folio-t">FOLIO</h2>
-      <p class="proj-what" data-en="The binder, rethought.">La carpeta, pensada otra vez.</p>
-      <p class="origen" data-en-html="It started as a note in Paratu on April 12, photo included: &lt;q&gt;A binder that doesn't bend the pages.&lt;/q&gt;">Empezó como una nota en Paratu, el 12 de abril, con foto y todo: <q>Carpeta que no dobla las hojas.</q></p>
-      <p class="problema" data-en="A regular binder won't stay open, the rings get in your hand's way and the pages bend. FOLIO separates the rings from the way the covers turn.">Una carpeta normal no se queda abierta, las argollas le estorban a tu mano y las hojas se doblan. FOLIO separa las argollas del giro de las tapas.</p>
-    </header>
-
-    <div class="folio-pasos">
-      <ol class="folio-steps" aria-label="El prototipo, paso por paso" data-en-aria-label="The prototype, step by step">
-        <li data-paso="0">
-          <div class="step-img"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" loading="lazy" decoding="async" alt="La carpeta cerrada: portada amarilla con cinta azul que dice «Prototipo 1» y @folioproject_ escrito a mano." data-en-alt="The closed binder: yellow cover, blue tape that reads “Prototipo 1” and @folioproject_ handwritten." /></div>
-          <span class="step-n">1 / 4</span>
-          <p class="step-t" data-en="Closed">Cerrada</p>
-          <p class="step-p" data-en="Prototype 1, handmade in Ciudad Acuña.">Prototipo 1, hecho a mano en Ciudad Acuña.</p>
-        </li>
-        <li data-paso="1">
-          <div class="step-img"><img src="assets/img/folio-abierta-540.webp" width="540" height="714" loading="lazy" decoding="async" alt="La carpeta abierta y plana, con bocetos del mecanismo en la tapa interior." data-en-alt="The binder open flat, with sketches of the mechanism on the inside cover." /></div>
-          <span class="step-n">2 / 4</span>
-          <p class="step-t" data-en="Open">Abierta</p>
-          <p class="step-p" data-en="It opens flat. You write like in a notebook, without holding it down.">Se abre plana. Escribes como en un cuaderno, sin sujetarla.</p>
-        </li>
-        <li data-paso="2">
-          <div class="step-img"><img src="assets/img/folio-argollas-540.webp" width="540" height="508" loading="lazy" decoding="async" alt="Las argollas montadas en su propio módulo, separado de las tapas." data-en-alt="The rings mounted on their own module, separate from the covers." /></div>
-          <span class="step-n">3 / 4</span>
-          <p class="step-t" data-en="Rings apart">Argollas aparte</p>
-          <p class="step-p" data-en="The rings live in their own module. The metal never gets in your hand's way.">Las argollas viven en su propio módulo. El metal nunca estorba tu mano.</p>
-        </li>
-        <li data-paso="3">
-          <div class="step-img"><img src="assets/img/folio-paneles-340.webp" width="340" height="929" loading="lazy" decoding="async" alt="Los tres paneles desplegados en cadena." data-en-alt="The three panels unfolded in a chain." /></div>
-          <span class="step-n">4 / 4</span>
-          <p class="step-t" data-en="Three panels">Tres paneles</p>
-          <p class="step-p" data-en="Three chained panels. It turns 360° and folds compact, so you can write standing up.">Tres paneles en cadena. Gira 360° y se vuelve compacta para escribir de pie.</p>
-        </li>
-      </ol>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <figure class="fig">
-      <div class="fig-box">
-        <img src="assets/img/folio-fig-1200.webp" srcset="assets/img/folio-fig-700.webp 700w, assets/img/folio-fig-1200.webp 1084w" sizes="(min-width:1320px) 1200px, 92vw" width="1084" height="409" loading="lazy" decoding="async" alt="Dibujo técnico del mecanismo de FOLIO: el módulo de tres argollas, las bisagras y los paneles apilados." data-en-alt="Technical drawing of FOLIO's mechanism: the three-ring module, the hinges and the stacked panels." />
-        <svg viewBox="0 0 1084 409" aria-hidden="true">
-          <g fill="none" stroke="#000" stroke-width="1.6">
-            <path d="M232 132 L300 40 H360"/>
-            <path d="M118 318 L150 392 H214"/>
-            <path d="M1030 350 L980 392 H920"/>
-          </g>
-          <g font-family="Archivo, sans-serif" font-weight="700" font-size="30">
-            <text x="368" y="50">1</text>
-            <text x="222" y="402">2</text>
-            <text x="896" y="402">3</text>
-          </g>
-        </svg>
-      </div>
-      <figcaption>
-        <ol class="leyenda">
-          <li><b>1</b><span data-en="Ring module">Módulo de argollas</span></li>
-          <li><b>2</b><span data-en="Free-turning hinges">Bisagras que giran libres</span></li>
-          <li><b>3</b><span data-en="Three panels">Tres paneles</span></li>
-        </ol>
-        <p class="pie-fig" data-en="Fig. 1. The mechanism, rendered. A utility-model application is pending at IMPI, Mexico's patent office.">Fig. 1. El mecanismo, en render. Hay una solicitud de modelo de utilidad en trámite ante el IMPI.</p>
-      </figcaption>
-    </figure>
-
-    <p class="folio-cierre" data-en="It's not for sale yet. If you want one, leave your email on its page.">Todavía no se vende. Si quieres una, deja tu correo en su página.</p>
-    <p class="links">
-      <a href="https://foliomx.vercel.app" target="_blank" rel="noopener" data-en="Visit FOLIO's page">Ver la página de FOLIO</a>
-      <a href="https://instagram.com/folioproject_" target="_blank" rel="noopener">@folioproject_</a>
-    </p>
   </div>
 </section>
 
 <!-- ===================== HABLEMOS DE NEGOCIOS ===================== -->
 <section class="proj hdn" id="hdn" aria-labelledby="hdn-t">
-  <div class="wrap">
-    <p class="tape" data-en="Ongoing">En curso</p>
-    <h2 class="proj-name" id="hdn-t">Hablemos de Negocios</h2>
-    <p class="proj-what" data-en="One-minute videos that explain how a real business works.">Videos de un minuto que explican cómo funciona un negocio real.</p>
-  </div>
-
-  <div class="aperturas" data-aperturas>
-    <ul class="aperturas-fila">
-      <li><video muted playsinline preload="none" data-poster="assets/img/abre-trisol-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-trisol.mp4" type="video/mp4" /></video><span>Trisol</span></li>
-      <li><video muted playsinline preload="none" data-poster="assets/img/abre-kidzania-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kidzania.mp4" type="video/mp4" /></video><span>KidZania</span></li>
-      <li><video muted playsinline preload="none" data-poster="assets/img/abre-kavak-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kavak.mp4" type="video/mp4" /></video><span>Kavak</span></li>
-      <li><video muted playsinline preload="none" data-poster="assets/img/abre-clip-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-clip.mp4" type="video/mp4" /></video><span>Clip</span></li>
-      <li><video muted playsinline preload="none" data-poster="assets/img/abre-theory11-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-theory11.mp4" type="video/mp4" /></video><span>theory11</span></li>
-    </ul>
-    <div class="wrap">
-      <p class="frase" data-frase><span>Hablemos</span> <span>de</span> <span>negocios.</span></p>
-      <p class="frase-tr" hidden data-en-show>“Let's talk business.”</p>
-      <div class="aperturas-foot">
-        <p data-en="Every episode opens the same way. That line never changes.">Cada episodio empieza igual. Esa frase no se cambia.</p>
+  <div class="wrap proj-grid">
+    <div class="proj-head">
+      <p class="tape" data-en="Ongoing">En curso</p>
+      <h2 class="proj-name" id="hdn-t">Hablemos de Negocios</h2>
+      <p class="proj-what" data-en="One-minute videos that explain how a real business works. Now I film them from India.">Videos de un minuto que explican cómo funciona un negocio real. Ahora los grabo desde India.</p>
+    </div>
+    <div class="proj-media" data-aperturas>
+      <ul class="aperturas-fila">
+        <li><video muted playsinline preload="none" data-poster="assets/img/abre-trisol-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-trisol.mp4" type="video/mp4" /></video><span>Trisol</span></li>
+        <li><video muted playsinline preload="none" data-poster="assets/img/abre-kidzania-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kidzania.mp4" type="video/mp4" /></video><span>KidZania</span></li>
+        <li><video muted playsinline preload="none" data-poster="assets/img/abre-kavak-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kavak.mp4" type="video/mp4" /></video><span>Kavak</span></li>
+        <li><video muted playsinline preload="none" data-poster="assets/img/abre-clip-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-clip.mp4" type="video/mp4" /></video><span>Clip</span></li>
+        <li><video muted playsinline preload="none" data-poster="assets/img/abre-theory11-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-theory11.mp4" type="video/mp4" /></video><span>theory11</span></li>
+      </ul>
+      <div class="frase-fila">
+        <p class="frase" data-frase><span>Hablemos</span> <span>de</span> <span>negocios.</span></p>
         <button class="btn-otra" type="button" data-otra data-en="Play again">Otra vez</button>
       </div>
+      <p class="frase-nota" data-en="Every episode opens the same way.">Cada episodio empieza igual.</p>
     </div>
-  </div>
-
-  <div class="wrap">
-    <p class="evidencia"><span data-en-html="One video passed &lt;mark&gt;500,000 views&lt;/mark&gt;. At Creator Lab, that week's assignment was to study it and make a video in my style.">Un video pasó las <mark>500 mil vistas</mark>. En el Creator Lab, la tarea de esa semana fue estudiarlo y hacer un video con mi estilo.</span> <a href="https://www.instagram.com/reel/DbmOgAZBFpU/" target="_blank" rel="noopener" data-en="Watch it on Instagram">Ver ese video en Instagram</a></p>
-
-    <div class="formula" data-formula>
-      <div class="reel" data-reel>
-        <div class="reel-video">
-        <video playsinline preload="none" data-poster="assets/img/episodio-trisol-540.webp" width="540" height="960" data-episodio>
-          <source src="assets/video/episodio-trisol.mp4" type="video/mp4" />
-        </video>
-        <button class="reel-play" type="button" data-play><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg></i><span data-en="Watch the Trisol episode (1:01, muted)">Ver el episodio de Trisol (1:01, sin sonido)</span></button>
-        </div>
-        <p class="reel-nota" data-en-html="No audio here because the background music has copyright. With sound, &lt;a href=&quot;https://www.instagram.com/joaquin.alvarezm&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;on my Instagram&lt;/a&gt;.">Aquí va sin audio porque la música de fondo tiene derechos. Con sonido, <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">en mi Instagram</a>.</p>
-      </div>
-      <div>
-        <h3 data-en="The formula">La fórmula</h3>
-        <p class="intro" data-en="After the first video went viral, I took it apart into seven blocks. They always go in the same order. Play the Trisol episode and watch them line up.">Después del primer video viral, lo desarmé en siete bloques. Siempre van en el mismo orden. Dale play al episodio de Trisol y mira cómo encajan.</p>
-        <ol class="bloques" data-bloques>
-          <li data-t="0"><button type="button"><span class="bn">1</span><span class="bt" data-en="Scale-fact hook">Hook de dato a escala</span><span class="bq" data-en="“40 million tires are thrown away in Mexico every year. That's one tire every second.”">«Se tiran 40 millones de llantas al año en México. Eso es una llanta cada segundo.»</span></button></li>
-          <li data-t="7.3"><button type="button"><span class="bn">2</span><span class="bt" data-en="“But how did it work?”">¿Pero cómo funcionó?</span><span class="bq" data-en="The viewer commits to watching before anything is explained.">El espectador promete atención antes de que expliques nada.</span></button></li>
-          <li data-t="8.2"><button type="button"><span class="bn">3</span><span class="bt" data-en="Founder with friction">Fundador con fricción</span><span class="bq" data-en="“…expelled three times, failed 12 classes, and lost his father while he was studying.”">«…al que corrieron tres veces, reprobó 12 materias y perdió a su padre mientras estudiaba.»</span></button></li>
-          <li data-t="22.8"><button type="button"><span class="bn">4</span><span class="bt" data-en="It worked because…">Funcionó porque…</span><span class="bq" data-en="“Companies have a problem: they don't know what to do with their used tires.”">«Las empresas tienen un problema y no saben qué hacer con sus llantas usadas.»</span></button></li>
-          <li data-t="30.8"><button type="button"><span class="bn">5</span><span class="bt">Insight drop</span><span class="bq" data-en="“Trisol has already made money, and it hasn't even done anything with the tires yet.”">«Trisol ya hizo dinero y ni siquiera ha hecho nada con las llantas.»</span></button></li>
-          <li data-t="46.8"><button type="button"><span class="bn">6</span><span class="bt" data-en="Circular recap">Resumen circular</span><span class="bq" data-en="“A student who failed 12 classes, with two secondhand machines… built the most efficient recycling business in all of Mexico.”">«Un estudiante que reprobó 12 materias, con dos máquinas de segunda mano… construyó el negocio de reciclaje más eficiente de todo México.»</span></button></li>
-          <li data-t="57"><button type="button"><span class="bn">7</span><span class="bt" data-en="Sign-off with a promise">Cierre con propuesta</span><span class="bq" data-en="“This was the first video about real businesses and how they work.”">«Este fue el primer video hablando de negocios reales y cómo funcionan.»</span></button></li>
-        </ol>
-        <details class="guion">
-          <summary data-en="Read the full script">Leer el guion completo</summary>
-          <p data-en="Let's talk business. 40 million tires are thrown away in Mexico every year. That's one tire every second. And one company is taking advantage of this to make money. But how did it work? It was founded by Andrés García Gasca, a student at Tecnológico de Monterrey who was expelled three times, failed 12 classes, and lost his father while he was studying. The company started as a school assignment, but in 2013 it began with three employees and two secondhand machines. It worked because companies have a problem: they don't know what to do with their used tires. Companies pay Trisol to pick up their waste. Trisol has already made money, and it hasn't even done anything with the tires yet. Then it shreds them and runs them through a process that turns the rubber into raw material. That raw material is sold to make waterproofing, speed bumps, artificial turf, court flooring and other things. Trisol makes money from the same material twice. A student who failed 12 classes, with two secondhand machines, picking up tires on weekends along the highway, built the most efficient recycling business in all of Mexico. Incredible. This was the first video about real businesses and how they work. Bye.">Hablemos de negocios. Se tiran 40 millones de llantas al año en México. Eso es una llanta cada segundo. Y una empresa aprovecha esto para ganar dinero. Pero ¿cómo funcionó? Fue fundada por Andrés García Gasca, que fue un estudiante del Tecnológico de Monterrey al que corrieron tres veces, reprobó 12 materias y perdió a su padre mientras estudiaba. La empresa empezó como tarea, pero en 2013 empezó con tres empleados y dos máquinas de segunda mano. Funcionó porque las empresas tienen un problema y no saben qué hacer con sus llantas usadas. Las empresas le pagan a Trisol para recoger sus residuos. Trisol ya hizo dinero y ni siquiera ha hecho nada con las llantas. Después las tritura y las pasa por un proceso para convertir el hule en materia prima. Esa materia prima se vende para hacer impermeabilizantes, topes, pasto sintético, pisos de cancha u otras cosas. Trisol hace dinero con el mismo material dos veces. Un estudiante que reprobó 12 materias, con dos máquinas de segunda mano, recogiendo llantas los fines de semana en la carretera, construyó el negocio de reciclaje más eficiente de todo México. Increíble. Este fue el primer video hablando de negocios reales y cómo funcionan. Bye.</p>
-        </details>
-      </div>
-    </div>
-
-    <div class="hdn-notas">
-      <p data-en="I compare episodes like experiments. The KidZania one got 10,000 views and 600 likes: 6% engagement. The problem wasn't quality. It was reach.">Comparo los episodios como si fueran experimentos. El de KidZania tuvo 10 mil vistas y 600 likes: 6% de engagement. El problema no fue la calidad. Fue el alcance.</p>
-      <div class="veg">
-        <span class="veg-mark" role="img" aria-label="Símbolo vegetariano de India: un punto verde dentro de un cuadro verde" data-en-aria-label="India's vegetarian mark: a green dot inside a green square"></span>
-        <p data-en="Now I'm filming from India. Every Coca-Cola here has a small green dot in the corner, because every product has to say whether it's vegetarian. Coca-Cola had to adapt, and that's why it's been here for decades.">Ahora grabo desde India. Aquí cada Coca-Cola trae un punto verde en la esquina, porque todo producto tiene que decir si es vegetariano. Coca-Cola tuvo que adaptarse, y por eso lleva décadas aquí.</p>
-      </div>
-    </div>
-
-    <p class="linea" data-en-html="Attention isn't bought.&lt;br /&gt;It's earned in the first few seconds.">La atención no se compra.<br />Se gana en los primeros segundos.</p>
-    <p class="links">
-      <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
-      <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
-    </p>
-  </div>
-</section>
-
-<!-- ===================== FINES DE SEMANA ===================== -->
-<section class="fines" id="fines" aria-labelledby="fines-t">
-  <div class="wrap">
-    <h2 class="fines-t" id="fines-t" data-en="Weekends">Fines de semana</h2>
-    <p class="fines-intro" data-en="Hackathons and challenges. Little time, a team, and something to present at the end.">Hackathons y retos. Poco tiempo, un equipo y algo que presentar al final.</p>
-
-    <div class="exp-lista">
-      <article class="exp fl">
-        <div>
-          <p class="tape" data-en="2nd place">2º lugar</p>
-          <h3>FounderLytics</h3>
-          <p class="meta" data-en="TETR Startup Hackathon, March 21–22, 2026. Team The Big Leagues.">Startup Hackathon de TETR, 21 y 22 de marzo de 2026. Equipo The Big Leagues.</p>
-          <p class="desc" data-en="Financial clarity for freelancers and founders in 60 seconds. You answer a few questions and AI reads your numbers.">Claridad financiera para freelancers y fundadores en 60 segundos. Contestas unas preguntas y la IA analiza tus números.</p>
-          <form class="calc" data-calc>
-            <p class="calc-intro" data-en="The question that changed everything: how much do you make per hour? The demo's example: María bakes cakes in her kitchen.">La pregunta que lo cambiaba todo: ¿cuánto ganas por hora? El ejemplo del demo: María hornea pasteles en su cocina.</p>
-            <label><span data-en="Monthly revenue">Ingresos al mes</span><span class="campo">$<input type="text" inputmode="decimal" value="1200" data-in="ing" /></span></label>
-            <label><span data-en="Monthly expenses">Gastos al mes</span><span class="campo">$<input type="text" inputmode="decimal" value="680" data-in="gas" /></span></label>
-            <label><span data-en="Hours worked per month">Horas de trabajo al mes</span><span class="campo"><input type="text" inputmode="decimal" value="80" data-in="hrs" />h</span></label>
-            <output aria-live="polite"><span data-rate>$6.50</span><small data-en=" an hour"> por hora</small></output>
-            <p class="calc-nota" data-nota-maria data-en="A year of baking, and she didn't know.">Un año horneando, y no lo sabía.</p>
-            <p class="calc-nota" data-nota-tuya hidden data-en="That's your real number.">Ese es tu número real.</p>
-            <p class="calc-nota" data-nota-pierdes hidden data-en="You're losing money on every hour.">Estás perdiendo dinero cada hora.</p>
-          </form>
-        </div>
-        <figure class="cert">
-          <img src="assets/img/certificado-640.webp" srcset="assets/img/certificado-640.webp 640w, assets/img/certificado-1100.webp 1100w" sizes="(min-width:900px) 440px, 88vw" width="640" height="453" loading="lazy" decoding="async" alt="Certificado de TETR College of Business: Joaquín Álvarez Mercado ganó el 2º lugar en la Startup Hackathon del 21 y 22 de marzo de 2026, con el equipo The Big Leagues." data-en-alt="TETR College of Business certificate: Joaquín Álvarez Mercado won 2nd place at the Startup Hackathon, March 21–22, 2026, with Team The Big Leagues." />
-        </figure>
-      </article>
-
-      <div class="exp-pares">
-        <article class="exp">
-          <h3>PitchVoice</h3>
-          <p class="meta" data-en="TETR hackathon, May 2026.">Hackathon de TETR, mayo de 2026.</p>
-          <p class="desc" data-en="A voice agent that interviews you the way an investor would: it interrupts, pushes back and counts your filler words while you talk.">Un agente de voz que te entrevista como lo haría un inversionista: te interrumpe, te presiona y cuenta tus muletillas mientras hablas.</p>
-        </article>
-        <article class="exp">
-          <h3 data-en="The Uber Eats challenge">El reto de Uber Eats</h3>
-          <p class="meta" data-en="TETR College of Business challenge, June 2026.">Reto de TETR College of Business, junio de 2026.</p>
-          <p class="desc" data-en="Three behavioral-economics features to turn a $10 order into a $16 one. It's a proposal, with a clickable prototype.">Tres funciones basadas en economía conductual para que un pedido de $10 llegue a $16. Es una propuesta, con prototipo navegable.</p>
-          <p class="links"><a href="casos/uber-eats.html" data-en="See the proposal">Ver la propuesta</a></p>
-        </article>
-      </div>
+    <div class="proj-rest">
+      <ul class="hechos">
+        <li data-en-html="The 5 videos add up to &lt;b&gt;1.4 million views&lt;/b&gt; across TikTok and Instagram.">Los 5 videos suman <b>1.4 millones de vistas</b> entre TikTok e Instagram.</li>
+        <li data-en-html="One passed &lt;b&gt;500,000&lt;/b&gt; on its own. At Creator Lab, the assignment was to make a video in my style.">Uno solo pasó las <b>500 mil</b>. En el Creator Lab lo dejaron de tarea: hacer un video con mi estilo.</li>
+        <li><details class="mini"><summary data-en="Every episode follows the same 7-block formula">Todos siguen la misma fórmula de 7 bloques</summary>
+          <ol class="formula">
+            <li data-en="Scale-fact hook">Hook de dato</li>
+            <li data-en="“But how did it work?”">¿Pero cómo funcionó?</li>
+            <li data-en="Founder with friction">Fundador con fricción</li>
+            <li data-en="It worked because…">Funcionó porque…</li>
+            <li>Insight</li>
+            <li data-en="Full-circle recap">Resumen circular</li>
+            <li data-en="Sign-off">Cierre</li>
+          </ol>
+        </details></li>
+      </ul>
+      <p class="links">
+        <a href="https://www.instagram.com/reel/DbmOgAZBFpU/" target="_blank" rel="noopener" data-en="The 500K-view video">El video de 500 mil vistas</a>
+        <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
+        <a href="assets/media-kit.pdf" data-kit-abrir>Media kit</a>
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ===================== BITÁCORA ===================== -->
-<section class="bitacora" id="bitacora" aria-labelledby="bit-t">
-  <div class="wrap bit-grid">
-    <div class="bit-side">
-      <h2 class="bit-t" id="bit-t" data-en="Logbook">Bitácora</h2>
-      <p class="bit-intro" data-en="What's happened, newest first.">Lo que ha pasado, de lo más nuevo a lo más viejo.</p>
-      <!-- AHORA: cambia estas líneas cuando algo cambie -->
-      <aside class="postit" aria-labelledby="ahora-t">
-        <h3 id="ahora-t" data-en="Now">Ahora</h3>
+<!-- ===================== PÁGINAS WEB ===================== -->
+<section class="proj web" id="web" aria-labelledby="web-t">
+  <div class="wrap proj-grid">
+    <div class="proj-head">
+      <p class="tape" data-en="Web design">Diseño web</p>
+      <h2 class="proj-name" id="web-t" data-en="Websites">Páginas web</h2>
+      <p class="proj-what" data-en="I design and build websites that make sense in seconds, especially on a phone.">Diseño y hago páginas que se entienden en segundos, sobre todo en el teléfono.</p>
+    </div>
+    <div class="proj-media">
+      <ul class="sitios" aria-label="Páginas que he hecho" data-en-aria-label="Websites I've made">
+          <li>
+            <a class="sitio" href="https://berri.co.in" target="_blank" rel="noopener">
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>berri.co.in</span></span><img src="assets/img/sitio-berri-720.webp" srcset="assets/img/sitio-berri-720.webp 720w, assets/img/sitio-berri-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Berri: frambuesas cubiertas de chocolate, con el botón para apartar tu lugar por WhatsApp." data-en-alt="Berri's website: chocolate-covered raspberries, with a button to claim your spot on WhatsApp." /></span>
+              <b>Berri</b>
+              <small data-en="Chocolate-covered raspberries in Gurugram, India">Frambuesas con chocolate, en Gurugram, India</small>
+            </a>
+          </li>
+          <li>
+            <a class="sitio" href="https://foliomx.vercel.app" target="_blank" rel="noopener">
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>foliomx.vercel.app</span></span><img src="assets/img/sitio-folio-720.webp" srcset="assets/img/sitio-folio-720.webp 720w, assets/img/sitio-folio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de FOLIO: el render del mecanismo y la etiqueta «Prototipo 1, en desarrollo»." data-en-alt="FOLIO's website: the render of the mechanism and the “Prototype 1, in development” tag." /></span>
+              <b>FOLIO</b>
+              <small data-en="The prototype, with a waitlist">El prototipo, con lista de espera</small>
+            </a>
+          </li>
+          <li id="sitio-paratu">
+            <a class="sitio" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>j-cob8.github.io</span></span><img src="assets/img/sitio-paratu-720.webp" srcset="assets/img/sitio-paratu-720.webp 720w, assets/img/sitio-paratu-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Paratu: descarga en la App Store, política de privacidad y soporte." data-en-alt="Paratu's website: App Store download, privacy policy and support." /></span>
+              <b>Paratu</b>
+              <small data-en="The app's download, privacy and support page">Descarga, privacidad y soporte de la app</small>
+            </a>
+          </li>
+          <li>
+            <a class="sitio" href="#mesa">
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>joaquinalvarezmercado.vercel.app</span></span><img src="assets/img/sitio-portafolio-720.webp" srcset="assets/img/sitio-portafolio-720.webp 720w, assets/img/sitio-portafolio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Esta misma página: el inicio con la mesa de objetos." data-en-alt="This very page: the start, with the table of objects." /></span>
+              <b>Esta página</b>
+              <small data-en="You're here">Estás aquí</small>
+            </a>
+          </li>
+      </ul>
+    </div>
+    <div class="proj-rest">
+      <ul class="hechos">
+        <li data-en="My approach: design and user experience first.">Mi enfoque: primero el diseño y la experiencia de usuario.</li>
+        <li data-en="All of them work just as well on a phone as on a computer.">Todas funcionan igual de bien en el teléfono que en la computadora.</li>
+        <li data-en-html="I've also designed the user experience of &lt;button type=&quot;button&quot; class=&quot;resalta&quot; data-resalta aria-controls=&quot;sitio-paratu&quot; aria-pressed=&quot;false&quot;&gt;apps&lt;/button&gt;.">También he diseñado la experiencia de usuario de <button type="button" class="resalta" data-resalta aria-controls="sitio-paratu" aria-pressed="false">aplicaciones</button>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EN PAUSA (filas que se abren) ===================== -->
+<section class="pausa" id="pausa" aria-labelledby="pausa-t">
+  <div class="wrap">
+    <h2 class="pausa-t" id="pausa-t" data-en="On hold">En pausa</h2>
+    <p class="pausa-intro" data-en="Projects I made and put on hold. Open them to see more.">Proyectos que hice y dejé en pausa. Ábrelos para ver más.</p>
+    <div class="pausados">
+
+      <details class="pausado" id="folio">
+        <summary>
+          <span class="p-img"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" alt="" loading="lazy" /></span>
+          <span class="p-txt"><b>FOLIO</b><small data-en="A binder that opens flat. Prototype 1, 2026.">Una carpeta que se abre plana. Prototipo 1, 2026.</small></span>
+          <span class="p-mas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15.5l6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="pausado-cuerpo">
+        <div class="proj-media">
+          <ol class="pasos-folio" aria-label="El prototipo" data-en-aria-label="The prototype">
+            <li><div class="pf"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" loading="lazy" decoding="async" alt="La carpeta cerrada: portada amarilla con cinta azul que dice «Prototipo 1»." data-en-alt="The closed binder: yellow cover with blue tape that reads “Prototipo 1”." /></div><span><b>1</b><span data-en="Handmade">Hecha a mano</span></span></li>
+            <li><div class="pf"><img src="assets/img/folio-abierta-540.webp" width="540" height="714" loading="lazy" decoding="async" alt="La carpeta abierta y plana, con bocetos del mecanismo en la tapa interior." data-en-alt="The binder open flat, with sketches of the mechanism on the inside cover." /></div><span><b>2</b><span data-en="Opens flat">Se abre plana</span></span></li>
+            <li><div class="pf"><img src="assets/img/folio-argollas-540.webp" width="540" height="508" loading="lazy" decoding="async" alt="Las argollas en su propio módulo, separado de las tapas." data-en-alt="The rings on their own module, separate from the covers." /></div><span><b>3</b><span data-en="Rings apart">Argollas aparte</span></span></li>
+            <li><div class="pf"><img src="assets/img/folio-paneles-340.webp" width="340" height="929" loading="lazy" decoding="async" alt="Los tres paneles desplegados en cadena." data-en-alt="The three panels unfolded in a chain." /></div><span><b>4</b><span data-en="Turns 360°">Gira 360°</span></span></li>
+          </ol>
+        </div>
+        <div class="proj-rest">
+          <ul class="hechos">
+            <li data-en-html="It started as a note in my app: &lt;q&gt;A binder that doesn't bend the pages.&lt;/q&gt;">Empezó como una nota en mi app: <q>Carpeta que no dobla las hojas.</q></li>
+            <li data-en="Prototype 1, handmade in Ciudad Acuña.">Prototipo 1, hecho a mano en Ciudad Acuña.</li>
+            <li data-en-html="Utility-model application &lt;b&gt;pending at IMPI&lt;/b&gt;, Mexico's patent office.">Solicitud de modelo de utilidad <b>en trámite ante el IMPI</b>.</li>
+          </ul>
+          <p class="links">
+            <a href="https://foliomx.vercel.app" target="_blank" rel="noopener" data-en="Visit FOLIO's page">Ver la página de FOLIO</a>
+            <a href="https://instagram.com/folioproject_" target="_blank" rel="noopener">@folioproject_</a>
+          </p>
+        </div>
+        </div>
+      </details>
+
+      <details class="pausado" id="paratu">
+        <summary>
+          <span class="p-img"><img class="ic-app" src="assets/img/paratu-icono.png" width="180" height="180" alt="" loading="lazy" /></span>
+          <span class="p-txt"><b>Paratu</b><small data-en="My app to organize the day. On the App Store since 2025.">Mi app para organizar el día. En la App Store desde 2025.</small></span>
+          <span class="p-mas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15.5l6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="pausado-cuerpo">
+        <div class="proj-media capturas">
+          <ul class="capturas-fila" aria-label="Capturas de Paratu en la App Store" data-en-aria-label="Paratu's App Store screenshots">
+            <li><img fetchpriority="low" src="assets/img/paratu-hoy-300.webp" srcset="assets/img/paratu-hoy-300.webp 300w, assets/img/paratu-hoy-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Organiza tu día: la pantalla Hoy con lo que viene." data-en-alt="Organize your day: the Today screen with what's coming up." /></li>
+            <li><img fetchpriority="low" src="assets/img/paratu-tareas-300.webp" srcset="assets/img/paratu-tareas-300.webp 300w, assets/img/paratu-tareas-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Que no se te olvide nada: listas de pendientes y completados." data-en-alt="Don't forget a thing: to-do lists and completed tasks." /></li>
+            <li><img fetchpriority="low" src="assets/img/paratu-notas-300.webp" srcset="assets/img/paratu-notas-300.webp 300w, assets/img/paratu-notas-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Anota lo que quieras: la bitácora con fotos y notas." data-en-alt="Capture anything: the log with photos and notes." /></li>
+            <li><img fetchpriority="low" src="assets/img/paratu-dinero-300.webp" srcset="assets/img/paratu-dinero-300.webp 300w, assets/img/paratu-dinero-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Lleva la cuenta de tu dinero: registrar un gasto de 50 pesos." data-en-alt="Know where your money goes: logging a 50-peso expense." /></li>
+          </ul>
+          <div class="ticket-wrap">
+            <figure class="ticket" aria-label="Corte de caja de Paratu: todo en ceros. Es gratis, sin anuncios, sin cuentas y sin nube; el usuario más fiel soy yo." data-en-aria-label="Paratu's end-of-day report: all zeros. It's free, with no ads, no accounts and no cloud; its most loyal user is me.">
+              <p class="ticket-t">Paratu</p>
+              <p class="sub" data-en="End-of-day report">Corte de caja</p>
+              <dl>
+                <div><dt data-en="Price">Precio</dt><dd>$0.00</dd></div>
+                <div><dt data-en="Revenue">Ingresos</dt><dd>$0.00</dd></div>
+                <div><dt data-en="Ad spend">Anuncios</dt><dd>$0.00</dd></div>
+                <div><dt data-en="Accounts needed">Cuentas</dt><dd>0</dd></div>
+                <div><dt data-en="Trackers">Rastreadores</dt><dd>0</dd></div>
+                <div><dt data-en="Data in the cloud">Datos en la nube</dt><dd>0 KB</dd></div>
+                <div><dt data-en="Developers">Desarrolladores</dt><dd>1</dd></div>
+              </dl>
+              <p class="total"><span data-en="Most loyal user">Usuario más fiel</span><span data-en="me">yo</span></p>
+              <p class="gracias" data-en="Thanks for stopping by">¡Gracias por su visita!</p>
+            </figure>
+          </div>
+        </div>
+        <div class="proj-rest">
+          <ul class="hechos">
+            <li data-en="I designed it, built it and put it on the App Store on my own.">La diseñé, la programé y la subí a la App Store yo solo.</li>
+            <li data-en-html="It taught me a lot about &lt;b&gt;design and user experience&lt;/b&gt;. That's my approach to everything now.">Con ella aprendí mucho de <b>diseño y experiencia de usuario</b>. Ese es mi enfoque en todo lo que hago.</li>
+            <li data-en="No account, no ads, no cloud: your data stays on your phone.">Sin cuenta, sin anuncios y sin nube: tus datos se quedan en tu teléfono.</li>
+            <li data-en-html="Three names in one year: &lt;s&gt;FJTZ&lt;/s&gt;, &lt;s&gt;FLINT&lt;/s&gt;, Paratu.">Tres nombres en un año: <s>FJTZ</s>, <s>FLINT</s>, Paratu.</li>
+            <li class="fuerte" data-en="It didn't make money. It's the app I use.">No hizo dinero. Es la app que uso yo.</li>
+          </ul>
+          <p class="links">
+            <a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener" data-en="Get it on the App Store">Descargar en la App Store</a>
+            <a href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener" data-en="Support and privacy">Soporte y privacidad</a>
+          </p>
+        </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AHORA ===================== -->
+<section class="ahora" id="ahora" aria-labelledby="ahora-t">
+  <div class="wrap ahora-grid">
+    <!-- AHORA: cambia estas líneas cuando algo cambie -->
+    <div class="nota-wrap">
+      <div class="nota">
+        <h2 class="nota-t" id="ahora-t"><span data-en="Now">Ahora</span><svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8.5c18-3.2 44-5 70-4.2 16 .5 30 1.6 46 3.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></h2>
         <ul>
-          <li data-en="In India, studying at TETR College of Business.">En India, estudiando en TETR College of Business.</li>
+          <li data-en="In India, studying at TETR.">En India, estudiando en TETR.</li>
           <li data-en="Filming businesses I run into on the street.">Grabando negocios que me encuentro en la calle.</li>
-          <li data-en="FOLIO is still in development.">FOLIO sigue en desarrollo.</li>
+          <li data-en="Designing websites.">Diseñando páginas web.</li>
         </ul>
-      </aside>
+      </div>
     </div>
 
-    <ol class="log">
-      <li><time datetime="2026-09" data-en="Sep 2026">sep 2026</time><p data-en="I start Technology and Business Management at TETR College of Business, from India.">Empiezo Technology and Business Management en TETR College of Business, desde India.</p></li>
-      <li><time datetime="2026-08" data-en="Aug 2026">ago 2026</time><p data-en="Hablemos de Negocios starts. One video passes 500,000 views.">Arranca Hablemos de Negocios. Un video pasa las 500 mil vistas.</p></li>
-      <li><time datetime="2026-07" data-en="Jul 2026">jul 2026</time><p data-en="FLINT becomes Paratu: new name, free app.">FLINT se vuelve Paratu: nombre nuevo y app gratis.</p></li>
-      <li><time datetime="2026-07" data-en="Jul 2026">jul 2026</time><p data-en="FOLIO: prototype 1 and a utility-model application at IMPI.">FOLIO: prototipo 1 y solicitud de modelo de utilidad ante el IMPI.</p></li>
-      <li><time datetime="2026-06" data-en="Jun 2026">jun 2026</time><p data-en="The Uber Eats challenge at TETR.">El reto de Uber Eats en TETR.</p></li>
-      <li><time datetime="2026-05" data-en="May 2026">may 2026</time><p data-en="TETR hackathon: PitchVoice.">Hackathon de TETR: PitchVoice.</p></li>
-      <li><time datetime="2026-03" data-en="Mar 2026">mar 2026</time><p data-en="2nd place at the TETR Startup Hackathon, with FounderLytics.">2º lugar en la Startup Hackathon de TETR, con FounderLytics.</p></li>
-      <li><time datetime="2025-11" data-en="Nov 2025">nov 2025</time><p data-en="FJTZ becomes FLINT.">FJTZ se vuelve FLINT.</p></li>
-      <li><time datetime="2025">2025</time><p data-en="My app hits the App Store.">Mi app llega a la App Store.</p></li>
-      <li><time datetime="2024">2024</time><p data-en="I co-found Acuña Sin Huella.">Cofundo Acuña Sin Huella.</p></li>
-      <li><time datetime="2024">2024</time><p data-en="I'm elected student representative on the University Council of UAdeC, one of Mexico's largest public universities.">Me eligen representante estudiantil ante el Consejo Universitario de la UAdeC, una de las universidades públicas más grandes de México.</p></li>
-      <li><time data-en="Age 13">13 años</time><p data-en="I start coding.">Empiezo a programar.</p></li>
-    </ol>
+    <ul class="fotos-ahora" aria-label="Fotos de India" data-en-aria-label="Photos from India">
+      <li class="impresa impresa--h" style="--r:-2deg; --rc:-4deg; --ar:1.3333"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-grupo-480.webp" srcset="assets/img/ahora-grupo-480.webp 480w, assets/img/ahora-grupo-800.webp 800w" sizes="(min-width:900px) 26vw, 76vw" width="480" height="360" loading="lazy" decoding="async" fetchpriority="low" alt="Una cena con unos treinta compañeros en un restaurante con focos colgando del techo." data-en-alt="A dinner with about thirty classmates in a restaurant with bulbs hanging from the ceiling." />
+        <p class="pie-foto" data-en="My TETR cohort">Mi generación de TETR</p>
+      </li>
+      <li class="impresa impresa--v" style="--r:3deg; --rc:5deg; --ar:.75"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-peesafe-360.webp" srcset="assets/img/ahora-peesafe-360.webp 360w, assets/img/ahora-peesafe-600.webp 600w" sizes="(min-width:900px) 19vw, 52vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Selfie de Joaquín frente al letrero de Pee Safe, en la entrada de su planta." data-en-alt="Joaquín's selfie in front of the Pee Safe sign, at the entrance of its plant." />
+        <p class="pie-foto" data-en="Visiting Pee Safe">Visitando Pee Safe</p>
+      </li>
+      <li class="impresa impresa--h" style="--r:1.5deg; --rc:-2deg; --ar:1.5"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-delhi-480.webp" srcset="assets/img/ahora-delhi-480.webp 480w, assets/img/ahora-delhi-800.webp 800w" sizes="(min-width:900px) 26vw, 76vw" width="480" height="320" loading="lazy" decoding="async" fetchpriority="low" alt="Cinco amigos de noche frente a los edificios de gobierno de Nueva Delhi, iluminados de rosa." data-en-alt="Five friends at night in front of New Delhi's government buildings, lit up in pink." />
+        <p class="pie-foto" data-en="New Delhi, at night">Nueva Delhi, de noche</p>
+      </li>
+      <li class="impresa impresa--v" style="--r:-3deg; --rc:3deg; --ar:.75"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-retrato-360.webp" srcset="assets/img/ahora-retrato-360.webp 360w, assets/img/ahora-retrato-600.webp 600w" sizes="(min-width:900px) 19vw, 52vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Retrato de Joaquín con lentes oscuros y playera blanca." data-en-alt="Portrait of Joaquín in sunglasses and a white T-shirt." />
+        <p class="pie-foto" data-en="Me, in Gurugram">Yo, en Gurugram</p>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -1125,10 +1057,11 @@ html[lang="en"] q{ quotes:"“" "”"; }
   <div class="wrap">
     <p class="tape" data-en="Open to projects">Disponible para proyectos</p>
     <h2 class="hablemos-t" id="hab-t" data-en="Let's talk.">Hablemos.</h2>
-    <p class="hablemos-sub" data-en="If something on this table got you curious, write to me. I'll be the one who answers.">Si algo de esta mesa te dio curiosidad, escríbeme. Contesto yo.</p>
+    <p class="hablemos-sub" data-en="If something here got you curious, or you need a website, write to me. I'll be the one who answers.">Si algo de aquí te dio curiosidad o necesitas una página, escríbeme. Contesto yo.</p>
     <div class="correo">
       <a href="mailto:joaquinalvarezme@gmail.com">joaquinalvarezme@gmail.com</a>
       <button class="copiar" type="button" data-copiar="joaquinalvarezme@gmail.com" data-en="Copy">Copiar</button>
+      <a class="ver-kit" href="assets/media-kit.pdf" data-kit-abrir data-en="See my media kit">Ver mi media kit</a>
     </div>
     <p class="hora" data-hora data-tz="Asia/Kolkata" data-lugar="India">Estoy en India.</p>
 
@@ -1137,12 +1070,22 @@ html[lang="en"] q{ quotes:"“" "”"; }
       <li><a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener"><b>TikTok</b><span>@joaquinalvarez614</span><em data-en="Short videos">Videos cortos</em></a></li>
       <li><a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener"><b>YouTube</b><span>@joaquinalvarezmercado</span><em data-en="Short videos">Videos cortos</em></a></li>
       <li><a href="https://www.linkedin.com/in/joaquin-alvarez-mercado" target="_blank" rel="noopener"><b>LinkedIn</b><span>/in/joaquin-alvarez-mercado</span><em data-en="The formal version">La versión formal</em></a></li>
-      <li><a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener"><b>App Store</b><span>Paratu</span><em data-en="Free">Gratis</em></a></li>
     </ul>
   </div>
 </section>
 
 </main>
+
+<dialog class="kit" id="kit" aria-labelledby="kit-t" data-kit>
+  <div class="kit-barra">
+    <h2 id="kit-t">Media kit</h2>
+    <a class="kit-bajar" href="assets/media-kit.pdf" download="Media Kit — Joaquín Álvarez Mercado.pdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Download PDF">Descargar PDF</span></a>
+    <button class="kit-cerrar" type="button" data-kit-cerrar aria-label="Cerrar" data-en-aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="kit-hoja" tabindex="-1" autofocus>
+    <img src="assets/img/media-kit-900.webp" srcset="assets/img/media-kit-900.webp 900w, assets/img/media-kit-1660.webp 1660w" sizes="(min-width:800px) 720px, 100vw" width="1659" height="2400" loading="lazy" decoding="async" alt="Media kit de Joaquín Álvarez Mercado: 1.65 millones de vistas totales, 8,047 seguidores entre Instagram y TikTok, 10.8% de engagement en Instagram, sus videos destacados, su audiencia y los formatos disponibles para marcas." data-en-alt="Joaquín Álvarez Mercado's media kit: 1.65 million total views, 8,047 followers across Instagram and TikTok, 10.8% Instagram engagement, top videos, audience and formats available for brands." />
+  </div>
+</dialog>
 
 <footer class="pie">
   <span class="firma"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M24 22.5l-1.2 7.5M40.5 22.5l-.8 7.2" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/><path d="M18.5 38.5c5.5 7.6 21.5 8.4 27.8-.6" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/></svg><span>© <span data-anio>2026</span> Joaquín Álvarez Mercado</span></span>
@@ -1177,7 +1120,12 @@ html[lang="en"] q{ quotes:"“" "”"; }
         el.setAttribute(a, el.getAttribute(lang === 'en' ? 'data-en-' + a : 'data-es-' + a));
       });
     });
-    document.querySelectorAll('[data-en-show]').forEach(function(el){ el.hidden = lang !== 'en'; });
+    var h1 = document.querySelector('.hero-title[data-l1]');
+    if (h1){
+      var ls = h1.querySelectorAll('.t-l');
+      h1.setAttribute('data-l1', ls[0].textContent);
+      h1.setAttribute('data-l2', ls[1].textContent);
+    }
     var t = document.querySelector('[data-lang-toggle]');
     if (t){
       var otro = lang === 'en' ? 'es' : 'en';
@@ -1188,6 +1136,20 @@ html[lang="en"] q{ quotes:"“" "”"; }
     document.dispatchEvent(new CustomEvent('idioma', { detail: lang }));
   };
   if (inicial === 'en') window.setIdioma('en');
+
+  // La mesa: las cosas caen en cuanto sus fotos están listas (máximo 700 ms)
+  var mesa = document.querySelector('[data-mesa]');
+  if (mesa){
+    var imgs = [].slice.call(mesa.querySelectorAll('img'));
+    var listas = Promise.all(imgs.map(function(i){ return i.decode ? i.decode().catch(function(){}) : 0; }));
+    Promise.race([listas, new Promise(function(r){ setTimeout(r, 700); })]).then(function(){
+      requestAnimationFrame(function(){
+        mesa.classList.add('is-set');
+        var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setTimeout(function(){ mesa.classList.add('is-ready'); }, quieto ? 0 : 1300);
+      });
+    });
+  }
 })();
 </script>
 <script src="assets/app.js" defer></script>
