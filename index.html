@@ -17,6 +17,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="assets/fonts/kalam-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/app.js" as="script" />
 <script>
 /* antes de pintar: hay JS y, si nadie pidió menos movimiento, las animaciones */
 (function(d){ d.classList.add('js'); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('mov'); })(document.documentElement);
@@ -240,6 +241,8 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .intro-listo .hero-title::before{ display:none; }
 .intro-listo .t-frente{ position:relative; }
 .hero-title .w{ display:inline-block; transform-origin:0 0; }
+.intro-listo:not(.intro-quieta) .hero-title .w,
+.intro-listo:not(.intro-quieta) .t-bandas i{ will-change:transform; }
 .t-bandas{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
 .t-bandas i{ position:absolute; left:0; top:0; background:var(--yellow); transform-origin:0 0; transform:scale(0, 1); }
 .intro-listo .mesa:not(.is-set) .obj,
@@ -424,17 +427,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .foto figcaption{ margin-top:8px; font-size:13px; color:var(--graphite); line-height:1.3; }
 
 /* ---- FOLIO: el prototipo en cuatro fotos ---- */
-.pasos-folio{
-  list-style:none; display:grid; grid-auto-flow:column; grid-auto-columns:42%; gap:10px;
-  overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
-  margin-inline:calc(var(--gutter) * -1); padding-inline:var(--gutter); scroll-padding-inline:var(--gutter);
-}
-.pasos-folio::-webkit-scrollbar{ display:none; }
-.pasos-folio li{ scroll-snap-align:start; }
-.pasos-folio .pf{ aspect-ratio:3/4; background:var(--sweep); display:flex; align-items:center; justify-content:center; padding:12%; border-radius:4px; }
-.pasos-folio img{ max-height:100%; width:auto; object-fit:contain; filter:var(--sh-rest); }
-.pasos-folio li > span{ display:block; margin-top:8px; font-size:14px; font-weight:600; }
-.pasos-folio li > span b{ color:var(--graphite); font-weight:650; margin-right:6px; font-variant-numeric:tabular-nums; }
 
 /* ---- Hablemos de Negocios: las aperturas ---- */
 .aperturas-fila{
@@ -550,34 +542,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
 @keyframes cae{ from{ opacity:0; transform:translateY(-26px) rotate(-4deg) scale(1.06); } }
 @keyframes sube{ from{ opacity:0; transform:translateY(22px); } }
 
-/* ============================================================
-   EN PAUSA — filas que se abren
-============================================================ */
-.pausa{ padding-block:clamp(56px, 8vw, 104px); border-top:1px solid var(--line); }
-.pausa-intro{ margin-top:14px; color:var(--graphite); }
-.pausados{ margin-top:22px; border-top:1px solid var(--line); }
-.pausado{ border-bottom:1px solid var(--line); }
-.pausado > summary{
-  display:grid; grid-template-columns:56px minmax(0,1fr) auto; align-items:center; column-gap:16px;
-  min-height:84px; padding:12px 6px; cursor:pointer; list-style:none;
-  transition:background-color .2s;
-}
-.pausado > summary::-webkit-details-marker{ display:none; }
-.p-img img{ width:56px; height:56px; object-fit:contain; }
-.p-img .ic-app{ border-radius:12px; }
-.p-txt b{ display:block; font-weight:780; font-size:clamp(19px, 1.8vw, 24px); letter-spacing:-.015em; line-height:1.15; }
-.p-txt small{ display:block; margin-top:2px; font-size:14px; color:var(--graphite); line-height:1.3; }
-.p-mas{
-  width:38px; height:38px; border-radius:50%; border:1.5px solid var(--ink);
-  display:grid; place-items:center; transition:transform .3s var(--ease), background-color .2s, color .2s;
-}
-.p-mas svg{ width:17px; height:17px; }
-.pausado[open] .p-mas{ transform:rotate(180deg); background:var(--ink); color:var(--paper); }
-.pausado-cuerpo{
-  display:grid; grid-template-columns:minmax(0,1fr); grid-template-areas:"media" "rest"; row-gap:22px;
-  padding:10px 0 34px;
-}
-.pausado[open] .pausado-cuerpo{ animation:abrir .35s var(--ease); }
 @keyframes abrir{ from{ opacity:0; transform:translateY(-8px); } }
 
 /* ============================================================
@@ -599,14 +563,9 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .nota{
   position:relative; aspect-ratio:1; padding:8.5cqw 8cqw 7cqw; overflow:hidden;
   color:#232323;
-  background:
-    linear-gradient(0deg, rgba(140,90,0,.16), rgba(140,90,0,0) 18%),
-    linear-gradient(180deg, rgba(140,90,0,.07), rgba(140,90,0,0) 10%),
-    #ffd21f;
+  background:#fad210 url("assets/img/postit-460.webp") 0 0 / 100% 100% no-repeat;   /* el post-it de verdad */
   box-shadow:0 1px 1px rgba(0,0,0,.16), 0 3px 6px rgba(0,0,0,.05);
-  border-bottom-right-radius:60% 12px;
 }
-.nota::before{ content:""; position:absolute; inset:0; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); opacity:.22; mix-blend-mode:multiply; pointer-events:none; }
 .nota-t, .nota ul, .pie-foto{ font-family:"Kalam", "Bradley Hand", "Segoe Print", cursive; font-weight:400; }
 .nota-t{ position:relative; display:inline-block; font-size:clamp(26px, 11cqw, 36px); line-height:1; letter-spacing:.01em; -webkit-text-stroke:.7px currentColor; }
 .nota-t svg{ position:absolute; left:-4%; bottom:-10px; width:112%; height:12px; }
@@ -635,7 +594,8 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
 @media (max-width:899px){
   .ahora-listo .ahora-grid{ position:relative; display:grid; grid-template-rows:auto 1fr; height:100%; padding-block:16px 12px; row-gap:6px; }
-  .ahora-listo .nota-wrap{ width:min(56vw, 28svh); margin:0 0 0 1vw; }
+  .ahora-listo .nota-wrap{ width:min(60vw, 32svh); margin:0 0 0 1vw; }
+  .ahora-listo .nota{ aspect-ratio:auto; }   /* en pantallas chicas crece con su texto */
   .ahora-listo .fotos-ahora{ display:block; position:relative; margin:18px 0 0; --pila-alto:min(36svh, 92vw); }
   .ahora-listo .impresa{
     position:absolute; --wp:min(calc(var(--pila-alto) * var(--ar) / .92), 84vw);
@@ -724,7 +684,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .aperturas-fila{ grid-auto-columns:22%; }
   .sitios{ grid-auto-columns:46%; }
   .capturas-fila{ grid-auto-columns:28%; }
-  .pasos-folio{ grid-auto-columns:28%; }
 }
 @media (min-width:900px){
   .hero{
@@ -763,7 +722,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .foto--fundadores{ order:1; } .foto--arboles{ order:2; } .foto--letrero{ order:3; } .foto--grupo{ order:4; }
   .aperturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(5, minmax(0,1fr)); overflow:visible; margin-inline:0; padding-inline:0; }
   .capturas-fila{ grid-auto-flow:row; grid-template-columns:repeat(4, minmax(0,1fr)); overflow:visible; margin-inline:0; padding-inline:0; }
-  .pasos-folio{ grid-auto-flow:row; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; overflow:visible; margin-inline:0; padding-inline:0; }
   .sitios{ grid-auto-flow:row; grid-template-columns:repeat(2, minmax(0,1fr)); gap:22px 18px; overflow:visible; margin-inline:0; padding:0; }
   .capturas{ display:grid; grid-template-columns:minmax(0,1fr) 190px; align-items:center; }
   .capturas-fila{ gap:10px; }
@@ -774,12 +732,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .hab-grid .redes{ grid-column:1 / -1; }
   .kit-tarjeta{ margin-top:34px; }
 
-  .pausado-cuerpo{
-    grid-template-columns:minmax(0,5fr) minmax(0,7fr); grid-template-areas:"rest media";
-    column-gap:clamp(40px, 5vw, 88px); align-items:center; padding:18px 6px 44px;
-  }
-  .pausado > summary{ grid-template-columns:64px minmax(0,1fr) auto; min-height:96px; column-gap:22px; }
-  .p-img img{ width:64px; height:64px; }
 
   /* en computadora: una mesa, como la del inicio (posiciones en % de la mesa) */
   .ahora-grid{ display:block; position:relative; aspect-ratio:1152/620; }
@@ -812,7 +764,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
 /* con mouse: las cosas de la mesa se levantan y se mueven; los demás
    efectos de "hover" solo aquí, para que no se queden pegados al tocar */
 @media (hover:hover) and (pointer:fine){
-  .pausado > summary:hover{ background:var(--sweep); }
   .sitio:hover .navegador{ transform:translateY(-3px); }
   .sitio:hover b{ text-decoration:underline; text-underline-offset:.16em; }
   .indice a:hover svg{ transform:translateY(2px); color:var(--ink); }
@@ -856,7 +807,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <div class="intro" data-intro>
 <section class="hero" id="mesa" aria-labelledby="hero-t">
   <h1 class="hero-title" id="hero-t" data-l1="Hago cosas." data-l2="Algunas funcionan."><span class="t-bandas" aria-hidden="true"></span><span class="t-frente"><span class="t-l" data-en="I make things.">Hago cosas.</span> <span class="t-l" data-en="Some of them work.">Algunas funcionan.</span></span></h1>
-  <p class="hero-sub" data-en-html="I'm Joaquín Álvarez Mercado, from Mexico. I have experience in &lt;a class=&quot;clave&quot; href=&quot;#web&quot;&gt;design&lt;/a&gt; and &lt;a class=&quot;clave&quot; href=&quot;#paratu&quot;&gt;platform development&lt;/a&gt;.">Soy Joaquín Álvarez Mercado, de México. Tengo experiencia en <a class="clave" href="#web">diseño</a> y <a class="clave" href="#paratu">desarrollo de plataformas</a>.</p>
+  <p class="hero-sub" data-en-html="I'm Joaquín Álvarez Mercado, from Mexico. What you see here is what did work: an &lt;a class=&quot;clave&quot; href=&quot;#acuna&quot;&gt;environmental movement&lt;/a&gt;, &lt;a class=&quot;clave&quot; href=&quot;#hdn&quot;&gt;videos about business&lt;/a&gt; and &lt;a class=&quot;clave&quot; href=&quot;#web&quot;&gt;websites&lt;/a&gt;.">Soy Joaquín Álvarez Mercado, de México. Lo que ves aquí es lo que sí funcionó: un <a class="clave" href="#acuna">movimiento ambiental</a>, <a class="clave" href="#hdn">videos sobre negocios</a> y <a class="clave" href="#web">páginas web</a>.</p>
 
   <div class="mesa" data-mesa>
     <p class="hint" data-en="Go ahead, move things around.">Puedes mover las cosas.</p>
@@ -902,7 +853,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <li><a href="#acuna"><img src="assets/img/acuna-280.webp" width="280" height="356" alt="" /><span><b>Acuña Sin Huella</b><small data-en="An environmental movement I co-founded">Movimiento ambiental que cofundé</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
     <li><a href="#hdn"><img class="ic-foto" src="assets/img/abre-trisol-360.webp" width="360" height="640" alt="" loading="lazy" /><span><b>Hablemos de Negocios</b><small data-en="Videos about real businesses, 1.4M views">Videos sobre negocios reales, 1.4 M de vistas</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
     <li><a href="#web"><img src="assets/img/indice-web.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="Websites">Páginas web</b><small data-en="Web design, from this page to Berri">Diseño web, de esta página a Berri</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
-    <li><a href="#pausa"><img src="assets/img/indice-pausa.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="On hold">En pausa</b><small data-en="FOLIO, a binder · Paratu, an app">FOLIO, una carpeta · Paratu, una app</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
   </ul>
   <p class="cue-intro" aria-hidden="true"><span data-en="Scroll">Desliza</span><i></i></p>
 </section>
@@ -919,19 +869,19 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <div class="proj-media">
       <div class="fotos" data-entra="cae">
         <figure class="foto foto--ancha foto--fundadores">
-          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-fundadores-600.webp" srcset="assets/img/acuna-fundadores-600.webp 600w, assets/img/acuna-fundadores-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Los dos fundadores de Acuña Sin Huella, con las playeras verdes del proyecto, junto al agua." data-en-alt="The two founders of Acuña Sin Huella in the project's green T-shirts, by the water." /></span>
+          <span class="marco"><img data-diferir fetchpriority="low" data-src="assets/img/acuna-fundadores-600.webp" data-srcset="assets/img/acuna-fundadores-600.webp 600w, assets/img/acuna-fundadores-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Los dos fundadores de Acuña Sin Huella, con las playeras verdes del proyecto, junto al agua." data-en-alt="The two founders of Acuña Sin Huella in the project's green T-shirts, by the water." /></span>
           <figcaption data-en="The two founders">Los dos fundadores</figcaption>
         </figure>
         <figure class="foto foto--ancha foto--grupo">
-          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-grupo-600.webp" srcset="assets/img/acuna-grupo-600.webp 600w, assets/img/acuna-grupo-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Más de 50 voluntarios detrás de una montaña de bolsas de basura, al terminar una jornada de limpieza." data-en-alt="More than 50 volunteers behind a pile of trash bags at the end of a clean-up drive." /></span>
+          <span class="marco"><img data-diferir fetchpriority="low" data-src="assets/img/acuna-grupo-600.webp" data-srcset="assets/img/acuna-grupo-600.webp 600w, assets/img/acuna-grupo-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Más de 50 voluntarios detrás de una montaña de bolsas de basura, al terminar una jornada de limpieza." data-en-alt="More than 50 volunteers behind a pile of trash bags at the end of a clean-up drive." /></span>
           <figcaption data-en="A clean-up drive">Una de las jornadas de limpieza</figcaption>
         </figure>
         <figure class="foto foto--alta foto--arboles">
-          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-arboles-320.webp" srcset="assets/img/acuna-arboles-320.webp 320w, assets/img/acuna-arboles-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Los árboles del canje, todavía en sus bolsas de vivero, listos para plantarse en el campus." data-en-alt="The trees from the trade, still in their nursery bags, ready to be planted on campus." /></span>
+          <span class="marco"><img data-diferir fetchpriority="low" data-src="assets/img/acuna-arboles-320.webp" data-srcset="assets/img/acuna-arboles-320.webp 320w, assets/img/acuna-arboles-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Los árboles del canje, todavía en sus bolsas de vivero, listos para plantarse en el campus." data-en-alt="The trees from the trade, still in their nursery bags, ready to be planted on campus." /></span>
           <figcaption data-en="The 13 trees">Los 13 árboles</figcaption>
         </figure>
         <figure class="foto foto--alta foto--letrero">
-          <span class="marco"><img fetchpriority="low" src="assets/img/acuna-letrero-320.webp" srcset="assets/img/acuna-letrero-320.webp 320w, assets/img/acuna-letrero-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Joaquín sostiene un letrero pintado a mano que dice «No tirar basura en este lugar», frente a bolsas de basura." data-en-alt="Joaquín holds a hand-painted sign that reads “No tirar basura en este lugar” (Don't dump trash here), in front of trash bags." /></span>
+          <span class="marco"><img data-diferir fetchpriority="low" data-src="assets/img/acuna-letrero-320.webp" data-srcset="assets/img/acuna-letrero-320.webp 320w, assets/img/acuna-letrero-500.webp 500w" sizes="(min-width:900px) 15vw, 54vw" width="320" height="427" loading="lazy" decoding="async" alt="Joaquín sostiene un letrero pintado a mano que dice «No tirar basura en este lugar», frente a bolsas de basura." data-en-alt="Joaquín holds a hand-painted sign that reads “No tirar basura en este lugar” (Don't dump trash here), in front of trash bags." /></span>
           <figcaption data-en="Me, at a clean-up">Yo, en una jornada</figcaption>
         </figure>
       </div>
@@ -1008,28 +958,28 @@ html[lang="en"] q{ quotes:"“" "”"; }
       <ul class="sitios" aria-label="Páginas que he hecho" data-en-aria-label="Websites I've made" data-entra="cae">
           <li>
             <a class="sitio" href="https://berri.co.in" target="_blank" rel="noopener">
-              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>berri.co.in</span></span><img src="assets/img/sitio-berri-720.webp" srcset="assets/img/sitio-berri-720.webp 720w, assets/img/sitio-berri-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Berri: frambuesas cubiertas de chocolate, con el botón para apartar tu lugar por WhatsApp." data-en-alt="Berri's website: chocolate-covered raspberries, with a button to claim your spot on WhatsApp." /></span>
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>berri.co.in</span></span><img data-diferir data-src="assets/img/sitio-berri-720.webp" data-srcset="assets/img/sitio-berri-720.webp 720w, assets/img/sitio-berri-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Berri: frambuesas cubiertas de chocolate, con el botón para apartar tu lugar por WhatsApp." data-en-alt="Berri's website: chocolate-covered raspberries, with a button to claim your spot on WhatsApp." /></span>
               <b>Berri</b>
               <small data-en="Chocolate-covered raspberries in Gurugram, India">Frambuesas con chocolate, en Gurugram, India</small>
             </a>
           </li>
           <li>
             <a class="sitio" href="https://foliomx.vercel.app" target="_blank" rel="noopener">
-              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>foliomx.vercel.app</span></span><img src="assets/img/sitio-folio-720.webp" srcset="assets/img/sitio-folio-720.webp 720w, assets/img/sitio-folio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de FOLIO: el render del mecanismo y la etiqueta «Prototipo 1, en desarrollo»." data-en-alt="FOLIO's website: the render of the mechanism and the “Prototype 1, in development” tag." /></span>
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>foliomx.vercel.app</span></span><img data-diferir data-src="assets/img/sitio-folio-720.webp" data-srcset="assets/img/sitio-folio-720.webp 720w, assets/img/sitio-folio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de FOLIO: el render del mecanismo y la etiqueta «Prototipo 1, en desarrollo»." data-en-alt="FOLIO's website: the render of the mechanism and the “Prototype 1, in development” tag." /></span>
               <b>FOLIO</b>
               <small data-en="The prototype, with a waitlist">El prototipo, con lista de espera</small>
             </a>
           </li>
           <li id="sitio-paratu">
             <a class="sitio" href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener">
-              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>j-cob8.github.io</span></span><img src="assets/img/sitio-paratu-720.webp" srcset="assets/img/sitio-paratu-720.webp 720w, assets/img/sitio-paratu-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Paratu: descarga en la App Store, política de privacidad y soporte." data-en-alt="Paratu's website: App Store download, privacy policy and support." /></span>
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>j-cob8.github.io</span></span><img data-diferir data-src="assets/img/sitio-paratu-720.webp" data-srcset="assets/img/sitio-paratu-720.webp 720w, assets/img/sitio-paratu-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Paratu: descarga en la App Store, política de privacidad y soporte." data-en-alt="Paratu's website: App Store download, privacy policy and support." /></span>
               <b>Paratu</b>
               <small data-en="The app's download, privacy and support page">Descarga, privacidad y soporte de la app</small>
             </a>
           </li>
           <li>
             <a class="sitio" href="#mesa">
-              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>joaquinalvarezmercado.vercel.app</span></span><img src="assets/img/sitio-portafolio-720.webp" srcset="assets/img/sitio-portafolio-720.webp 720w, assets/img/sitio-portafolio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Esta misma página: el inicio con la mesa de objetos." data-en-alt="This very page: the start, with the table of objects." /></span>
+              <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>joaquinalvarezmercado.vercel.app</span></span><img data-diferir data-src="assets/img/sitio-portafolio-720.webp" data-srcset="assets/img/sitio-portafolio-720.webp 720w, assets/img/sitio-portafolio-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Esta misma página: el inicio con la mesa de objetos." data-en-alt="This very page: the start, with the table of objects." /></span>
               <b>Esta página</b>
               <small data-en="You're here">Estás aquí</small>
             </a>
@@ -1046,94 +996,6 @@ html[lang="en"] q{ quotes:"“" "”"; }
   </div>
 </section>
 
-<!-- ===================== EN PAUSA (filas que se abren) ===================== -->
-<section class="pausa" id="pausa" aria-labelledby="pausa-t">
-  <div class="wrap">
-    <h2 class="cinta-sec" id="pausa-t" data-etiqueta><span data-en="On hold">En pausa</span></h2>
-    <p class="pausa-intro" data-en="Projects I made and put on hold. Open them to see more.">Proyectos que hice y dejé en pausa. Ábrelos para ver más.</p>
-    <div class="pausados" data-entra="sube">
-
-      <details class="pausado" id="folio">
-        <summary>
-          <span class="p-img"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" alt="" loading="lazy" /></span>
-          <span class="p-txt"><b>FOLIO</b><small data-en="A binder that opens flat. Prototype 1, 2026.">Una carpeta que se abre plana. Prototipo 1, 2026.</small></span>
-          <span class="p-mas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15.5l6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </summary>
-        <div class="pausado-cuerpo">
-        <div class="proj-media">
-          <ol class="pasos-folio" aria-label="El prototipo" data-en-aria-label="The prototype">
-            <li><div class="pf"><img src="assets/img/folio-cerrada-520.webp" width="520" height="585" loading="lazy" decoding="async" alt="La carpeta cerrada: portada amarilla con cinta azul que dice «Prototipo 1»." data-en-alt="The closed binder: yellow cover with blue tape that reads “Prototipo 1”." /></div><span><b>1</b><span data-en="Handmade">Hecha a mano</span></span></li>
-            <li><div class="pf"><img src="assets/img/folio-abierta-540.webp" width="540" height="714" loading="lazy" decoding="async" alt="La carpeta abierta y plana, con bocetos del mecanismo en la tapa interior." data-en-alt="The binder open flat, with sketches of the mechanism on the inside cover." /></div><span><b>2</b><span data-en="Opens flat">Se abre plana</span></span></li>
-            <li><div class="pf"><img src="assets/img/folio-argollas-540.webp" width="540" height="508" loading="lazy" decoding="async" alt="Las argollas en su propio módulo, separado de las tapas." data-en-alt="The rings on their own module, separate from the covers." /></div><span><b>3</b><span data-en="Rings apart">Argollas aparte</span></span></li>
-            <li><div class="pf"><img src="assets/img/folio-paneles-340.webp" width="340" height="929" loading="lazy" decoding="async" alt="Los tres paneles desplegados en cadena." data-en-alt="The three panels unfolded in a chain." /></div><span><b>4</b><span data-en="Turns 360°">Gira 360°</span></span></li>
-          </ol>
-        </div>
-        <div class="proj-rest">
-          <ul class="hechos">
-            <li data-en-html="It started as a note in my app: &lt;q&gt;A binder that doesn't bend the pages.&lt;/q&gt;">Empezó como una nota en mi app: <q>Carpeta que no dobla las hojas.</q></li>
-            <li data-en="Prototype 1, handmade in Ciudad Acuña.">Prototipo 1, hecho a mano en Ciudad Acuña.</li>
-            <li data-en-html="Utility-model application &lt;b&gt;pending at IMPI&lt;/b&gt;, Mexico's patent office.">Solicitud de modelo de utilidad <b>en trámite ante el IMPI</b>.</li>
-          </ul>
-          <p class="links">
-            <a href="https://foliomx.vercel.app" target="_blank" rel="noopener" data-en="Visit FOLIO's page">Ver la página de FOLIO</a>
-            <a href="https://instagram.com/folioproject_" target="_blank" rel="noopener">@folioproject_</a>
-          </p>
-        </div>
-        </div>
-      </details>
-
-      <details class="pausado" id="paratu">
-        <summary>
-          <span class="p-img"><img class="ic-app" src="assets/img/paratu-icono.png" width="180" height="180" alt="" loading="lazy" /></span>
-          <span class="p-txt"><b>Paratu</b><small data-en="My app to organize the day. On the App Store since 2025.">Mi app para organizar el día. En la App Store desde 2025.</small></span>
-          <span class="p-mas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9.5 12 15.5l6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </summary>
-        <div class="pausado-cuerpo">
-        <div class="proj-media capturas">
-          <ul class="capturas-fila" aria-label="Capturas de Paratu en la App Store" data-en-aria-label="Paratu's App Store screenshots">
-            <li><img fetchpriority="low" src="assets/img/paratu-hoy-300.webp" srcset="assets/img/paratu-hoy-300.webp 300w, assets/img/paratu-hoy-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Organiza tu día: la pantalla Hoy con lo que viene." data-en-alt="Organize your day: the Today screen with what's coming up." /></li>
-            <li><img fetchpriority="low" src="assets/img/paratu-tareas-300.webp" srcset="assets/img/paratu-tareas-300.webp 300w, assets/img/paratu-tareas-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Que no se te olvide nada: listas de pendientes y completados." data-en-alt="Don't forget a thing: to-do lists and completed tasks." /></li>
-            <li><img fetchpriority="low" src="assets/img/paratu-notas-300.webp" srcset="assets/img/paratu-notas-300.webp 300w, assets/img/paratu-notas-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Anota lo que quieras: la bitácora con fotos y notas." data-en-alt="Capture anything: the log with photos and notes." /></li>
-            <li><img fetchpriority="low" src="assets/img/paratu-dinero-300.webp" srcset="assets/img/paratu-dinero-300.webp 300w, assets/img/paratu-dinero-480.webp 480w" sizes="(min-width:900px) 11vw, 42vw" width="300" height="649" loading="lazy" decoding="async" alt="Lleva la cuenta de tu dinero: registrar un gasto de 50 pesos." data-en-alt="Know where your money goes: logging a 50-peso expense." /></li>
-          </ul>
-          <div class="ticket-wrap">
-            <figure class="ticket" aria-label="Corte de caja de Paratu: todo en ceros. Es gratis, sin anuncios, sin cuentas y sin nube; el usuario más fiel soy yo." data-en-aria-label="Paratu's end-of-day report: all zeros. It's free, with no ads, no accounts and no cloud; its most loyal user is me.">
-              <p class="ticket-t">Paratu</p>
-              <p class="sub" data-en="End-of-day report">Corte de caja</p>
-              <dl>
-                <div><dt data-en="Price">Precio</dt><dd>$0.00</dd></div>
-                <div><dt data-en="Revenue">Ingresos</dt><dd>$0.00</dd></div>
-                <div><dt data-en="Ad spend">Anuncios</dt><dd>$0.00</dd></div>
-                <div><dt data-en="Accounts needed">Cuentas</dt><dd>0</dd></div>
-                <div><dt data-en="Trackers">Rastreadores</dt><dd>0</dd></div>
-                <div><dt data-en="Data in the cloud">Datos en la nube</dt><dd>0 KB</dd></div>
-                <div><dt data-en="Developers">Desarrolladores</dt><dd>1</dd></div>
-              </dl>
-              <p class="total"><span data-en="Most loyal user">Usuario más fiel</span><span data-en="me">yo</span></p>
-              <p class="gracias" data-en="Thanks for stopping by">¡Gracias por su visita!</p>
-            </figure>
-          </div>
-        </div>
-        <div class="proj-rest">
-          <ul class="hechos">
-            <li data-en="I designed it, built it and put it on the App Store on my own.">La diseñé, la programé y la subí a la App Store yo solo.</li>
-            <li data-en-html="It taught me a lot about &lt;b&gt;design and user experience&lt;/b&gt;. That's my approach to everything now.">Con ella aprendí mucho de <b>diseño y experiencia de usuario</b>. Ese es mi enfoque en todo lo que hago.</li>
-            <li data-en="No account, no ads, no cloud: your data stays on your phone.">Sin cuenta, sin anuncios y sin nube: tus datos se quedan en tu teléfono.</li>
-            <li data-en-html="Three names in one year: &lt;s&gt;FJTZ&lt;/s&gt;, &lt;s&gt;FLINT&lt;/s&gt;, Paratu.">Tres nombres en un año: <s>FJTZ</s>, <s>FLINT</s>, Paratu.</li>
-            <li class="fuerte" data-en="It didn't make money. It's the app I use.">No hizo dinero. Es la app que uso yo.</li>
-          </ul>
-          <p class="links">
-            <a href="https://apps.apple.com/us/app/paratu/id6748326474" target="_blank" rel="noopener" data-en="Get it on the App Store">Descargar en la App Store</a>
-            <a href="https://j-cob8.github.io/App-FLINT-support/" target="_blank" rel="noopener" data-en="Support and privacy">Soporte y privacidad</a>
-          </p>
-        </div>
-        </div>
-      </details>
-
-    </div>
-  </div>
-</section>
-
 <!-- ===================== AHORA ===================== -->
 <!-- Mientras bajas, las fotos se van repartiendo sobre la mesa (en el teléfono,
      en un montón). Sin animaciones, se ven todas desde el principio. -->
@@ -1145,9 +1007,9 @@ html[lang="en"] q{ quotes:"“" "”"; }
       <div class="nota">
         <h2 class="nota-t" id="ahora-t"><span data-en="Now" data-etiqueta>Ahora</span><svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8.5c18-3.2 44-5 70-4.2 16 .5 30 1.6 46 3.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></h2>
         <ul>
-          <li data-en="In India, studying at TETR.">En India, estudiando en TETR.</li>
-          <li data-en="Filming businesses I run into on the street.">Grabando negocios que me encuentro en la calle.</li>
-          <li data-en="Designing websites.">Diseñando páginas web.</li>
+          <li data-en="Studying at TETR College in India.">Estudiando en TETR College, en India.</li>
+          <li data-en="Making content about business and school.">Haciendo contenido sobre negocios y la escuela.</li>
+          <li data-en="Launching a business here and there.">Lanzando algún negocio por aquí y por allá.</li>
         </ul>
       </div>
     </div>
@@ -1155,7 +1017,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <ul class="fotos-ahora" aria-label="Fotos de India" data-en-aria-label="Photos from India">
       <li class="impresa impresa--v" style="--r:-3deg; --rc:4deg; --ar:.75; --px:-8px; --py:6px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-orientacion-400.webp" srcset="assets/img/ahora-orientacion-400.webp 400w, assets/img/ahora-orientacion-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín en la orientación de TETR College of Business, frente a una pantalla verde que dice «Orientation»." data-en-alt="Joaquín at TETR College of Business orientation, in front of a green screen that reads “Orientation”." />
-        <p class="pie-foto" data-en="TETR orientation">Orientación de TETR</p>
+        <p class="pie-foto" data-en="First days">Los primeros días</p>
       </li>
       <li class="impresa impresa--h" style="--r:2deg; --rc:-4deg; --ar:1.3333; --px:6px; --py:-4px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-grupo-480.webp" srcset="assets/img/ahora-grupo-480.webp 480w, assets/img/ahora-grupo-800.webp 800w" sizes="(min-width:900px) 22vw, 80vw" width="480" height="360" loading="lazy" decoding="async" fetchpriority="low" alt="Una cena con unos treinta compañeros en un restaurante con focos colgando del techo." data-en-alt="A dinner with about thirty classmates in a restaurant with bulbs hanging from the ceiling." />
@@ -1163,15 +1025,15 @@ html[lang="en"] q{ quotes:"“" "”"; }
       </li>
       <li class="impresa impresa--v" style="--r:-2deg; --rc:3deg; --ar:.75; --px:10px; --py:2px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-build-400.webp" srcset="assets/img/ahora-build-400.webp 400w, assets/img/ahora-build-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín, pensativo, bajo un letrero de luz que dice «Build»." data-en-alt="Joaquín, thinking, under a light sign that reads “Build”." />
-        <p class="pie-foto" data-en="“Build,” says the wall">«Build», dice la pared</p>
+        <p class="pie-foto" data-en="Build something great">Construye algo grande</p>
       </li>
       <li class="impresa impresa--v" style="--r:4deg; --rc:5deg; --ar:.75; --px:-6px; --py:-6px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-peesafe-360.webp" srcset="assets/img/ahora-peesafe-360.webp 360w, assets/img/ahora-peesafe-600.webp 600w" sizes="(min-width:900px) 14vw, 62vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Selfie de Joaquín frente al letrero de Pee Safe, en la entrada de su planta." data-en-alt="Joaquín's selfie in front of the Pee Safe sign, at the entrance of its plant." />
-        <p class="pie-foto" data-en="Visiting Pee Safe">Visitando Pee Safe</p>
+        <p class="pie-foto" data-en="Connecting with brands">Conectando con marcas</p>
       </li>
       <li class="impresa impresa--v" style="--r:3deg; --rc:-3deg; --ar:.75; --px:8px; --py:6px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-corbata-400.webp" srcset="assets/img/ahora-corbata-400.webp 400w, assets/img/ahora-corbata-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín de camisa y corbata, mirando a un lado." data-en-alt="Joaquín in a shirt and tie, looking to the side." />
-        <p class="pie-foto" data-en="Shirt and tie">Camisa y corbata</p>
+        <p class="pie-foto" data-en="Work">A trabajar</p>
       </li>
       <li class="impresa impresa--h" style="--r:-2deg; --rc:-2deg; --ar:1.5; --px:-4px; --py:4px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-delhi-480.webp" srcset="assets/img/ahora-delhi-480.webp 480w, assets/img/ahora-delhi-800.webp 800w" sizes="(min-width:900px) 22vw, 80vw" width="480" height="320" loading="lazy" decoding="async" fetchpriority="low" alt="Cinco amigos de noche frente a los edificios de gobierno de Nueva Delhi, iluminados de rosa." data-en-alt="Five friends at night in front of New Delhi's government buildings, lit up in pink." />
@@ -1183,15 +1045,15 @@ html[lang="en"] q{ quotes:"“" "”"; }
       </li>
       <li class="impresa impresa--v" style="--r:-4deg; --rc:-3deg; --ar:.75; --px:6px; --py:6px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-respiro-400.webp" srcset="assets/img/ahora-respiro-400.webp 400w, assets/img/ahora-respiro-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín recostado en un sillón blanco junto a un ventanal." data-en-alt="Joaquín lounging on a white couch by a big window." />
-        <p class="pie-foto" data-en="A breather">Un respiro</p>
+        <p class="pie-foto" data-en="Some rest">Un descanso</p>
       </li>
       <li class="impresa impresa--v" style="--r:-3deg; --rc:3deg; --ar:.75; --px:-6px; --py:-4px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-retrato-360.webp" srcset="assets/img/ahora-retrato-360.webp 360w, assets/img/ahora-retrato-600.webp 600w" sizes="(min-width:900px) 14vw, 62vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Retrato de Joaquín con lentes oscuros y playera blanca." data-en-alt="Portrait of Joaquín in sunglasses and a white T-shirt." />
-        <p class="pie-foto" data-en="Me, in Gurugram">Yo, en Gurugram</p>
+        <p class="pie-foto" data-en="Look cool">Siempre con estilo</p>
       </li>
       <li class="impresa impresa--v" style="--r:5deg; --rc:-4deg; --ar:.75; --px:4px; --py:2px"><span class="cinta" aria-hidden="true"></span>
         <img src="assets/img/ahora-brazos-400.webp" srcset="assets/img/ahora-brazos-400.webp 400w, assets/img/ahora-brazos-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín con los brazos arriba en un cuarto blanco." data-en-alt="Joaquín with his arms up in a white room." />
-        <p class="pie-foto" data-en="Feeling good">Así de bien</p>
+        <p class="pie-foto" data-en="Do your best">Da lo mejor de ti</p>
       </li>
     </ul>
     <p class="ahora-cuenta" aria-hidden="true" data-cuenta></p>
@@ -1215,7 +1077,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
     <!-- el media kit: la portada impresa sobre una tarjeta negra, para que se vea -->
     <a class="kit-tarjeta" href="/media-kit" data-kit-abrir>
-      <span class="kit-hojita"><span class="cinta" aria-hidden="true"></span><img src="assets/img/media-kit-portada-380.webp" srcset="assets/img/media-kit-portada-380.webp 380w, assets/img/media-kit-portada-640.webp 640w" sizes="(min-width:900px) 320px, 72vw" width="380" height="236" alt="" loading="lazy" decoding="async" /></span>
+      <span class="kit-hojita"><span class="cinta" aria-hidden="true"></span><img data-diferir data-src="assets/img/media-kit-portada-380.webp" data-srcset="assets/img/media-kit-portada-380.webp 380w, assets/img/media-kit-portada-640.webp 640w" sizes="(min-width:900px) 320px, 72vw" width="380" height="236" alt="" loading="lazy" decoding="async" /></span>
       <span class="kit-info">
         <b data-en="My media kit">Mi media kit</b>
         <small data-en="1.65M views · 8,047 followers · 10.8% engagement">1.65 M de vistas · 8,047 seguidores · 10.8% de engagement</small>
@@ -1295,6 +1157,24 @@ html[lang="en"] q{ quotes:"“" "”"; }
     document.dispatchEvent(new CustomEvent('idioma', { detail: lang }));
   };
   if (inicial === 'en') window.setIdioma('en');
+
+  // Fotos diferidas: las de los proyectos se piden hasta que te acercas,
+  // para que la portada cargue primero. Vive aquí (y no en app.js) para
+  // que las fotos aparezcan aunque app.js no llegue a cargar.
+  var diferidas = [].slice.call(document.querySelectorAll('img[data-diferir]'));
+  var ponFoto = function(im){
+    if (im.dataset.srcset) im.srcset = im.dataset.srcset;
+    if (im.dataset.src) im.src = im.dataset.src;
+    im.removeAttribute('data-diferir');
+  };
+  if (!('IntersectionObserver' in window)) diferidas.forEach(ponFoto);
+  else addEventListener('load', function(){
+    // mientras la intro tiene fija la portada, todo parece "cerca": se espera a que la página termine de cargar
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ ponFoto(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '900px 0px' });
+    setTimeout(function(){ diferidas.forEach(function(im){ io.observe(im); }); }, 300);
+  });
 
   // La mesa. Con animaciones, las cosas caen cuando el título llega a su
   // lugar (lo dispara la intro en app.js); si la intro no arrancara, caen

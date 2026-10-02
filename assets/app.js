@@ -349,6 +349,7 @@
     var cue = $('.cue-intro', hero), mesa = $('[data-mesa]', hero);
     var aparecen = [$('.hero-sub', hero), $('.indice', hero)];
     var pals = [], bandas = [], geo = null, mesaHecha = false, pend = false;
+    var altoVista = innerHeight, anchoVista = raiz.clientWidth;
 
     // cada palabra en su propia caja, para moverla sola
     function partir() {
@@ -394,7 +395,7 @@
       // (o dos, si la primera es muy corta, como "I make").
       var gut = parseFloat(getComputedStyle(hero).paddingLeft) || 16;
       var x0 = heroR.left + gut, anchoDisp = heroR.width - 2 * gut;
-      var arriba = cab + 16, altoDisp = Math.max(120, innerHeight - 76 - arriba);
+      var arriba = cab + 16, altoDisp = Math.max(120, altoVista - 76 - arriba);
       var oraciones = $$('.t-l', h1).map(function (l) { return $$('.w', l).map(function (w) { return pals.indexOf(w); }); });
       var renglones = [];
       if (raiz.clientWidth >= 720) renglones = oraciones;
@@ -438,47 +439,78 @@
       return lim((scrollY - (docTop(intro) - alturaCabeza())) / pista);
     }
 
-    function aplicar() {
-      pend = false;
-      if (!geo) return;
-      var p = progreso();
+    // el título no salta directo a donde va el scroll: lo sigue cuadro por
+    // cuadro con suavidad, así se ve fluido aunque el teléfono mande los
+    // eventos de scroll disparejos
+    var actual = null, tAnt = 0;
+    function paso(t) {
+      var meta = progreso();
+      if (actual === null) actual = meta;
+      var dt = tAnt ? Math.min(64, t - tAnt) : 16.7;
+      tAnt = t;
+      actual += (meta - actual) * (1 - Math.pow(.78, dt / 16.7));
+      if (Math.abs(meta - actual) < .0006) actual = meta;
+      pintar(actual);
+      if (actual !== meta) requestAnimationFrame(paso);
+      else { pend = false; tAnt = 0; }
+    }
+    function aplicar() { if (geo) pintar(actual = progreso()); }
+
+    function pintar(p) {
       pals.forEach(function (w, i) {
         var g = geo.ini[i];
         if (!g) return;
         var k = 1 - suave(lim((p - .035 * i) / .6));
         var s = 1 + (g.s - 1) * k;
-        w.style.transform = k < .0005 ? '' : 'translate(' + (g.dx * k).toFixed(2) + 'px,' + (g.dy * k).toFixed(2) + 'px) scale(' + s.toFixed(4) + ')';
+        w.style.transform = k < .0005 ? '' : 'translate3d(' + (g.dx * k).toFixed(2) + 'px,' + (g.dy * k).toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
         // su franja la sigue y se pinta de izquierda a derecha
         var f = geo.franjas[i], n = geo.nat[i];
         var d = sale(lim((p - .4 - .05 * i) / .24));
         var tx = g.dx * k + (f.x - n.x) * (s - 1), ty = g.dy * k + (f.y - n.y) * (s - 1);
-        bandas[i].style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + (s * d).toFixed(4) + ',' + s.toFixed(4) + ')';
+        bandas[i].style.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0) scale(' + (s * d).toFixed(4) + ',' + s.toFixed(4) + ')';
       });
-      var o = lim((p - .55) / .3);
+      var o = lim((p - .62) / .28);
       aparecen.forEach(function (el) {
         if (!el) return;
         el.style.opacity = o;
         el.style.transform = o >= 1 ? '' : 'translateY(' + ((1 - o) * 24).toFixed(1) + 'px)';
       });
       if (cue) cue.style.opacity = String(1 - lim(p / .06));
-      if (!mesaHecha && p >= .5) {
+      // la mesa: solo cuando el título ya casi se acomodó, para que las
+      // palabras grandes nunca pasen por encima (ni de ida ni de regreso)
+      var om = lim((p - .8) / .15);
+      mesa.style.opacity = om;
+      mesa.style.visibility = om > 0 ? '' : 'hidden';
+      if (!mesaHecha && p >= .8) {
         mesaHecha = true;
         mesa.classList.add('is-set');
         setTimeout(function () { mesa.classList.add('is-ready'); }, 1300);
       }
+      // mientras se mueve, cada palabra en su propia capa (más fluido)
+      raiz.classList.toggle('intro-quieta', p >= 1);
     }
-    function pedir() { if (!pend) { pend = true; requestAnimationFrame(aplicar); } }
+    function pedir() { if (!pend && geo) { pend = true; requestAnimationFrame(paso); } }
 
-    var fuentes = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    Promise.race([fuentes, new Promise(function (r) { setTimeout(r, 1500); })]).then(function () {
-      partir();
-      raiz.classList.add('intro-listo');
-      medir(); aplicar();
-      addEventListener('scroll', pedir, { passive: true });
-      var t = null;
-      addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { medir(); aplicar(); }, 120); });
-      document.addEventListener('idioma', function () { partir(); medir(); aplicar(); });
+    // arranca ya, sin esperar a la tipografía; cuando llega, se vuelve a medir
+    partir();
+    raiz.classList.add('intro-listo');
+    medir(); aplicar();
+    addEventListener('scroll', pedir, { passive: true });
+    var t = null;
+    var remedir = function () { clearTimeout(t); t = setTimeout(function () { medir(); aplicar(); }, 60); };
+    // solo si cambia el ancho (girar el teléfono): al hacer scroll en el
+    // teléfono la barra del navegador aparece y se esconde, y eso también
+    // dispara resize; volver a medir ahí hacía que el texto brincara
+    addEventListener('resize', function () {
+      if (raiz.clientWidth === anchoVista) return;
+      anchoVista = raiz.clientWidth; altoVista = innerHeight;
+      remedir();
     });
+    if (document.fonts) {
+      if (document.fonts.ready) document.fonts.ready.then(remedir);
+      if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', remedir);
+    }
+    document.addEventListener('idioma', function () { partir(); medir(); aplicar(); });
   });
 
   /* ============================================================
@@ -539,7 +571,10 @@
     var sec = $('[data-ahora]');
     if (!sec) return;
     var fotos = $$('.impresa', sec);
-    // que ya estén cargadas cuando lleguen volando
+    // que ya estén cargadas cuando lleguen volando: se piden en segundo plano
+    // un poco después de cargar la página, o antes si te acercas
+    var pedirFotos = function () { fotos.forEach(function (li) { var im = $('img', li); if (im) im.loading = 'eager'; }); };
+    addEventListener('load', function () { setTimeout(pedirFotos, 1500); });
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es, o) {
         if (!es[0].isIntersecting) return;
