@@ -15,6 +15,15 @@
   var locale = function () { return idioma() === 'en' ? 'en-US' : 'es-MX'; };
   function seguro(nombre, fn) { try { fn(); } catch (e) { if (window.console) console.warn(nombre, e); } }
 
+  // para lo que se mueve con el scroll
+  var raiz = document.documentElement;
+  var mov = raiz.classList.contains('mov');
+  function lim(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function suave(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function sale(t) { return 1 - Math.pow(1 - t, 3); }
+  function alturaCabeza() { var c = $('[data-top]'); return c ? c.offsetHeight : 56; }
+  function docTop(el) { return el.getBoundingClientRect().top + scrollY; }
+
   /* ---------- idioma ---------- */
   seguro('idioma', function () {
     $('[data-lang-toggle]').addEventListener('click', function () {
@@ -292,15 +301,284 @@
     $$('[data-anio]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
   });
 
+  // El reel del teléfono de la mesa: quieto si se piden menos animaciones
+  seguro('reel', function () {
+    var v = $('.reel-video');
+    if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+  });
+
   // Media kit: se abre en un visor; sin <dialog>, el enlace abre el PDF
   seguro('kit', function () {
     var kit = $('[data-kit]');
     if (!kit || !kit.showModal) return;
     $$('[data-kit-abrir]').forEach(function (a) {
-      a.addEventListener('click', function (e) { e.preventDefault(); kit.showModal(); });
+      a.addEventListener('click', function (e) {
+        if (e.defaultPrevented) return; // en la mesa: lo acabas de arrastrar, no abrir
+        e.preventDefault(); kit.showModal();
+      });
     });
     $('[data-kit-cerrar]', kit).addEventListener('click', function () { kit.close(); });
     kit.addEventListener('click', function (e) { if (e.target === kit) kit.close(); });
+    // El enlace para compartir es la página propia: /media-kit
+    var enlace = $('[data-kit-enlace]', kit), url = 'https://joaquinalvarezmercado.vercel.app/media-kit';
+    enlace.addEventListener('click', function () {
+      if (navigator.share && matchMedia('(pointer:coarse)').matches) {
+        navigator.share({ title: 'Media kit · Joaquín Álvarez Mercado', url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function () {
+          enlace.classList.add('is-ok');
+          setTimeout(function () { enlace.classList.remove('is-ok'); }, 1600);
+        });
+      }
+    });
+    // joaquinalvarezmercado.vercel.app/#media-kit también lo abre
+    if (location.hash === '#media-kit') kit.showModal();
+  });
+
+  /* ============================================================
+     LA INTRO: el título empieza enorme, como un cartel (en el teléfono,
+     una palabra por renglón). Mientras bajas, cada palabra vuela a su
+     lugar y el marcatextos la va pintando; cuando el título llega, cae
+     la mesa y aparece lo demás. El inicio se queda fijo durante la pista.
+  ============================================================ */
+  seguro('intro', function () {
+    if (!mov) return;
+    var intro = $('[data-intro]');
+    if (!intro) return;
+    var hero = $('.hero', intro), h1 = $('.hero-title', hero), capa = $('.t-bandas', h1);
+    var cue = $('.cue-intro', hero), mesa = $('[data-mesa]', hero);
+    var aparecen = [$('.hero-sub', hero), $('.indice', hero)];
+    var pals = [], bandas = [], geo = null, mesaHecha = false, pend = false;
+
+    // cada palabra en su propia caja, para moverla sola
+    function partir() {
+      $$('.t-l', h1).forEach(function (l) {
+        var txt = l.textContent.trim();
+        l.textContent = '';
+        txt.split(/\s+/).forEach(function (p, i) {
+          if (i) l.appendChild(document.createTextNode(' '));
+          var w = document.createElement('span');
+          w.className = 'w'; w.textContent = p; l.appendChild(w);
+        });
+      });
+      pals = $$('.w', h1);
+      capa.textContent = '';
+      bandas = pals.map(function () { var b = document.createElement('i'); capa.appendChild(b); return b; });
+    }
+
+    function medir() {
+      pals.forEach(function (w) { w.style.transform = ''; });
+      var cab = alturaCabeza();
+      var fs = parseFloat(getComputedStyle(h1).fontSize);
+      var hR = h1.getBoundingClientRect(), heroR = hero.getBoundingClientRect();
+      var nat = pals.map(function (w) { var r = w.getBoundingClientRect(); return { x: r.left - hR.left, y: r.top - hR.top, w: r.width, h: r.height }; });
+      var mismo = function (a, b) { return a && b && Math.abs(a.y - b.y) < fs * .3; };
+      var esp = .26 * fs;
+      for (var i = 0; i < nat.length - 1; i++) if (mismo(nat[i], nat[i + 1])) { esp = nat[i + 1].x - nat[i].x - nat[i].w; break; }
+
+      // franjas del marcatextos: una por palabra (con su espacio), así juntas
+      // forman la del renglón; del alto del renglón para que queden pegadas
+      var pad = .09 * fs, alto = .95 * fs;
+      var franjas = nat.map(function (n, i) {
+        var x0 = n.x - (mismo(nat[i - 1], n) ? 0 : pad);
+        var x1 = mismo(n, nat[i + 1]) ? nat[i + 1].x : n.x + n.w + pad;
+        return { x: x0, y: n.y + n.h / 2 - alto / 2, w: x1 - x0 + .6, h: alto };
+      });
+      franjas.forEach(function (f, i) {
+        var b = bandas[i].style;
+        b.left = f.x + 'px'; b.top = f.y + 'px'; b.width = f.w + 'px'; b.height = f.h + 'px';
+      });
+
+      // el cartel: renglones a todo lo ancho, centrados en la pantalla.
+      // En computadora, una oración por renglón; en el teléfono, una palabra
+      // (o dos, si la primera es muy corta, como "I make").
+      var gut = parseFloat(getComputedStyle(hero).paddingLeft) || 16;
+      var x0 = heroR.left + gut, anchoDisp = heroR.width - 2 * gut;
+      var arriba = cab + 16, altoDisp = Math.max(120, innerHeight - 76 - arriba);
+      var oraciones = $$('.t-l', h1).map(function (l) { return $$('.w', l).map(function (w) { return pals.indexOf(w); }); });
+      var renglones = [];
+      if (raiz.clientWidth >= 720) renglones = oraciones;
+      else oraciones.forEach(function (o) {
+        var desde = renglones.length, cur = [];
+        o.forEach(function (i) {
+          cur.push(i);
+          var letras = cur.map(function (j) { return pals[j].textContent; }).join('').replace(/[^0-9A-Za-zÀ-ÿ]/g, '').length;
+          if (letras >= 4) { renglones.push(cur); cur = []; }
+        });
+        if (cur.length) {
+          if (renglones.length > desde) renglones[renglones.length - 1] = renglones[renglones.length - 1].concat(cur);
+          else renglones.push(cur);
+        }
+      });
+      var sMax = raiz.clientWidth >= 720 ? 3.2 : 3.6;
+      var info = renglones.map(function (r) {
+        var ancho = r.reduce(function (a, i, k) { return a + nat[i].w + (k ? esp : 0); }, 0);
+        return { r: r, s: Math.min(anchoDisp / ancho, sMax) };
+      });
+      var total = info.reduce(function (a, l) { return a + .92 * fs * l.s; }, 0);
+      var f = total > altoDisp ? altoDisp / total : 1;
+      var y = arriba + (altoDisp - total * f) / 2;
+      // mientras la intro está fija, el inicio queda pegado bajo la cabecera
+      var h1Top = cab + (hR.top - heroR.top);
+      var ini = [];
+      info.forEach(function (l) {
+        var s = l.s * f, x = x0;
+        l.r.forEach(function (i) {
+          ini[i] = { dx: x - (hR.left + nat[i].x), dy: y - (h1Top + nat[i].y), s: s };
+          x += (nat[i].w + esp) * s;
+        });
+        y += .92 * fs * s;
+      });
+      geo = { ini: ini, nat: nat, franjas: franjas };
+    }
+
+    function progreso() {
+      var pista = intro.offsetHeight - hero.offsetHeight;
+      if (pista <= 0) return 1;
+      return lim((scrollY - (docTop(intro) - alturaCabeza())) / pista);
+    }
+
+    function aplicar() {
+      pend = false;
+      if (!geo) return;
+      var p = progreso();
+      pals.forEach(function (w, i) {
+        var g = geo.ini[i];
+        if (!g) return;
+        var k = 1 - suave(lim((p - .035 * i) / .6));
+        var s = 1 + (g.s - 1) * k;
+        w.style.transform = k < .0005 ? '' : 'translate(' + (g.dx * k).toFixed(2) + 'px,' + (g.dy * k).toFixed(2) + 'px) scale(' + s.toFixed(4) + ')';
+        // su franja la sigue y se pinta de izquierda a derecha
+        var f = geo.franjas[i], n = geo.nat[i];
+        var d = sale(lim((p - .4 - .05 * i) / .24));
+        var tx = g.dx * k + (f.x - n.x) * (s - 1), ty = g.dy * k + (f.y - n.y) * (s - 1);
+        bandas[i].style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + (s * d).toFixed(4) + ',' + s.toFixed(4) + ')';
+      });
+      var o = lim((p - .55) / .3);
+      aparecen.forEach(function (el) {
+        if (!el) return;
+        el.style.opacity = o;
+        el.style.transform = o >= 1 ? '' : 'translateY(' + ((1 - o) * 24).toFixed(1) + 'px)';
+      });
+      if (cue) cue.style.opacity = String(1 - lim(p / .06));
+      if (!mesaHecha && p >= .5) {
+        mesaHecha = true;
+        mesa.classList.add('is-set');
+        setTimeout(function () { mesa.classList.add('is-ready'); }, 1300);
+      }
+    }
+    function pedir() { if (!pend) { pend = true; requestAnimationFrame(aplicar); } }
+
+    var fuentes = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    Promise.race([fuentes, new Promise(function (r) { setTimeout(r, 1500); })]).then(function () {
+      partir();
+      raiz.classList.add('intro-listo');
+      medir(); aplicar();
+      addEventListener('scroll', pedir, { passive: true });
+      var t = null;
+      addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { medir(); aplicar(); }, 120); });
+      document.addEventListener('idioma', function () { partir(); medir(); aplicar(); });
+    });
+  });
+
+  /* ============================================================
+     RUMBO: la cabecera dice en qué sección estás, y el marcatextos
+     de abajo avanza con tu lectura.
+  ============================================================ */
+  seguro('rumbo', function () {
+    var cab = $('[data-top]'), prog = $('[data-prog]'), sec = $('[data-tn-sec]');
+    if (!cab || !prog || !sec) return;
+    var marcas = $$('[data-etiqueta]').map(function (el) { return { el: el, sec: el.closest('section') }; });
+    var actual = null, pend = false;
+    function aplicar() {
+      pend = false;
+      var max = raiz.scrollHeight - innerHeight;
+      prog.style.transform = 'scaleX(' + (max > 0 ? lim(scrollY / max) : 0).toFixed(4) + ')';
+      var linea = innerHeight * .4, hay = null;
+      marcas.forEach(function (m) { if (m.sec && m.sec.getBoundingClientRect().top <= linea) hay = m; });
+      if (hay === actual) return;
+      actual = hay;
+      cab.classList.toggle('con-sec', !!hay);
+      if (hay) {
+        sec.textContent = hay.el.textContent.trim();
+        sec.classList.remove('pega'); void sec.offsetWidth; sec.classList.add('pega');
+      }
+    }
+    function pedir() { if (!pend) { pend = true; requestAnimationFrame(aplicar); } }
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    document.addEventListener('idioma', function () { actual = null; aplicar(); });
+    aplicar();
+  });
+
+  /* ============================================================
+     AL APARECER: las cintas de sección se desenrollan y se pegan,
+     las fotos caen sobre la mesa, las filas suben y "Hablemos." se
+     marca. Una sola vez cada cosa.
+  ============================================================ */
+  seguro('aparecer', function () {
+    if (!mov || !('IntersectionObserver' in window)) return;
+    $$('[data-entra]').forEach(function (c) {
+      Array.prototype.forEach.call(c.children, function (h, i) { h.style.setProperty('--d', Math.min(i, 8) * 85 + 'ms'); });
+    });
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add(e.target.classList.contains('cinta-sec') ? 'is-pegada' : 'is-dentro');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: .15 });
+    $$('.cinta-sec, [data-entra], .hablemos-t').forEach(function (el) { io.observe(el); });
+  });
+
+  /* ============================================================
+     AHORA: mientras bajas, las fotos se reparten sobre la mesa una por
+     una (en el teléfono, en un montón). La escena se queda fija.
+  ============================================================ */
+  seguro('ahora', function () {
+    var sec = $('[data-ahora]');
+    if (!sec) return;
+    var fotos = $$('.impresa', sec);
+    // que ya estén cargadas cuando lleguen volando
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es, o) {
+        if (!es[0].isIntersecting) return;
+        fotos.forEach(function (li) { var im = $('img', li); if (im) im.loading = 'eager'; });
+        o.disconnect();
+      }, { rootMargin: '1600px 0px' }).observe(sec);
+    }
+    if (!mov) return;
+    var escena = $('.ahora-escena', sec), cuenta = $('[data-cuenta]', sec);
+    var N = fotos.length, pend = false;
+    raiz.classList.add('ahora-listo');
+    // de qué lado llega cada foto y cuánto gira mientras cae
+    var semillas = fotos.map(function (li, i) {
+      return {
+        x: (i % 2 ? 1 : -1) * (24 + (i * 17) % 22),
+        g: (i % 2 ? 1 : -1) * (14 + (i * 11) % 14),
+        r: parseFloat(li.style.getPropertyValue('--r')) || 0
+      };
+    });
+    function progreso() {
+      var pista = sec.offsetHeight - escena.offsetHeight;
+      if (pista <= 0) return 1;
+      return lim((scrollY - (docTop(sec) - alturaCabeza())) / pista);
+    }
+    function aplicar() {
+      pend = false;
+      var p = progreso(), paso = .86 / N, dur = 1.5 / N, puestas = 0, vh = innerHeight;
+      fotos.forEach(function (li, i) {
+        var q = lim((p - i * paso) / dur), k = 1 - sale(q), s = semillas[i];
+        if (q >= .6) puestas++;
+        li.style.visibility = q <= 0 ? 'hidden' : '';
+        li.style.transform = k < .0008 ? '' : 'translate(' + (s.x * k).toFixed(2) + 'vw,' + (k * vh * .95).toFixed(1) + 'px) rotate(' + (s.r + s.g * k).toFixed(2) + 'deg) scale(' + (1 + .14 * k).toFixed(3) + ')';
+      });
+      if (cuenta) cuenta.textContent = puestas + ' / ' + N;
+    }
+    function pedir() { if (!pend) { pend = true; requestAnimationFrame(aplicar); } }
+    addEventListener('scroll', pedir, { passive: true });
+    addEventListener('resize', pedir);
+    aplicar();
   });
 
   document.addEventListener('idioma', function () {

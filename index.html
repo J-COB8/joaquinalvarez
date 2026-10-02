@@ -16,6 +16,11 @@
 <meta property="og:url" content="https://joaquinalvarezmercado.vercel.app/" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/fonts/kalam-latin.woff2" as="font" type="font/woff2" crossorigin />
+<script>
+/* antes de pintar: hay JS y, si nadie pidió menos movimiento, las animaciones */
+(function(d){ d.classList.add('js'); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('mov'); })(document.documentElement);
+</script>
 
 <!-- ============================================================
   GUÍA RÁPIDA DE EDICIÓN
@@ -56,7 +61,13 @@
   --line:#e6e6e6;
   --sweep:#f4f4f2;
   --yellow:#fcd404;
-  --tape:#2a8fd6;
+  --tape:#3b62bd;
+  --cinta-img:url("assets/img/cinta-textura.webp");
+  /* orillas rasgadas de la cinta: pegada, y enrollada (para animarla) */
+  --rasgado:polygon(1.2% 0,98.8% 0,100% 14%,98.4% 30%,99.6% 46%,98% 62%,99.8% 78%,98.6% 100%,1% 100%,0 84%,1.6% 68%,.2% 52%,1.8% 36%,.4% 18%);
+  --rasgado-0:polygon(1.2% 0,2% 0,2.6% 14%,1.4% 30%,2.4% 46%,1.2% 62%,2.6% 78%,1.6% 100%,1% 100%,0 84%,1.6% 68%,.2% 52%,1.8% 36%,.4% 18%);
+  --pista:50svh;
+  --paso-ahora:15svh;
   --gutter:clamp(16px, 4.6vw, 64px);
   --maxw:1280px;
   --head:56px;
@@ -82,7 +93,7 @@ body{
   font-synthesis:none;
   overflow-x:clip;
 }
-@media (min-width:900px){ body{ font-size:17px; } }
+@media (min-width:900px){ body{ font-size:17px; } :root{ --pista:60svh; --paso-ahora:12svh; } }
 img,video,svg{ display:block; max-width:100%; }
 img, video{ height:auto; }
 a{ color:inherit; text-decoration-thickness:1px; text-underline-offset:.18em; }
@@ -101,15 +112,28 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
 .wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter); }
 
-/* Cinta de pintor: dice en qué estado está cada cosa, como en el prototipo */
-.tape{
-  display:inline-block; width:max-content; justify-self:start; align-self:flex-start;
-  font-stretch:78%; font-weight:650; font-size:12px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
-  color:var(--ink); background:var(--tape);
-  padding:.62em 1.05em .56em;
-  transform:rotate(-1.6deg);
-  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
+/* Cinta de sección: un pedazo de cinta azul de verdad (la textura sale de
+   una foto) con lo que es la sección escrito a mano en blanco. La sombra va
+   en la envoltura porque clip-path recortaría la del propio pedazo. */
+.cinta-sec{
+  display:block; width:max-content; max-width:100%;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.28)) drop-shadow(0 5px 7px rgba(0,0,0,.14));
+  transform:rotate(-2deg); transform-origin:0 50%;
+  margin-left:-.12em;
 }
+.cinta-sec > span{
+  display:block; padding:.34em 1em .24em;
+  font-family:"Kalam", "Bradley Hand", "Segoe Print", cursive; font-weight:400;
+  font-size:clamp(23px, 2.4vw, 32px); line-height:1.1; letter-spacing:.01em; color:#fff;
+  background:var(--cinta-img) 0 50% / auto 100% repeat-x, var(--tape);
+  clip-path:var(--rasgado);
+  text-shadow:0 1px 0 rgba(0,0,0,.18);
+}
+/* al llegar a la sección, la cinta se desenrolla y se asienta */
+.mov .cinta-sec{ transition:transform .6s cubic-bezier(.34,1.4,.64,1); }
+.mov .cinta-sec > span{ transition:clip-path .6s var(--ease-out); }
+.mov .cinta-sec:not(.is-pegada){ transform:rotate(-7deg) translateY(-6px); }
+.mov .cinta-sec:not(.is-pegada) > span{ clip-path:var(--rasgado-0); }
 
 /* ============================================================
    CABECERA
@@ -124,7 +148,28 @@ html[lang="en"] q{ quotes:"“" "”"; }
   transition:box-shadow .3s;
 }
 .top.is-scrolled{ box-shadow:0 1px 0 var(--line); }
-.top-name{ font-weight:650; font-size:15px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.top-name{ display:grid; align-items:center; min-width:0; font-weight:650; font-size:15px; letter-spacing:-.01em; text-decoration:none; }
+.tn-nombre, .tn-sec{ grid-area:1 / 1; transition:transform .45s var(--ease-out), opacity .3s var(--ease); }
+.tn-nombre{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* la sección en la que estás, en un pedacito de cinta */
+.tn-sec{
+  justify-self:start; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  font-family:"Kalam", "Bradley Hand", cursive; font-weight:400; font-size:17px; line-height:1; color:#fff;
+  padding:.4em .8em .3em; rotate:-2deg;
+  background:var(--cinta-img) 0 50% / auto 100% repeat-x, var(--tape);
+  clip-path:var(--rasgado);
+  opacity:0; transform:translateY(120%);
+}
+.top.con-sec .tn-nombre{ opacity:0; transform:translateY(-120%); }
+.top.con-sec .tn-sec{ opacity:1; transform:none; }
+.tn-sec.pega{ animation:pega .5s var(--ease-out); }
+@keyframes pega{ from{ clip-path:var(--rasgado-0); } }
+/* progreso: el marcatextos sigue tu lectura por toda la página */
+.top-prog{
+  position:absolute; left:0; right:0; bottom:-3px; height:3px;
+  background:var(--yellow); transform-origin:0 50%; transform:scaleX(0);
+  pointer-events:none;
+}
 .top-nav{ display:flex; align-items:center; gap:4px; flex:none; }
 .lang{
   min-width:44px; height:44px; padding:0 8px;
@@ -180,6 +225,36 @@ html[lang="en"] q{ quotes:"“" "”"; }
 @keyframes marcar{ from{ background-size:0 .95em; } }
 .hero-sub{ grid-area:sub; margin-top:14px; max-width:32em; font-size:16px; line-height:1.45; color:var(--ink); }
 
+/* ---- la intro: el título empieza enorme y se acomoda mientras bajas ----
+   .mov = el JS corre y nadie pidió menos movimiento.
+   .intro-listo = el JS ya midió todo; el inicio se queda fijo un tramo
+   (--pista) para que el scroll mueva el título en vez de la página. */
+/* la pista es un bloque vacío dentro de .intro: un sticky solo se mueve dentro
+   del contenido de su contenedor (el padding no cuenta) */
+.mov.intro-listo .intro::after{ content:""; display:block; height:var(--pista); }
+.mov.intro-listo .hero{ position:sticky; top:var(--head); }
+.mov:not(.intro-listo) .hero-title, .mov:not(.intro-listo) .hero-sub,
+.mov:not(.intro-listo) .indice, .mov:not(.intro-listo) .mesa{ opacity:0; animation:aparece 0s 3s forwards; }
+@keyframes aparece{ to{ opacity:1; } }
+.intro-listo .hero-title{ z-index:8; }   /* las palabras vuelan por encima de la mesa */
+.intro-listo .hero-title::before{ display:none; }
+.intro-listo .t-frente{ position:relative; }
+.hero-title .w{ display:inline-block; transform-origin:0 0; }
+.t-bandas{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
+.t-bandas i{ position:absolute; left:0; top:0; background:var(--yellow); transform-origin:0 0; transform:scale(0, 1); }
+.intro-listo .mesa:not(.is-set) .obj,
+.intro-listo .mesa:not(.is-set) .nota-escondida,
+.intro-listo .mesa:not(.is-set) .hint{ opacity:0; }
+.mesa .nota-escondida, .mesa .hint{ transition:opacity .4s linear .6s; }
+.cue-intro{
+  position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); z-index:3;
+  translate:-50% 0; display:none; align-items:center; gap:10px;
+  font-family:"Kalam", "Bradley Hand", cursive; font-size:19px; color:var(--ink); pointer-events:none;
+}
+.intro-listo .cue-intro{ display:flex; }
+.cue-intro i{ display:block; width:2px; height:34px; background:var(--ink); transform-origin:50% 0; animation:baja 1.6s var(--ease) infinite; }
+@keyframes baja{ 0%{ transform:scaleY(0); } 45%{ transform:scaleY(1); transform-origin:50% 0; } 55%{ transform:scaleY(1); transform-origin:50% 100%; } 100%{ transform:scaleY(0); transform-origin:50% 100%; } }
+
 /* el índice: los cuatro proyectos, en una sola mirada */
 .indice{ grid-area:indice; margin-top:28px; border-top:1px solid var(--line); list-style:none; }
 .indice li{ border-bottom:1px solid var(--line); }
@@ -218,41 +293,32 @@ html[lang="en"] q{ quotes:"“" "”"; }
   translate:-50% 0; rotate:calc(var(--r,0deg) * -1 - 1.5deg);
   white-space:nowrap;
   font-stretch:78%; font-weight:650; font-size:10px; line-height:1; letter-spacing:.07em; text-transform:uppercase;
-  background:var(--tape); color:var(--ink); padding:.62em .95em .56em;
-  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
+  background:var(--cinta-img) 0 50% / auto 100% repeat-x, var(--tape); color:#fff; padding:.62em .95em .56em;
+  clip-path:var(--rasgado);
   transition:opacity .25s var(--ease), translate .3s var(--ease);
 }
 /* la entrada: las cosas se ven desde el primer momento, un poco levantadas,
    y se asientan en la mesa una tras otra (un solo momento, al cargar) */
 .js .mesa:not(.is-set) .obj{ --s:1.07; --dy:-16px; filter:var(--sh-lift); transition:none; }
 .js .mesa.is-set:not(.is-ready) .obj{
-  transition:transform .8s var(--ease-out) calc(var(--i) * 90ms), filter .7s var(--ease) calc(var(--i) * 90ms);
+  transition:transform .8s var(--ease-out) calc(var(--i) * 90ms), filter .7s var(--ease) calc(var(--i) * 90ms), opacity .35s linear calc(var(--i) * 90ms);
 }
 .obj:active{ --s:1.04; filter:var(--sh-lift); transition:transform .15s var(--ease), filter .15s var(--ease); }
 
 /* posiciones en el teléfono (en % de la mesa) */
-.obj--print  { --x:0%;  --y:3%;  --w:32%; --r:-7deg; z-index:2; }
-.obj--folio  { --x:28%; --y:0%;  --w:39%; --r:4deg;  z-index:3; }
-.obj--phone  { --x:71%; --y:4%;  --w:26%; --r:7deg;  z-index:4; }
-.obj--script { --x:5%;  --y:50%; --w:34%; --r:-4deg; z-index:5; }
-.obj--sticker{ --x:46%; --y:56%; --w:24%; --r:8deg;  z-index:6; }
+.obj--print  { --x:1%;  --y:6%;  --w:33%; --r:-7deg; z-index:2; }
+.obj--kit    { --x:31%; --y:0%;  --w:36%; --r:4deg;  z-index:3; }
+.obj--phone  { --x:68%; --y:10%; --w:28%; --r:6deg;  z-index:4; }
+.obj--sticker{ --x:33%; --y:61%; --w:24%; --r:-6deg; z-index:6; }
 
-.print, .sticker, .script, .ui-body, .ui-island, .dot{ display:block; }
+.print, .sticker, .ui-island{ display:block; }
 .print{ background:#fff; padding:5%; }
 .print img{ aspect-ratio:3/4; object-fit:cover; }
 .sticker{ background:#fff; border-radius:12%; padding:7% 7% 5%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
-.script{
-  background:#fff; aspect-ratio:8.5/11; padding:12cqw 10cqw 0 12cqw;
-  font-size:6.4cqw; line-height:1.42; color:#1f1f1f;
-  position:relative; overflow:hidden;
-}
-.script b{ display:block; font-weight:800; font-size:8.2cqw; line-height:1.15; margin-bottom:.7em; letter-spacing:-.01em; }
-.script p{ margin-bottom:.6em; }
-.script p:last-child{ color:#9a9a9a; }
-.script mark{ background:linear-gradient(transparent 56%, var(--yellow) 56%, var(--yellow) 92%, transparent 92%); color:inherit; }
-.script .n{ position:absolute; left:4.5cqw; font-weight:750; font-size:5.2cqw; color:var(--tape); }
+.hojakit{ display:block; background:#fff; }
+.hojakit img{ aspect-ratio:1659/2400; }
 
-/* nota escondida debajo del prototipo: solo la ve quien mueve las cosas */
+/* nota escondida debajo del media kit: solo la ve quien mueve las cosas */
 .nota-escondida{
   position:absolute; left:calc(var(--x) + 9%); top:calc(var(--y) + 10%); width:22%;
   --x:31%; --y:0%;
@@ -291,26 +357,24 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .ui-bat i{ display:block; width:6.2cqw; height:3cqw; border-radius:.9cqw; border:.5cqw solid #111; position:relative; }
 .ui-bat i::after{ content:""; position:absolute; inset:.4cqw; right:1.2cqw; background:#111; border-radius:.3cqw; }
 .ui-bat b{ display:block; width:4.2cqw; height:3cqw; background:linear-gradient(90deg,#111 0 20%,transparent 20% 27%,#111 27% 47%,transparent 47% 54%,#111 54% 74%,transparent 74% 81%,#111 81%); clip-path:polygon(0 100%,100% 0,100% 100%); }
-.ui-body{ flex:1; min-height:0; overflow:hidden; padding:1.5cqw 5.5cqw 0; }
-.ui-h1{ display:block; font-weight:750; font-size:8.6cqw; letter-spacing:-.02em; line-height:1.1; }
-.ui-date{ display:block; color:#8a8a8e; font-size:3.8cqw; margin-top:.4em; }
-.ui-card{ display:block; background:#fff; border-radius:5cqw; padding:4cqw 4.4cqw; margin-top:4cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); min-height:17cqw; }
-.ui-shortcuts{ display:grid; grid-template-columns:repeat(3,1fr); gap:2.6cqw; margin-top:3cqw; }
-.ui-shortcuts > *{ background:#fff; border-radius:4.4cqw; padding:3.6cqw 0 3cqw; text-align:center; font-weight:600; font-size:3.4cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); display:flex; flex-direction:column; align-items:center; gap:1.4cqw; }
-.ui-shortcuts svg{ width:6cqw; height:6cqw; }
-.ui-h2{ display:block; font-weight:750; font-size:6.2cqw; margin:5cqw 0 2.4cqw; letter-spacing:-.01em; }
-.ui-row{ display:flex; align-items:center; gap:3cqw; background:#fff; border-radius:4.4cqw; padding:3.2cqw 4cqw; margin-bottom:2.2cqw; box-shadow:0 .4cqw 2cqw rgba(0,0,0,.05); font-weight:600; }
-.ui-row small{ display:block; font-weight:500; color:#8a8a8e; font-size:3.2cqw; }
-.dot{ width:2.6cqw; height:2.6cqw; border-radius:50%; flex:none; background:#f97316; }
-.dot.r{ background:#f26d6d; } .dot.b{ background:#3b82f6; }
-.ui-tabs{
-  flex:none; margin:0 3.5cqw 3.5cqw; height:15cqw; border-radius:99px;
-  background:rgba(255,255,255,.92); box-shadow:0 1cqw 5cqw rgba(0,0,0,.10), inset 0 0 0 .3cqw rgba(0,0,0,.04);
-  display:grid; grid-template-columns:repeat(4,1fr); align-items:center; padding:0 1.4cqw;
-}
-.ui-tabs > *{ display:flex; flex-direction:column; align-items:center; padding:1.6cqw 0; border-radius:99px; }
-.ui-tabs svg{ width:5.8cqw; height:5.8cqw; }
-.ui-tabs .on{ background:#ececef; }
+/* el reel: la apertura de Trisol en silencio, con la interfaz encima */
+.reel{ background:#000; color:#fff; }
+.reel-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.reel::after{ content:""; position:absolute; inset:0; background:linear-gradient(rgba(0,0,0,.35), transparent 22%, transparent 62%, rgba(0,0,0,.6)); pointer-events:none; }
+.reel .ui-status, .reel-top{ position:relative; z-index:1; }
+.reel .ui-island{ background:#000; }
+.reel .ui-bat i{ border-color:#fff; }
+.reel .ui-bat i::after{ background:#fff; }
+.reel .ui-bat b{ background:linear-gradient(90deg,#fff 0 20%,transparent 20% 27%,#fff 27% 47%,transparent 47% 54%,#fff 54% 74%,transparent 74% 81%,#fff 81%); }
+.reel-top{ display:block; padding:1cqw 6cqw; font-weight:750; font-size:6.4cqw; letter-spacing:-.01em; }
+.reel-lado{ position:absolute; z-index:1; right:4cqw; bottom:30cqw; display:flex; flex-direction:column; gap:6cqw; }
+.reel-lado svg{ width:8cqw; height:8cqw; filter:drop-shadow(0 .3cqw .8cqw rgba(0,0,0,.4)); }
+.reel-pie{ position:absolute; z-index:1; left:5cqw; right:16cqw; bottom:7cqw; display:flex; flex-direction:column; gap:1.8cqw; text-shadow:0 .3cqw 1cqw rgba(0,0,0,.5); }
+.reel-user{ display:flex; align-items:center; gap:2cqw; font-weight:700; font-size:4cqw; }
+.reel-user i{ width:6.4cqw; height:6.4cqw; border-radius:50%; background:var(--yellow); box-shadow:0 0 0 .5cqw #fff; flex:none; }
+.reel-txt{ font-size:4.2cqw; line-height:1.25; }
+.reel-vistas{ display:inline-flex; align-items:center; gap:1.2cqw; font-weight:700; font-size:4cqw; }
+.reel-vistas svg{ width:4.4cqw; height:4.4cqw; }
 
 /* ============================================================
    PROYECTOS — el mismo esqueleto para que se lean igual:
@@ -444,22 +508,19 @@ html[lang="en"] q{ quotes:"“" "”"; }
 
 /* ---- palabras marcadas que se pueden tocar ---- */
 .clave{
-  font-weight:700; color:var(--ink); text-decoration:underline dotted; text-decoration-thickness:1.5px; text-underline-offset:.22em;
-  background:linear-gradient(transparent 12%, var(--yellow) 12%, var(--yellow) 92%, transparent 92%);
-  padding:0 .2em; margin:0 -.04em; border-radius:2px;
-  -webkit-box-decoration-break:clone; box-decoration-break:clone;
-  transition:box-shadow .2s;
+  font-weight:700; color:var(--ink);
+  text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.22em;
+  transition:text-decoration-thickness .2s, text-underline-offset .2s;
 }
-.clave:hover, .clave:active{ box-shadow:0 0 0 2px var(--ink); text-decoration-color:transparent; }
+.clave:hover, .clave:active{ text-decoration-thickness:4px; text-underline-offset:.14em; }
 .resalta{
-  display:inline; padding:0 .22em; margin:0 -.04em;
+  display:inline; padding:0; margin:0;
   font:inherit; font-weight:700; color:var(--ink);
-  background:linear-gradient(transparent 12%, var(--yellow) 12%, var(--yellow) 92%, transparent 92%);
-  text-decoration:underline dotted; text-decoration-thickness:1.5px; text-underline-offset:.22em;
-  cursor:pointer; border-radius:2px;
-  transition:background-color .2s, box-shadow .2s;
+  text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.22em;
+  cursor:pointer;
+  transition:text-decoration-thickness .2s, text-underline-offset .2s;
 }
-.resalta:hover, .resalta[aria-pressed="true"]{ box-shadow:0 0 0 2px var(--ink); text-decoration-color:transparent; }
+.resalta:hover, .resalta[aria-pressed="true"]{ text-decoration-thickness:4px; text-underline-offset:.14em; }
 .sitios li{ transition:opacity .35s var(--ease); }
 .sitios.hay-resaltado li:not(.is-resaltado){ opacity:.3; }
 .sitios li.is-resaltado .navegador{ transform:translateY(-4px); box-shadow:0 0 0 3px var(--yellow), var(--sh-print); }
@@ -479,12 +540,21 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .mini[open] > summary::after{ transform:rotate(225deg); margin-top:3px; }
 .mini[open] .formula{ animation:abrir .3s var(--ease); }
 
+/* ---- al aparecer: las fotos caen sobre la mesa, las filas suben ----
+   Solo con .mov; los elementos esperan escondidos hasta que se ven.
+   Las animaciones no dejan estilos puestos al terminar (sin "forwards"),
+   así no pisan otros efectos como el atenuado de las páginas. */
+.mov [data-entra]:not(.is-dentro) > *{ opacity:0; }
+.mov [data-entra="cae"].is-dentro > *{ animation:cae .75s var(--ease-out) var(--d, 0ms) backwards; }
+.mov [data-entra="sube"].is-dentro > *{ animation:sube .6s var(--ease-out) var(--d, 0ms) backwards; }
+@keyframes cae{ from{ opacity:0; transform:translateY(-26px) rotate(-4deg) scale(1.06); } }
+@keyframes sube{ from{ opacity:0; transform:translateY(22px); } }
+
 /* ============================================================
    EN PAUSA — filas que se abren
 ============================================================ */
 .pausa{ padding-block:clamp(56px, 8vw, 104px); border-top:1px solid var(--line); }
-.pausa-t{ font-size:clamp(28px, 3vw, 40px); font-weight:820; font-stretch:125%; line-height:.95; letter-spacing:-.035em; }
-.pausa-intro{ margin-top:8px; color:var(--graphite); }
+.pausa-intro{ margin-top:14px; color:var(--graphite); }
 .pausados{ margin-top:22px; border-top:1px solid var(--line); }
 .pausado{ border-bottom:1px solid var(--line); }
 .pausado > summary{
@@ -514,7 +584,9 @@ html[lang="en"] q{ quotes:"“" "”"; }
    AHORA — una nota adhesiva y unas fotos impresas sobre la mesa
 ============================================================ */
 .ahora{ padding-block:clamp(64px, 9vw, 120px); border-top:1px solid var(--line); }
-.ahora-grid{ display:grid; gap:36px; }
+.ahora-listo .ahora{ height:calc(100svh - var(--head) + 10 * var(--paso-ahora)); padding:0; }
+.ahora-listo .ahora-escena{ position:sticky; top:var(--head); height:calc(100svh - var(--head)); overflow:clip; }
+.ahora-listo .impresa{ will-change:transform; }
 .sec-t{ font-size:clamp(34px, 4.4vw, 60px); font-weight:820; font-stretch:125%; line-height:.95; letter-spacing:-.04em; }
 
 /* la nota: papel con grano, luz de arriba y la orilla de abajo levantada */
@@ -528,14 +600,13 @@ html[lang="en"] q{ quotes:"“" "”"; }
   position:relative; aspect-ratio:1; padding:8.5cqw 8cqw 7cqw; overflow:hidden;
   color:#232323;
   background:
-    linear-gradient(0deg, rgba(110,80,0,.13), rgba(110,80,0,0) 17%),
-    linear-gradient(135deg, rgba(255,255,255,.42), rgba(255,255,255,0) 46%),
-    linear-gradient(180deg, rgba(110,80,0,.07), rgba(110,80,0,0) 11%),
-    #fde56a;
+    linear-gradient(0deg, rgba(140,90,0,.16), rgba(140,90,0,0) 18%),
+    linear-gradient(180deg, rgba(140,90,0,.07), rgba(140,90,0,0) 10%),
+    #ffd21f;
   box-shadow:0 1px 1px rgba(0,0,0,.16), 0 3px 6px rgba(0,0,0,.05);
   border-bottom-right-radius:60% 12px;
 }
-.nota::before{ content:""; position:absolute; inset:0; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); opacity:.35; mix-blend-mode:multiply; pointer-events:none; }
+.nota::before{ content:""; position:absolute; inset:0; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); opacity:.22; mix-blend-mode:multiply; pointer-events:none; }
 .nota-t, .nota ul, .pie-foto{ font-family:"Kalam", "Bradley Hand", "Segoe Print", cursive; font-weight:400; }
 .nota-t{ position:relative; display:inline-block; font-size:clamp(26px, 11cqw, 36px); line-height:1; letter-spacing:.01em; -webkit-text-stroke:.7px currentColor; }
 .nota-t svg{ position:absolute; left:-4%; bottom:-10px; width:112%; height:12px; }
@@ -543,35 +614,54 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .nota li{ position:relative; padding-left:1.05em; }
 .nota li::before{ content:"–"; position:absolute; left:2px; }
 
-/* las fotos: impresas, con su cinta azul y el pie escrito a mano */
-.fotos-ahora{
-  list-style:none; display:flex; align-items:flex-start; gap:22px;
-  overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none;
-  margin-inline:calc(var(--gutter) * -1); padding:26px var(--gutter) 34px; scroll-padding-inline:var(--gutter);
-}
-.fotos-ahora::-webkit-scrollbar{ display:none; }
+/* las fotos: impresas, con su cinta azul y el pie escrito a mano.
+   Sin animaciones: una cuadrícula de dos columnas (las horizontales a lo ancho). */
+.fotos-ahora{ list-style:none; display:grid; grid-template-columns:1fr 1fr; grid-auto-flow:row dense; gap:30px 16px; margin-top:34px; }
 .impresa{
-  position:relative; flex:none; scroll-snap-align:start; container-type:inline-size;
+  position:relative; container-type:inline-size;
   background:#fcfcfa; box-shadow:var(--sh-print);
   transform:rotate(var(--r, 0deg));
 }
+.impresa--h{ grid-column:1 / -1; }
 .impresa img{ margin:4cqw 4cqw 0; width:calc(100% - 8cqw); }
-/* misma altura para todas en la tira: el marco mide 8cqw más que la foto */
-.impresa{ --alto:min(52vw, 280px); width:calc(var(--alto) * var(--ar, 1) / .92); }
 .pie-foto{ font-size:clamp(14px, 6.2cqw, 18px); line-height:1.2; color:#2c2c2c; text-align:center; padding:3cqw 4cqw 4cqw; }
+.ahora-cuenta{ display:none; }
 .cinta{
   position:absolute; z-index:1; top:-11px; left:50%; width:38%; height:24px;
   translate:-50% 0; rotate:var(--rc, -3deg);
-  background:rgba(42,143,214,.84); box-shadow:0 1px 1px rgba(0,0,0,.08);
-  clip-path:polygon(0 0,100% 0,98.6% 18%,100% 36%,98.4% 54%,100% 72%,98.6% 88%,100% 100%,0 100%,1.4% 84%,0 68%,1.6% 50%,0 32%,1.4% 16%);
+  background:var(--cinta-img) 0 50% / auto 100% repeat-x, var(--tape); opacity:.94;
+  clip-path:var(--rasgado);
 }
+
+@media (max-width:899px){
+  .ahora-listo .ahora-grid{ position:relative; display:grid; grid-template-rows:auto 1fr; height:100%; padding-block:16px 12px; row-gap:6px; }
+  .ahora-listo .nota-wrap{ width:min(56vw, 28svh); margin:0 0 0 1vw; }
+  .ahora-listo .fotos-ahora{ display:block; position:relative; margin:18px 0 0; --pila-alto:min(36svh, 92vw); }
+  .ahora-listo .impresa{
+    position:absolute; --wp:min(calc(var(--pila-alto) * var(--ar) / .92), 84vw);
+    width:var(--wp); left:calc(50% + var(--px, 0px)); margin-left:calc(var(--wp) / -2);
+    top:calc((var(--pila-alto) - .92 * var(--wp) / var(--ar)) / 2 + var(--py, 0px));
+  }
+  .ahora-listo .ahora-cuenta{ display:block; position:absolute; right:calc(var(--gutter) + 2vw); top:22px; }
+}
+.ahora-cuenta{ font-family:"Kalam", "Bradley Hand", cursive; font-size:26px; line-height:1; color:var(--ink); font-variant-numeric:tabular-nums; }
 
 /* ============================================================
    HABLEMOS
 ============================================================ */
 .hablemos{ padding-block:clamp(64px, 10vw, 136px) clamp(32px, 4vw, 56px); border-top:1px solid var(--line); }
-.hablemos .tape{ margin-bottom:clamp(14px, 2vw, 22px); }
-.hablemos-t{ font-size:min(calc((100vw - 2 * var(--gutter)) / 6.6), 128px); font-weight:850; font-stretch:125%; line-height:.86; letter-spacing:-.055em; margin-left:-.03em; }
+.hablemos .cinta-sec{ margin-bottom:clamp(16px, 2vw, 24px); }
+.hab-grid{ display:grid; grid-template-columns:minmax(0,1fr); }
+/* "Hablemos." se marca cuando llegas, igual que el título del inicio */
+.hab-marca{
+  background:linear-gradient(var(--yellow), var(--yellow)) 0 52% / 100% .92em no-repeat;
+  padding:0 .07em; margin:0 -.07em;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+.mov .hab-marca{ background-size:0 .92em; transition:background-size .9s cubic-bezier(.45,.05,.35,1) .2s; }
+.mov .is-dentro > .hab-marca{ background-size:100% .92em; }
+.hab-texto{ container-type:inline-size; min-width:0; }
+.hablemos-t{ font-size:min(calc(100cqw / 6.7), 128px); font-weight:850; font-stretch:125%; line-height:.86; letter-spacing:-.055em; margin-left:-.03em; }
 .hablemos-sub{ margin-top:clamp(16px, 2vw, 24px); font-size:clamp(18px, 1.8vw, 22px); line-height:1.35; max-width:24em; }
 .correo{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:clamp(20px, 3vw, 32px); }
 .correo a{ font-size:clamp(19px, 2.8vw, 34px); font-weight:750; letter-spacing:-.02em; text-decoration:underline; text-decoration-thickness:.07em; text-underline-offset:.16em; overflow-wrap:anywhere; }
@@ -587,8 +677,25 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .redes a:hover b{ text-decoration:underline; text-underline-offset:.15em; text-decoration-thickness:2px; }
 
 /* ---- Media kit: se ve en un visor y se descarga ---- */
-.ver-kit{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; text-decoration:underline; text-underline-offset:.2em; }
-.correo .ver-kit{ font-size:14px; }
+.kit-tarjeta{
+  position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:20px;
+  margin-top:clamp(48px, 7vw, 64px); padding:0 22px 24px; max-width:560px;
+  background:var(--ink); color:var(--paper); border-radius:18px; text-decoration:none;
+  transition:transform .3s var(--ease);
+}
+/* la hoja asoma por arriba de la tarjeta, como un papel encima */
+.kit-hojita{
+  position:relative; display:block; justify-self:center; width:min(78%, 330px); margin-top:-34px;
+  background:#fff; rotate:-3deg; transition:rotate .35s var(--ease);
+  box-shadow:0 2px 3px rgba(0,0,0,.35), 0 16px 32px rgba(0,0,0,.28);
+}
+.kit-hojita img{ width:100%; }
+.kit-info b{ display:block; font-size:clamp(25px, 2.6vw, 32px); font-weight:820; letter-spacing:-.025em; line-height:1.05; }
+.kit-info small{ display:block; margin-top:6px; font-size:15px; line-height:1.35; color:rgba(255,255,255,.74); }
+.kit-boton{
+  display:inline-flex; align-items:center; min-height:48px; margin-top:16px; padding:0 24px;
+  border-radius:999px; background:var(--yellow); color:var(--ink); font-size:16px; font-weight:750;
+}
 .kit{ width:min(100% - 24px, 760px); max-height:calc(100dvh - 24px); margin:auto; padding:0; border:0; border-radius:14px; background:var(--paper); color:var(--ink); box-shadow:0 30px 80px rgba(0,0,0,.35); overflow:hidden; }
 .kit[open]{ display:flex; flex-direction:column; }
 .kit::backdrop{ background:rgba(0,0,0,.6); }
@@ -599,6 +706,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .kit-cerrar{ display:grid; place-items:center; width:44px; height:44px; border-radius:999px; }
 .kit-cerrar:hover{ background:var(--sweep); }
 .kit-cerrar svg{ width:20px; height:20px; }
+.kit-cerrar.is-ok{ background:var(--ink); color:var(--paper); }
 .kit-hoja{ overflow-y:auto; overscroll-behavior:contain; background:var(--sweep); padding:clamp(10px, 2vw, 20px); }
 .kit-hoja:focus{ outline:none; }
 .kit-hoja img{ display:block; width:100%; height:auto; box-shadow:var(--sh-print); }
@@ -626,15 +734,17 @@ html[lang="en"] q{ quotes:"“" "”"; }
     column-gap:clamp(24px, 3.5vw, 64px);
     min-height:calc(100svh - var(--head));
   }
+  .top-name{ display:flex; align-items:center; gap:14px; }
+  .top.con-sec .tn-nombre{ opacity:1; transform:none; }
+  .tn-sec{ transform:translateX(-10px); }
   .hero-title{ font-size:clamp(52px, 5.2vw, 84px); }
   .hero-sub{ font-size:17px; margin-top:18px; }
   .indice{ margin-top:26px; }
   .mesa{ aspect-ratio:auto; height:100%; min-height:540px; max-height:760px; margin-top:0; }
-  .obj--print  { --x:3%;  --y:9%;  --w:27%; --r:-8deg; }
-  .obj--folio  { --x:31%; --y:4%;  --w:39%; --r:-4deg; }
-  .obj--phone  { --x:71%; --y:11%; --w:22%; --r:7deg; }
-  .obj--script { --x:9%;  --y:50%; --w:30%; --r:5deg; }
-  .obj--sticker{ --x:48%; --y:57%; --w:20%; --r:-7deg; }
+  .obj--print  { --x:3%;  --y:12%; --w:28%; --r:-8deg; }
+  .obj--kit    { --x:31%; --y:4%;  --w:34%; --r:3deg; }
+  .obj--phone  { --x:69%; --y:18%; --w:24%; --r:7deg; }
+  .obj--sticker{ --x:38%; --y:62%; --w:19%; --r:-7deg; }
   .obj-label{ font-size:11px; bottom:-13px; }
   .nota-escondida{ --x:31%; --y:4%; }
 
@@ -660,6 +770,10 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .ticket-wrap{ margin:0 0 0 -22px; position:relative; z-index:1; }
   .ticket{ width:212px; font-size:10.5px; }
 
+  .hab-grid{ grid-template-columns:minmax(0,7fr) minmax(0,5fr); column-gap:clamp(40px, 6vw, 96px); align-items:center; }
+  .hab-grid .redes{ grid-column:1 / -1; }
+  .kit-tarjeta{ margin-top:34px; }
+
   .pausado-cuerpo{
     grid-template-columns:minmax(0,5fr) minmax(0,7fr); grid-template-areas:"rest media";
     column-gap:clamp(40px, 5vw, 88px); align-items:center; padding:18px 6px 44px;
@@ -668,16 +782,24 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .p-img img{ width:64px; height:64px; }
 
   /* en computadora: una mesa, como la del inicio (posiciones en % de la mesa) */
-  .ahora-grid{ display:block; position:relative; aspect-ratio:1152/560; }
-  .nota-wrap{ position:absolute; z-index:5; left:1%; top:6%; width:25%; margin:0; }
-  .fotos-ahora{ display:block; overflow:visible; margin:0; padding:0; }
+  .ahora-grid{ display:block; position:relative; aspect-ratio:1152/620; }
+  /* la mesa, centrada en la escena y del tamaño que quepa */
+  .ahora-listo .ahora-escena{ display:grid; align-content:center; }
+  .ahora-listo .ahora-grid{ width:min(100%, calc((100svh - var(--head) - 48px) * 1152 / 620 + 2 * var(--gutter))); }
+  .nota-wrap{ position:absolute; z-index:12; left:0; top:3%; width:23%; margin:0; }
+  .fotos-ahora{ display:block; position:absolute; inset:0; margin:0; }
   .impresa{ position:absolute; left:var(--x); top:var(--y); width:var(--w); }
-  /* grupo arriba al centro, Delhi abajo a la izquierda (encimada en la
-     orilla de la nota), Pee Safe y el retrato a la derecha */
-  .fotos-ahora li:nth-child(1){ --x:30%;   --y:1%;  --w:30%;   z-index:3; }
-  .fotos-ahora li:nth-child(2){ --x:56%;   --y:47%; --w:15.5%; z-index:4; }
-  .fotos-ahora li:nth-child(3){ --x:15%;   --y:58%; --w:27%;   z-index:6; }
-  .fotos-ahora li:nth-child(4){ --x:78%;   --y:9%;  --w:17%;   z-index:5; }
+  .fotos-ahora li:nth-child(1) { --x:27%;   --y:3%;  --w:13.2%; }
+  .fotos-ahora li:nth-child(2) { --x:41%;   --y:1%;  --w:21%; }
+  .fotos-ahora li:nth-child(3) { --x:63.5%; --y:4%;  --w:13.2%; }
+  .fotos-ahora li:nth-child(4) { --x:79%;   --y:0%;  --w:13.2%; }
+  .fotos-ahora li:nth-child(5) { --x:27.5%; --y:49%; --w:13.2%; }
+  .fotos-ahora li:nth-child(6) { --x:41.5%; --y:55%; --w:21%; }
+  .fotos-ahora li:nth-child(7) { --x:64%;   --y:47%; --w:13.2%; }
+  .fotos-ahora li:nth-child(8) { --x:80%;   --y:51%; --w:13.2%; }
+  .fotos-ahora li:nth-child(9) { --x:1.5%;  --y:55%; --w:13.2%; }
+  .fotos-ahora li:nth-child(10){ --x:12.5%; --y:60%; --w:13.2%; }
+  .ahora-listo .ahora-cuenta{ display:block; position:absolute; left:1%; bottom:2%; }
 
 }
 
@@ -701,6 +823,8 @@ html[lang="en"] q{ quotes:"“" "”"; }
   .obj.is-held{ --s:1.05; cursor:grabbing; filter:var(--sh-lift); transition:filter .3s var(--ease), transform .12s linear; }
   .obj-label{ opacity:0; translate:-50% 6px; }
   .obj:hover .obj-label, .obj:focus-visible .obj-label, .obj.is-held .obj-label{ opacity:1; translate:-50% 0; }
+  .kit-tarjeta:hover{ transform:translateY(-3px); }
+  .kit-tarjeta:hover .kit-hojita{ rotate:-1deg; }
   .nota-escondida{ display:block; }
 }
 @media (prefers-reduced-motion:no-preference){
@@ -717,18 +841,21 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <a class="skip" href="#contenido" data-en="Skip to content">Saltar al contenido</a>
 
 <header class="top" data-top>
-  <a class="top-name" href="#mesa">Joaquín Álvarez Mercado</a>
+  <a class="top-name" href="#mesa" aria-label="Joaquín Álvarez Mercado, ir al inicio" data-en-aria-label="Joaquín Álvarez Mercado, back to top"><span class="tn-nombre">Joaquín Álvarez Mercado</span><span class="tn-sec" aria-hidden="true" data-tn-sec></span></a>
   <nav class="top-nav" aria-label="Idioma y contacto" data-en-aria-label="Language and contact">
     <button type="button" class="lang" data-lang-toggle lang="en" aria-label="Read this page in English">EN</button>
     <a class="top-cta" href="#hablemos" data-en="Let's talk">Hablemos</a>
   </nav>
+  <span class="top-prog" aria-hidden="true" data-prog></span>
 </header>
 
 <main id="contenido">
 
 <!-- ===================== QUIÉN SOY + LA MESA + ÍNDICE ===================== -->
+<!-- .intro es la pista: mientras bajas por ella, el inicio se queda fijo y el título se acomoda -->
+<div class="intro" data-intro>
 <section class="hero" id="mesa" aria-labelledby="hero-t">
-  <h1 class="hero-title" id="hero-t" data-l1="Hago cosas." data-l2="Algunas funcionan."><span class="t-frente"><span class="t-l" data-en="I make things.">Hago cosas.</span> <span class="t-l" data-en="Some of them work.">Algunas funcionan.</span></span></h1>
+  <h1 class="hero-title" id="hero-t" data-l1="Hago cosas." data-l2="Algunas funcionan."><span class="t-bandas" aria-hidden="true"></span><span class="t-frente"><span class="t-l" data-en="I make things.">Hago cosas.</span> <span class="t-l" data-en="Some of them work.">Algunas funcionan.</span></span></h1>
   <p class="hero-sub" data-en-html="I'm Joaquín Álvarez Mercado, from Mexico. I have experience in &lt;a class=&quot;clave&quot; href=&quot;#web&quot;&gt;design&lt;/a&gt; and &lt;a class=&quot;clave&quot; href=&quot;#paratu&quot;&gt;platform development&lt;/a&gt;.">Soy Joaquín Álvarez Mercado, de México. Tengo experiencia en <a class="clave" href="#web">diseño</a> y <a class="clave" href="#paratu">desarrollo de plataformas</a>.</p>
 
   <div class="mesa" data-mesa>
@@ -736,48 +863,37 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <p class="nota-escondida" aria-hidden="true" data-en="Curious people always move things. Write to me: joaquinalvarezme@gmail.com">Los curiosos siempre mueven las cosas. Escríbeme: joaquinalvarezme@gmail.com</p>
 
     <a class="obj obj--print" href="#ahora" style="--i:0" data-obj aria-label="Yo. Ver en qué ando ahora" data-en-aria-label="Me. See what I'm up to now">
-      <span class="print"><img src="assets/img/retrato-440.webp" srcset="assets/img/retrato-440.webp 440w, assets/img/retrato-720.webp 720w" sizes="(min-width:900px) 16vw, 32vw" width="440" height="587" alt="" fetchpriority="high" /></span>
+      <span class="print"><img src="assets/img/build-440.webp" srcset="assets/img/build-440.webp 440w, assets/img/build-720.webp 720w" sizes="(min-width:900px) 16vw, 32vw" width="440" height="587" alt="" fetchpriority="high" /></span>
       <span class="obj-label" aria-hidden="true" data-en="Me">Yo</span>
     </a>
 
-    <a class="obj obj--folio" href="#folio" style="--i:1" data-obj aria-label="FOLIO, prototipo 1" data-en-aria-label="FOLIO, prototype 1">
-      <img src="assets/img/folio-cerrada-520.webp" srcset="assets/img/folio-cerrada-520.webp 520w, assets/img/folio-cerrada-900.webp 900w" sizes="(min-width:900px) 23vw, 39vw" width="520" height="585" alt="" fetchpriority="high" />
-      <span class="obj-label" aria-hidden="true">FOLIO</span>
+    <a class="obj obj--kit" href="/media-kit" style="--i:1" data-obj data-kit-abrir aria-label="Ver mi media kit" data-en-aria-label="See my media kit">
+      <span class="hojakit"><img src="assets/img/media-kit-520.webp" srcset="assets/img/media-kit-520.webp 520w, assets/img/media-kit-900.webp 900w" sizes="(min-width:900px) 22vw, 38vw" width="520" height="752" alt="" fetchpriority="high" /></span>
+      <span class="obj-label" aria-hidden="true">Media kit</span>
     </a>
 
-    <a class="obj obj--phone" href="#paratu" style="--i:2" data-obj aria-label="Paratu, app para iOS" data-en-aria-label="Paratu, iOS app">
+    <a class="obj obj--phone" href="#hdn" style="--i:2" data-obj aria-label="Hablemos de Negocios: el reel de Trisol, 1.1 millones de vistas" data-en-aria-label="Hablemos de Negocios: the Trisol reel, 1.1 million views">
       <span class="phone" aria-hidden="true">
-        <span class="screen">
+        <span class="screen reel">
+          <video class="reel-video" src="assets/video/abre-trisol.mp4" poster="assets/img/abre-trisol-360.webp" muted loop playsinline autoplay preload="auto" width="360" height="640" tabindex="-1"></video>
           <span class="ui-status"><span data-reloj>9:41</span><i class="ui-island"></i><span class="ui-bat"><b></b><i></i></span></span>
-          <span class="ui-body">
-            <span class="ui-h1" data-en="Today">Hoy</span>
-            <span class="ui-date" data-fecha>sábado 27 de septiembre</span>
-            <span class="ui-card">Es un gran día!!!</span>
-            <span class="ui-shortcuts"><span><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Tasks">Tareas</span></span><span><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.8"/></svg><span data-en="Money">Finanzas</span></span><span><svg viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 0 8 1.5 2-1.5 5-1.9 8-1.5V5c-3-.4-6 0-8 1.5zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span data-en="Log">Bitácora</span></span></span>
-            <span class="ui-h2" data-en="Upcoming">Próximo</span>
-            <span class="ui-row"><i class="dot"></i><span><small data-en="Tomorrow">Mañana</small>Ir al parque</span></span>
-            <span class="ui-row"><i class="dot r"></i><span><small data-en="To watch">Para ver</small>Infinity Castle</span></span>
-            <span class="ui-row"><i class="dot b"></i><span><small data-en="Priority 1">Prioridad 1</small>Zapatero a sus zapatos</span></span>
+          <span class="reel-top">Reels</span>
+          <span class="reel-lado">
+            <span><svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.1A4.2 4.2 0 0 1 12 7.4a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z" fill="currentColor"/></svg></span>
+            <span><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7l-4.2 1 1.1-3.9A8 8 0 1 1 20 11.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+            <span><svg viewBox="0 0 24 24"><path d="M21 4 10 14M21 4l-7 17-4-7-7-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
           </span>
-          <span class="ui-tabs"><span><svg viewBox="0 0 24 24"><circle cx="6" cy="7.5" r="2.4"/><circle cx="6" cy="16.5" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 7.5h9M11 16.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span><svg viewBox="0 0 24 24"><path d="M4 13.5 6.4 6h11.2L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18zM4 13.5h4.6l1.4 2.2h4l1.4-2.2H20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><span><svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10.5h17" stroke="currentColor" stroke-width="1.7"/></svg></span><span class="on"><svg viewBox="0 0 24 24"><path d="M4.5 11 12 4.8l7.5 6.2V19a1 1 0 0 1-1 1H15v-5.2H9V20H5.5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span></span>
+          <span class="reel-pie">
+            <span class="reel-user"><i></i>joaquin.alvarezm</span>
+            <span class="reel-txt" data-en="How does Trisol make money?">¿Cómo gana dinero Trisol?</span>
+            <span class="reel-vistas"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg><span data-en="1.1M views">1.1 M de vistas</span></span>
+          </span>
         </span>
       </span>
-      <span class="obj-label" aria-hidden="true">Paratu</span>
+      <span class="obj-label" aria-hidden="true" data-en="Reel">Reel</span>
     </a>
 
-    <a class="obj obj--script" href="#hdn" style="--i:3" data-obj aria-label="Guion de Hablemos de Negocios" data-en-aria-label="A Hablemos de Negocios script">
-      <div class="script" aria-hidden="true">
-        <span class="n" style="top:12.6cqw">1</span>
-        <b>Hablemos de negocios.</b>
-        <p><mark>Se tiran 40 millones de llantas</mark> al año en México. Eso es una llanta cada segundo.</p>
-        <span class="n" style="top:71cqw">2</span>
-        <p>¿Pero cómo funcionó?</p>
-        <p>Fue fundada por un estudiante al que corrieron tres veces…</p>
-      </div>
-      <span class="obj-label" aria-hidden="true" data-en="Script">Guion</span>
-    </a>
-
-    <a class="obj obj--sticker" href="#acuna" style="--i:4" data-obj aria-label="Acuña Sin Huella">
+    <a class="obj obj--sticker" href="#acuna" style="--i:3" data-obj aria-label="Acuña Sin Huella">
       <span class="sticker"><img src="assets/img/acuna-280.webp" srcset="assets/img/acuna-280.webp 280w, assets/img/acuna-560.webp 560w" sizes="(min-width:900px) 11vw, 24vw" width="280" height="356" alt="" /></span>
     </a>
   </div>
@@ -788,18 +904,20 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <li><a href="#web"><img src="assets/img/indice-web.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="Websites">Páginas web</b><small data-en="Web design, from this page to Berri">Diseño web, de esta página a Berri</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
     <li><a href="#pausa"><img src="assets/img/indice-pausa.webp" width="88" height="88" alt="" loading="lazy" /><span><b data-en="On hold">En pausa</b><small data-en="FOLIO, a binder · Paratu, an app">FOLIO, una carpeta · Paratu, una app</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6.5 12.5 12 18l5.5-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
   </ul>
+  <p class="cue-intro" aria-hidden="true"><span data-en="Scroll">Desliza</span><i></i></p>
 </section>
+</div>
 
 <!-- ===================== ACUÑA SIN HUELLA ===================== -->
 <section class="proj acuna" id="acuna" aria-labelledby="acuna-t">
   <div class="wrap proj-grid">
     <div class="proj-head">
-      <p class="tape" data-en="Co-founder">Cofundador</p>
+      <p class="cinta-sec" data-etiqueta><span data-en="Environment">Medio ambiente</span></p>
       <h2 class="proj-name" id="acuna-t">Acuña Sin Huella</h2>
       <p class="proj-what" data-en="An environmental movement I co-founded in Ciudad Acuña.">Un movimiento ambiental que cofundé en Ciudad Acuña.</p>
     </div>
     <div class="proj-media">
-      <div class="fotos">
+      <div class="fotos" data-entra="cae">
         <figure class="foto foto--ancha foto--fundadores">
           <span class="marco"><img fetchpriority="low" src="assets/img/acuna-fundadores-600.webp" srcset="assets/img/acuna-fundadores-600.webp 600w, assets/img/acuna-fundadores-1000.webp 1000w" sizes="(min-width:900px) 30vw, 80vw" width="600" height="400" loading="lazy" decoding="async" alt="Los dos fundadores de Acuña Sin Huella, con las playeras verdes del proyecto, junto al agua." data-en-alt="The two founders of Acuña Sin Huella in the project's green T-shirts, by the water." /></span>
           <figcaption data-en="The two founders">Los dos fundadores</figcaption>
@@ -833,12 +951,12 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <section class="proj hdn" id="hdn" aria-labelledby="hdn-t">
   <div class="wrap proj-grid">
     <div class="proj-head">
-      <p class="tape" data-en="Ongoing">En curso</p>
+      <p class="cinta-sec" data-etiqueta><span data-en="Content">Contenido</span></p>
       <h2 class="proj-name" id="hdn-t">Hablemos de Negocios</h2>
       <p class="proj-what" data-en="One-minute videos that explain how a real business works. Now I film them from India.">Videos de un minuto que explican cómo funciona un negocio real. Ahora los grabo desde India.</p>
     </div>
     <div class="proj-media" data-aperturas>
-      <ul class="aperturas-fila">
+      <ul class="aperturas-fila" data-entra="sube">
         <li><video muted playsinline preload="none" data-poster="assets/img/abre-trisol-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-trisol.mp4" type="video/mp4" /></video><span>Trisol</span></li>
         <li><video muted playsinline preload="none" data-poster="assets/img/abre-kidzania-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kidzania.mp4" type="video/mp4" /></video><span>KidZania</span></li>
         <li><video muted playsinline preload="none" data-poster="assets/img/abre-kavak-360.webp" width="360" height="640" aria-hidden="true" tabindex="-1"><source src="assets/video/abre-kavak.mp4" type="video/mp4" /></video><span>Kavak</span></li>
@@ -854,7 +972,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <div class="proj-rest">
       <ul class="hechos">
         <li data-en-html="The 5 videos add up to &lt;b&gt;1.4 million views&lt;/b&gt; across TikTok and Instagram.">Los 5 videos suman <b>1.4 millones de vistas</b> entre TikTok e Instagram.</li>
-        <li data-en-html="One passed &lt;b&gt;500,000&lt;/b&gt; on its own. At Creator Lab, the assignment was to make a video in my style.">Uno solo pasó las <b>500 mil</b>. En el Creator Lab lo dejaron de tarea: hacer un video con mi estilo.</li>
+        <li data-en-html="The Trisol one alone passed &lt;b&gt;1.1 million&lt;/b&gt;, from an account with 3,000 followers. At Creator Lab, the assignment was to make a video in my style.">El de Trisol pasó solo <b>1.1 millones</b>, con una cuenta de 3,000 seguidores. En el Creator Lab lo dejaron de tarea: hacer un video con mi estilo.</li>
         <li><details class="mini"><summary data-en="Every episode follows the same 7-block formula">Todos siguen la misma fórmula de 7 bloques</summary>
           <ol class="formula">
             <li data-en="Scale-fact hook">Hook de dato</li>
@@ -868,11 +986,11 @@ html[lang="en"] q{ quotes:"“" "”"; }
         </details></li>
       </ul>
       <p class="links">
-        <a href="https://www.instagram.com/reel/DbmOgAZBFpU/" target="_blank" rel="noopener" data-en="The 500K-view video">El video de 500 mil vistas</a>
+        <a href="https://www.instagram.com/reel/DbmOgAZBFpU/" target="_blank" rel="noopener" data-en="Watch the Trisol video">Ver el video de Trisol</a>
         <a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener">Instagram</a>
         <a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener">TikTok</a>
         <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
-        <a href="assets/media-kit.pdf" data-kit-abrir>Media kit</a>
+        <a href="/media-kit" data-kit-abrir>Media kit</a>
       </p>
     </div>
   </div>
@@ -882,12 +1000,12 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <section class="proj web" id="web" aria-labelledby="web-t">
   <div class="wrap proj-grid">
     <div class="proj-head">
-      <p class="tape" data-en="Web design">Diseño web</p>
+      <p class="cinta-sec" data-etiqueta><span data-en="Web design">Diseño web</span></p>
       <h2 class="proj-name" id="web-t" data-en="Websites">Páginas web</h2>
       <p class="proj-what" data-en="I design and build websites that make sense in seconds, especially on a phone.">Diseño y hago páginas que se entienden en segundos, sobre todo en el teléfono.</p>
     </div>
     <div class="proj-media">
-      <ul class="sitios" aria-label="Páginas que he hecho" data-en-aria-label="Websites I've made">
+      <ul class="sitios" aria-label="Páginas que he hecho" data-en-aria-label="Websites I've made" data-entra="cae">
           <li>
             <a class="sitio" href="https://berri.co.in" target="_blank" rel="noopener">
               <span class="navegador"><span class="barra" aria-hidden="true"><i></i><i></i><i></i><span>berri.co.in</span></span><img src="assets/img/sitio-berri-720.webp" srcset="assets/img/sitio-berri-720.webp 720w, assets/img/sitio-berri-1080.webp 1080w" sizes="(min-width:900px) 22vw, 78vw" width="720" height="450" loading="lazy" decoding="async" fetchpriority="low" alt="Página de Berri: frambuesas cubiertas de chocolate, con el botón para apartar tu lugar por WhatsApp." data-en-alt="Berri's website: chocolate-covered raspberries, with a button to claim your spot on WhatsApp." /></span>
@@ -931,9 +1049,9 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <!-- ===================== EN PAUSA (filas que se abren) ===================== -->
 <section class="pausa" id="pausa" aria-labelledby="pausa-t">
   <div class="wrap">
-    <h2 class="pausa-t" id="pausa-t" data-en="On hold">En pausa</h2>
+    <h2 class="cinta-sec" id="pausa-t" data-etiqueta><span data-en="On hold">En pausa</span></h2>
     <p class="pausa-intro" data-en="Projects I made and put on hold. Open them to see more.">Proyectos que hice y dejé en pausa. Ábrelos para ver más.</p>
-    <div class="pausados">
+    <div class="pausados" data-entra="sube">
 
       <details class="pausado" id="folio">
         <summary>
@@ -1017,12 +1135,15 @@ html[lang="en"] q{ quotes:"“" "”"; }
 </section>
 
 <!-- ===================== AHORA ===================== -->
-<section class="ahora" id="ahora" aria-labelledby="ahora-t">
+<!-- Mientras bajas, las fotos se van repartiendo sobre la mesa (en el teléfono,
+     en un montón). Sin animaciones, se ven todas desde el principio. -->
+<section class="ahora" id="ahora" aria-labelledby="ahora-t" data-ahora>
+  <div class="ahora-escena">
   <div class="wrap ahora-grid">
     <!-- AHORA: cambia estas líneas cuando algo cambie -->
     <div class="nota-wrap">
       <div class="nota">
-        <h2 class="nota-t" id="ahora-t"><span data-en="Now">Ahora</span><svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8.5c18-3.2 44-5 70-4.2 16 .5 30 1.6 46 3.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></h2>
+        <h2 class="nota-t" id="ahora-t"><span data-en="Now" data-etiqueta>Ahora</span><svg viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8.5c18-3.2 44-5 70-4.2 16 .5 30 1.6 46 3.6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></h2>
         <ul>
           <li data-en="In India, studying at TETR.">En India, estudiando en TETR.</li>
           <li data-en="Filming businesses I run into on the street.">Grabando negocios que me encuentro en la calle.</li>
@@ -1032,40 +1153,77 @@ html[lang="en"] q{ quotes:"“" "”"; }
     </div>
 
     <ul class="fotos-ahora" aria-label="Fotos de India" data-en-aria-label="Photos from India">
-      <li class="impresa impresa--h" style="--r:-2deg; --rc:-4deg; --ar:1.3333"><span class="cinta" aria-hidden="true"></span>
-        <img src="assets/img/ahora-grupo-480.webp" srcset="assets/img/ahora-grupo-480.webp 480w, assets/img/ahora-grupo-800.webp 800w" sizes="(min-width:900px) 26vw, 76vw" width="480" height="360" loading="lazy" decoding="async" fetchpriority="low" alt="Una cena con unos treinta compañeros en un restaurante con focos colgando del techo." data-en-alt="A dinner with about thirty classmates in a restaurant with bulbs hanging from the ceiling." />
+      <li class="impresa impresa--v" style="--r:-3deg; --rc:4deg; --ar:.75; --px:-8px; --py:6px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-orientacion-400.webp" srcset="assets/img/ahora-orientacion-400.webp 400w, assets/img/ahora-orientacion-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín en la orientación de TETR College of Business, frente a una pantalla verde que dice «Orientation»." data-en-alt="Joaquín at TETR College of Business orientation, in front of a green screen that reads “Orientation”." />
+        <p class="pie-foto" data-en="TETR orientation">Orientación de TETR</p>
+      </li>
+      <li class="impresa impresa--h" style="--r:2deg; --rc:-4deg; --ar:1.3333; --px:6px; --py:-4px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-grupo-480.webp" srcset="assets/img/ahora-grupo-480.webp 480w, assets/img/ahora-grupo-800.webp 800w" sizes="(min-width:900px) 22vw, 80vw" width="480" height="360" loading="lazy" decoding="async" fetchpriority="low" alt="Una cena con unos treinta compañeros en un restaurante con focos colgando del techo." data-en-alt="A dinner with about thirty classmates in a restaurant with bulbs hanging from the ceiling." />
         <p class="pie-foto" data-en="My TETR cohort">Mi generación de TETR</p>
       </li>
-      <li class="impresa impresa--v" style="--r:3deg; --rc:5deg; --ar:.75"><span class="cinta" aria-hidden="true"></span>
-        <img src="assets/img/ahora-peesafe-360.webp" srcset="assets/img/ahora-peesafe-360.webp 360w, assets/img/ahora-peesafe-600.webp 600w" sizes="(min-width:900px) 19vw, 52vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Selfie de Joaquín frente al letrero de Pee Safe, en la entrada de su planta." data-en-alt="Joaquín's selfie in front of the Pee Safe sign, at the entrance of its plant." />
+      <li class="impresa impresa--v" style="--r:-2deg; --rc:3deg; --ar:.75; --px:10px; --py:2px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-build-400.webp" srcset="assets/img/ahora-build-400.webp 400w, assets/img/ahora-build-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín, pensativo, bajo un letrero de luz que dice «Build»." data-en-alt="Joaquín, thinking, under a light sign that reads “Build”." />
+        <p class="pie-foto" data-en="“Build,” says the wall">«Build», dice la pared</p>
+      </li>
+      <li class="impresa impresa--v" style="--r:4deg; --rc:5deg; --ar:.75; --px:-6px; --py:-6px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-peesafe-360.webp" srcset="assets/img/ahora-peesafe-360.webp 360w, assets/img/ahora-peesafe-600.webp 600w" sizes="(min-width:900px) 14vw, 62vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Selfie de Joaquín frente al letrero de Pee Safe, en la entrada de su planta." data-en-alt="Joaquín's selfie in front of the Pee Safe sign, at the entrance of its plant." />
         <p class="pie-foto" data-en="Visiting Pee Safe">Visitando Pee Safe</p>
       </li>
-      <li class="impresa impresa--h" style="--r:1.5deg; --rc:-2deg; --ar:1.5"><span class="cinta" aria-hidden="true"></span>
-        <img src="assets/img/ahora-delhi-480.webp" srcset="assets/img/ahora-delhi-480.webp 480w, assets/img/ahora-delhi-800.webp 800w" sizes="(min-width:900px) 26vw, 76vw" width="480" height="320" loading="lazy" decoding="async" fetchpriority="low" alt="Cinco amigos de noche frente a los edificios de gobierno de Nueva Delhi, iluminados de rosa." data-en-alt="Five friends at night in front of New Delhi's government buildings, lit up in pink." />
+      <li class="impresa impresa--v" style="--r:3deg; --rc:-3deg; --ar:.75; --px:8px; --py:6px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-corbata-400.webp" srcset="assets/img/ahora-corbata-400.webp 400w, assets/img/ahora-corbata-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín de camisa y corbata, mirando a un lado." data-en-alt="Joaquín in a shirt and tie, looking to the side." />
+        <p class="pie-foto" data-en="Shirt and tie">Camisa y corbata</p>
+      </li>
+      <li class="impresa impresa--h" style="--r:-2deg; --rc:-2deg; --ar:1.5; --px:-4px; --py:4px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-delhi-480.webp" srcset="assets/img/ahora-delhi-480.webp 480w, assets/img/ahora-delhi-800.webp 800w" sizes="(min-width:900px) 22vw, 80vw" width="480" height="320" loading="lazy" decoding="async" fetchpriority="low" alt="Cinco amigos de noche frente a los edificios de gobierno de Nueva Delhi, iluminados de rosa." data-en-alt="Five friends at night in front of New Delhi's government buildings, lit up in pink." />
         <p class="pie-foto" data-en="New Delhi, at night">Nueva Delhi, de noche</p>
       </li>
-      <li class="impresa impresa--v" style="--r:-3deg; --rc:3deg; --ar:.75"><span class="cinta" aria-hidden="true"></span>
-        <img src="assets/img/ahora-retrato-360.webp" srcset="assets/img/ahora-retrato-360.webp 360w, assets/img/ahora-retrato-600.webp 600w" sizes="(min-width:900px) 19vw, 52vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Retrato de Joaquín con lentes oscuros y playera blanca." data-en-alt="Portrait of Joaquín in sunglasses and a white T-shirt." />
+      <li class="impresa impresa--v" style="--r:2deg; --rc:4deg; --ar:.75; --px:-10px; --py:-2px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-taj-400.webp" srcset="assets/img/ahora-taj-400.webp 400w, assets/img/ahora-taj-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín posa frente al Taj Mahal." data-en-alt="Joaquín posing in front of the Taj Mahal." />
+        <p class="pie-foto" data-en="Taj Mahal, Agra">Taj Mahal, Agra</p>
+      </li>
+      <li class="impresa impresa--v" style="--r:-4deg; --rc:-3deg; --ar:.75; --px:6px; --py:6px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-respiro-400.webp" srcset="assets/img/ahora-respiro-400.webp 400w, assets/img/ahora-respiro-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín recostado en un sillón blanco junto a un ventanal." data-en-alt="Joaquín lounging on a white couch by a big window." />
+        <p class="pie-foto" data-en="A breather">Un respiro</p>
+      </li>
+      <li class="impresa impresa--v" style="--r:-3deg; --rc:3deg; --ar:.75; --px:-6px; --py:-4px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-retrato-360.webp" srcset="assets/img/ahora-retrato-360.webp 360w, assets/img/ahora-retrato-600.webp 600w" sizes="(min-width:900px) 14vw, 62vw" width="360" height="480" loading="lazy" decoding="async" fetchpriority="low" alt="Retrato de Joaquín con lentes oscuros y playera blanca." data-en-alt="Portrait of Joaquín in sunglasses and a white T-shirt." />
         <p class="pie-foto" data-en="Me, in Gurugram">Yo, en Gurugram</p>
       </li>
+      <li class="impresa impresa--v" style="--r:5deg; --rc:-4deg; --ar:.75; --px:4px; --py:2px"><span class="cinta" aria-hidden="true"></span>
+        <img src="assets/img/ahora-brazos-400.webp" srcset="assets/img/ahora-brazos-400.webp 400w, assets/img/ahora-brazos-700.webp 700w" sizes="(min-width:900px) 14vw, 62vw" width="400" height="533" loading="lazy" decoding="async" fetchpriority="low" alt="Joaquín con los brazos arriba en un cuarto blanco." data-en-alt="Joaquín with his arms up in a white room." />
+        <p class="pie-foto" data-en="Feeling good">Así de bien</p>
+      </li>
     </ul>
+    <p class="ahora-cuenta" aria-hidden="true" data-cuenta></p>
+  </div>
   </div>
 </section>
 
 <!-- ===================== HABLEMOS ===================== -->
 <section class="hablemos" id="hablemos" aria-labelledby="hab-t">
-  <div class="wrap">
-    <p class="tape" data-en="Open to projects">Disponible para proyectos</p>
-    <h2 class="hablemos-t" id="hab-t" data-en="Let's talk.">Hablemos.</h2>
+  <div class="wrap hab-grid">
+    <div class="hab-texto">
+    <p class="cinta-sec" data-etiqueta><span data-en="Contact">Contacto</span></p>
+    <h2 class="hablemos-t" id="hab-t"><span class="hab-marca" data-en="Let's talk.">Hablemos.</span></h2>
     <p class="hablemos-sub" data-en="If something here got you curious, or you need a website, write to me. I'll be the one who answers.">Si algo de aquí te dio curiosidad o necesitas una página, escríbeme. Contesto yo.</p>
     <div class="correo">
       <a href="mailto:joaquinalvarezme@gmail.com">joaquinalvarezme@gmail.com</a>
       <button class="copiar" type="button" data-copiar="joaquinalvarezme@gmail.com" data-en="Copy">Copiar</button>
-      <a class="ver-kit" href="assets/media-kit.pdf" data-kit-abrir data-en="See my media kit">Ver mi media kit</a>
     </div>
     <p class="hora" data-hora data-tz="Asia/Kolkata" data-lugar="India">Estoy en India.</p>
+    </div>
 
-    <ul class="redes">
+    <!-- el media kit: la portada impresa sobre una tarjeta negra, para que se vea -->
+    <a class="kit-tarjeta" href="/media-kit" data-kit-abrir>
+      <span class="kit-hojita"><span class="cinta" aria-hidden="true"></span><img src="assets/img/media-kit-portada-380.webp" srcset="assets/img/media-kit-portada-380.webp 380w, assets/img/media-kit-portada-640.webp 640w" sizes="(min-width:900px) 320px, 72vw" width="380" height="236" alt="" loading="lazy" decoding="async" /></span>
+      <span class="kit-info">
+        <b data-en="My media kit">Mi media kit</b>
+        <small data-en="1.65M views · 8,047 followers · 10.8% engagement">1.65 M de vistas · 8,047 seguidores · 10.8% de engagement</small>
+        <span class="kit-boton" data-en="See the media kit">Ver el media kit</span>
+      </span>
+    </a>
+
+    <ul class="redes" data-entra="sube">
       <li><a href="https://www.instagram.com/joaquin.alvarezm" target="_blank" rel="noopener"><b>Instagram</b><span>@joaquin.alvarezm</span><em data-en="Where Hablemos de Negocios lives">Donde vive Hablemos de Negocios</em></a></li>
       <li><a href="https://www.tiktok.com/@joaquinalvarez614" target="_blank" rel="noopener"><b>TikTok</b><span>@joaquinalvarez614</span><em data-en="Short videos">Videos cortos</em></a></li>
       <li><a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener"><b>YouTube</b><span>@joaquinalvarezmercado</span><em data-en="Short videos">Videos cortos</em></a></li>
@@ -1079,6 +1237,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
 <dialog class="kit" id="kit" aria-labelledby="kit-t" data-kit>
   <div class="kit-barra">
     <h2 id="kit-t">Media kit</h2>
+    <button class="kit-cerrar" type="button" data-kit-enlace aria-label="Copiar enlace del media kit" data-en-aria-label="Copy media kit link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     <a class="kit-bajar" href="assets/media-kit.pdf" download="Media Kit — Joaquín Álvarez Mercado.pdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-en="Download PDF">Descargar PDF</span></a>
     <button class="kit-cerrar" type="button" data-kit-cerrar aria-label="Cerrar" data-en-aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
   </div>
@@ -1137,18 +1296,22 @@ html[lang="en"] q{ quotes:"“" "”"; }
   };
   if (inicial === 'en') window.setIdioma('en');
 
-  // La mesa: las cosas caen en cuanto sus fotos están listas (máximo 700 ms)
+  // La mesa. Con animaciones, las cosas caen cuando el título llega a su
+  // lugar (lo dispara la intro en app.js); si la intro no arrancara, caen
+  // igual a los 3 s. Sin animaciones, aparecen en cuanto cargan sus fotos.
   var mesa = document.querySelector('[data-mesa]');
   if (mesa){
-    var imgs = [].slice.call(mesa.querySelectorAll('img'));
-    var listas = Promise.all(imgs.map(function(i){ return i.decode ? i.decode().catch(function(){}) : 0; }));
-    Promise.race([listas, new Promise(function(r){ setTimeout(r, 700); })]).then(function(){
-      requestAnimationFrame(function(){
-        mesa.classList.add('is-set');
-        var quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        setTimeout(function(){ mesa.classList.add('is-ready'); }, quieto ? 0 : 1300);
-      });
-    });
+    var asentar = function(){
+      mesa.classList.add('is-set');
+      setTimeout(function(){ mesa.classList.add('is-ready'); }, d.classList.contains('mov') ? 1300 : 0);
+    };
+    if (d.classList.contains('mov')){
+      setTimeout(function(){ if (!d.classList.contains('intro-listo')) asentar(); }, 3200);
+    } else {
+      var imgs = [].slice.call(mesa.querySelectorAll('img'));
+      var listas = Promise.all(imgs.map(function(i){ return i.decode ? i.decode().catch(function(){}) : 0; }));
+      Promise.race([listas, new Promise(function(r){ setTimeout(r, 700); })]).then(function(){ requestAnimationFrame(asentar); });
+    }
   }
 })();
 </script>
