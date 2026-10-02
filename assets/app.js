@@ -450,24 +450,27 @@
       tAnt = t;
       actual += (meta - actual) * (1 - Math.pow(.78, dt / 16.7));
       if (Math.abs(meta - actual) < .0006) actual = meta;
-      pintar(actual);
-      if (actual !== meta) requestAnimationFrame(paso);
+      var quieto = actual === meta;
+      raiz.classList.toggle('intro-mueve', !quieto);
+      pintar(actual, !quieto);
+      if (!quieto) requestAnimationFrame(paso);
       else { pend = false; tAnt = 0; }
     }
     function aplicar() { if (geo) pintar(actual = progreso()); }
 
-    function pintar(p) {
+    function pintar(p, moviendo) {
+      var tr = moviendo ? 'translate3d(' : 'translate(', z = moviendo ? 'px,0)' : 'px)';
       pals.forEach(function (w, i) {
         var g = geo.ini[i];
         if (!g) return;
         var k = 1 - suave(lim((p - .035 * i) / .6));
         var s = 1 + (g.s - 1) * k;
-        w.style.transform = k < .0005 ? '' : 'translate3d(' + (g.dx * k).toFixed(2) + 'px,' + (g.dy * k).toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
+        w.style.transform = k < .0005 ? '' : tr + (g.dx * k).toFixed(2) + 'px,' + (g.dy * k).toFixed(2) + z + ' scale(' + s.toFixed(4) + ')';
         // su franja la sigue y se pinta de izquierda a derecha
         var f = geo.franjas[i], n = geo.nat[i];
         var d = sale(lim((p - .4 - .05 * i) / .24));
         var tx = g.dx * k + (f.x - n.x) * (s - 1), ty = g.dy * k + (f.y - n.y) * (s - 1);
-        bandas[i].style.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0) scale(' + (s * d).toFixed(4) + ',' + s.toFixed(4) + ')';
+        bandas[i].style.transform = tr + tx.toFixed(2) + 'px,' + ty.toFixed(2) + z + ' scale(' + (s * d).toFixed(4) + ',' + s.toFixed(4) + ')';
       });
       var o = lim((p - .62) / .28);
       aparecen.forEach(function (el) {
@@ -487,7 +490,6 @@
         setTimeout(function () { mesa.classList.add('is-ready'); }, 1300);
       }
       // mientras se mueve, cada palabra en su propia capa (más fluido)
-      raiz.classList.toggle('intro-quieta', p >= 1);
     }
     function pedir() { if (!pend && geo) { pend = true; requestAnimationFrame(paso); } }
 

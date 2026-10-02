@@ -241,8 +241,10 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .intro-listo .hero-title::before{ display:none; }
 .intro-listo .t-frente{ position:relative; }
 .hero-title .w{ display:inline-block; transform-origin:0 0; }
-.intro-listo:not(.intro-quieta) .hero-title .w,
-.intro-listo:not(.intro-quieta) .t-bandas i{ will-change:transform; }
+/* capas propias solo mientras se mueven: quietas, el navegador vuelve a
+   dibujar las letras a su tamaño real y no se ven pixeleadas de grandes */
+.intro-mueve .hero-title .w,
+.intro-mueve .t-bandas i{ will-change:transform; }
 .t-bandas{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
 .t-bandas i{ position:absolute; left:0; top:0; background:var(--yellow); transform-origin:0 0; transform:scale(0, 1); }
 .intro-listo .mesa:not(.is-set) .obj,
@@ -405,6 +407,13 @@ html[lang="en"] q{ quotes:"“" "”"; }
 .hechos s{ color:var(--graphite); text-decoration-thickness:2px; }
 .links{ display:flex; flex-wrap:wrap; gap:0 22px; margin-top:16px; }
 .links a{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; }
+/* colaboraciones: para marcas que quieren un video */
+.colabora{ margin-top:22px; max-width:32em; padding:18px 20px 16px; border:1.5px solid var(--ink); border-radius:14px; }
+.colabora-t{ font-weight:780; font-size:18px; letter-spacing:-.01em; margin-bottom:4px; }
+.colabora-t::before{ content:""; display:inline-block; width:9px; height:9px; margin:0 8px 2px 0; border-radius:50%; background:#22a55b; box-shadow:0 0 0 4px rgba(34,165,91,.18); }
+.colabora-links{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 18px; margin-top:12px; }
+.colabora-links a{ display:inline-flex; align-items:center; min-height:44px; font-weight:650; }
+.colabora-btn{ padding:0 18px; border-radius:999px; background:var(--ink); color:var(--paper); text-decoration:none; }
 .fuerte{ font-weight:750; }
 
 /* ---- Acuña Sin Huella: fotos reales, como fotos impresas sobre la mesa ---- */
@@ -942,6 +951,11 @@ html[lang="en"] q{ quotes:"“" "”"; }
         <a href="https://www.youtube.com/@joaquinalvarezmercado" target="_blank" rel="noopener">YouTube</a>
         <a href="/media-kit" data-kit-abrir>Media kit</a>
       </p>
+      <div class="colabora">
+        <p class="colabora-t" data-en="Collaborations are open">Colaboraciones abiertas</p>
+        <p data-en="Do you have a business? I make paid videos that tell how it works, with the same formula and for the same audience.">¿Tienes un negocio? Hago videos pagados que cuentan cómo funciona, con la misma fórmula y para la misma audiencia.</p>
+        <p class="colabora-links"><a class="colabora-btn" href="/media-kit" data-kit-abrir data-en="See my media kit">Ver mi media kit</a><a href="#hablemos" data-en="Write to me">Escríbeme</a></p>
+      </div>
     </div>
   </div>
 </section>
@@ -1067,7 +1081,7 @@ html[lang="en"] q{ quotes:"“" "”"; }
     <div class="hab-texto">
     <p class="cinta-sec" data-etiqueta><span data-en="Contact">Contacto</span></p>
     <h2 class="hablemos-t" id="hab-t"><span class="hab-marca" data-en="Let's talk.">Hablemos.</span></h2>
-    <p class="hablemos-sub" data-en="If something here got you curious, or you need a website, write to me. I'll be the one who answers.">Si algo de aquí te dio curiosidad o necesitas una página, escríbeme. Contesto yo.</p>
+    <p class="hablemos-sub" data-en="If something here got you curious, you need a website or you want a video for your brand, write to me. I'll be the one who answers.">Si algo de aquí te dio curiosidad, necesitas una página o quieres un video para tu marca, escríbeme. Contesto yo.</p>
     <div class="correo">
       <a href="mailto:joaquinalvarezme@gmail.com">joaquinalvarezme@gmail.com</a>
       <button class="copiar" type="button" data-copiar="joaquinalvarezme@gmail.com" data-en="Copy">Copiar</button>
